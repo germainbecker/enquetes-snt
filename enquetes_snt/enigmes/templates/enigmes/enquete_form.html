@@ -1,0 +1,97 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+<h1>{{ titre }}</h1>
+<p>Sélectionner les énigmes à ajouter à votre enquête puis valider en bas de page.</p>
+<p>N'hésitez pas à filtrer les énigmes pour aller plus vite.</p>
+
+{% include 'enigmes/filtre.html' %}
+{% include 'enigmes/modale_images.html' %}
+
+{% load static %}
+{% load custom_tags %}
+<div class="form-creation-enquete">
+    <form method="POST" id="form">
+        {% csrf_token %}
+        <div id="liste-enigmes">
+            {% for enigme in enigmes %}
+                {% load markdownify %}
+                <div class="filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur }}">
+                    <div class="selected-enigme-container">
+                        <div class="checkbox-container" id="case-{{ enigme.id }}">
+                            <input type="checkbox" name="enigmes" id="enigme-{{ enigme.id }}" class="case-a-cocher" value="{{ enigme.id }}" autocomplete="off">
+                        </div>
+                        <div class="enigme-container">
+                            {% include 'enigmes/enigme.html' with enigme=enigme %}
+                        </div>
+                    </div>
+                </div>
+                                
+            {% endfor %}
+        </div>
+        <div>
+            <p>Avant de créer l'enquête, veuillez renseigner les trois informations ci-dessous.</p>
+        </div>
+
+
+        <div class="input-container">
+            <p class="label">
+                <label for="description" class="label">Description</label>
+            </p>
+            <p class="consigne">Renseignez une description pour l'enquête (à destination du professeur uniquement, 200 caractères max.).</p>
+            <p class="input">
+                <input type="text" name="description" id="description" placeholder="" maxlength="200" required>
+            </p>               
+        </div>
+        <div class="input-container">
+            <p class="label">Correction</p>
+            <p class="consigne">La correction doit-elle être proposée aux élèves après leur enquête ?</p>
+            <div class="radio">
+                <div>
+                    <input type="radio" name="choix_correction" value="oui">
+                    <label for="choix_correction">Oui</label>
+                </div>
+                <div>
+                    <input type="radio" name="choix_correction" value="Non" checked>
+                    <label for="choix_correction">Non</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <p class="label">Ordre aléatoire</p>
+            <p class="consigne">Les énigmes de l'enquête doivent-elles être proposées dans un ordre aléatoire aux élèves ?</p>
+            <div class="radio">
+                <div>
+                    <input type="radio" name="choix_ordre" value="oui">
+                    <label for="choix_ordre">Oui</label>
+                </div>
+                <div>
+                    <input type="radio" name="choix_ordre" value="Non" checked>
+                    <label for="choix_ordre">Non</label>
+                </div>
+            </div>
+        </div>
+        
+        <div id="cle-enquete">
+            <p id="cle-enquete-contenu">Vous n'avez sélectionné aucune énigme.</p>
+            <p id="message-erreur">Vous devez sélectionner au moins une énigme pour créer une enquête.</p>
+        </div>
+
+        <div class="btn-form">
+            <button id="btn-creer-enquete" class="btn-validation" type="submit">Créer l'enquête</button>
+        </div>
+    </form>
+</div>
+
+{% load static %}
+<!-- Style zone d'apercu -->
+<script src="{% static 'enigmes/js/enquete_form.js' %}"></script>
+<script src="{% static 'enigmes/js/filtre.js' %}"></script>
+<script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
+
+{% endblock %}

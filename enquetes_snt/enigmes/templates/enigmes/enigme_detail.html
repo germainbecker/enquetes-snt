@@ -1,0 +1,16 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+{% include 'enigmes/modale_images.html' %}
+{% load static %}
+{% load custom_tags %}
+    <div class="enigme-container">
+        {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=False %}
+    </div> 
+
+<script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "enigmes/base.html" %}
+
+{% block balise_body%}
+<body class="couleur">
+{% endblock %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav=None %}
+{% endblock %}
+
+{% block content %}
+  <p>Vous avez bien été déconnecté !</p>
+  <a href="{% url 'login'%}">Se connecter à nouveau.</a>
+{% endblock %}

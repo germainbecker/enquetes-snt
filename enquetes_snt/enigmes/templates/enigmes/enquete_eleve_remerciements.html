@@ -1,0 +1,18 @@
+{% extends 'enigmes/base.html' %}
+
+{% block balise_body%}
+<body class="couleur">
+{% endblock %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav=None %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<img class="centre image-responsive" src="{% static 'enigmes/img/enquetes_snt_logo.svg' %}" width="300"></script>
+
+<h1>Merci</h1>
+<p>Ta participation a bien été enregistrée !</p>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+{% load static %}
+<div class="resultats-enquete">
+    <h1>Résultats de l'enquête de code {{ enquete.code }}</h1>
+    <a href="{% url 'enquete-detail' enquete_id=enquete.pk %}">Détails de l'enquête</a>
+</div>
+
+<div class="parametres-resultats">
+    <div class="parametre">
+        <label class="switch" id="switch-id">
+            <input type="checkbox" id="switch-id-checkbox">
+            <span class="slider round"></span>
+        </label>
+        <span class="txt-parametre">Afficher les identifiants</span>
+    </div>
+    <div class="parametre">
+        <label class="switch" id="switch-reponses">
+            <input type="checkbox" id="switch-reponses-checkbox">
+            <span class="slider round"></span>
+        </label>
+        <span class="txt-parametre">Afficher les réponses</span>
+    </div>
+    <div class="parametre">        
+        <label class="switch" id="switch-resultats">
+            <input type="checkbox" id="switch-resultats-checkbox" checked>
+            <span class="slider round"></span>
+        </label>
+        <span class="txt-parametre">Afficher les résultats</span>
+    </div>
+    <div class="parametre">        
+        <label class="switch" id="switch-tri">
+            <input type="checkbox" id="switch-tri-checkbox">
+            <span class="slider round"></span>
+        </label>
+        <span class="txt-parametre">Trier par ordre alphabétique</span>
+    </div>
+</div>
+
+<div class="actualisation">
+    <form method="POST">
+        {% csrf_token %}
+        <div id="btn-actualiser">
+            <button id="fetch-call" type="submit">
+                <img id="icone-actualiser" src="{% static 'enigmes/img/refresh.svg' %}" alt="icone actualisation">
+                <span>Actualiser</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="tableau">
+    <table id="tableau-de-resultats">
+        <thead class="intitule-colonnes">
+            <tr>
+                <th class="zone-eleve-score">
+                    <span class="flex-grow">Élève</span>
+                    <span class="score">Score</span>
+                </th>
+                {% for num_enigme in enigmes %}
+                    <th><a href="{% url 'enigme-detail' pk=num_enigme %}">Enigme n° {{ forloop.counter }}</a></th>
+                {% endfor %}
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="resultats-eleves">
+        {% for resultat in resultats %}
+            <tr>
+                <td class="zone-eleve-score cache-eleve" data-cache="&#9679;&#9679;&#9679;&#9679;">
+                    <span class="flex-grow id-eleve" data-resultats="{{forloop.counter}}">{{ resultat.id }}</span>
+                    <span class="score-eleve">{{ resultat.score }} / {{ enigmes|length }}</span>
+                </td>
+                {% for num_enigme in enigmes %}
+                    {% if resultat.reponses|get:num_enigme|get:'correct' == True %}
+                        <td class="correct">
+                            <div class="reponse-eleve">
+                                <svg width="15" height="15" viewBox="0 0 15 15" focusable="false" fill="currentColor" aria-hidden="true">
+                                    <path d="M13.475 5.464a.75.75 0 011.123.989l-.073.083-6.13 6a.75.75 0 01-.965.07l-.084-.07-3.87-3.79a.75.75 0 01.964-1.143l.085.072L7.87 10.95l5.604-5.487z"></path>
+                                </svg>                        
+                    {% else %}
+                        <td class="incorrect">
+                            <div class="reponse-eleve">
+                                <svg width="15" height="15" viewBox="0 0 15 15" focusable="false" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M13.53 5.53a.75.75 0 00-1.06-1.06L9 7.94 5.53 4.47a.75.75 0 00-1.06 1.06L7.94 9l-3.47 3.47a.75.75 0 001.06 1.06L9 10.06l3.47 3.47a.75.75 0 001.06-1.06L10.06 9l3.47-3.47z"></path>
+                                </svg>
+                    {% endif %}     
+                                <span class="reponse hidden">
+                                    {{resultat.reponses|get:num_enigme|get:'rep_eleve'}}
+                                </span>
+                            </div>
+                        </td>
+                {% endfor %}
+                <td class="date-resultat">{{resultat.date|date:"d/m/Y H:i"}}</td>
+                <!-- <td class="date-resultat">{{resultat.date}}</td> -->
+            </tr>        
+        {% endfor %}
+        <tr id="ligne-reussite">
+            <td class="zone-eleve-score">
+                <span class="gras">Réussite</span>
+            </td>
+            {% for num_enigme in enigmes %}
+                <td class="pourcentage">
+                    <span class="centre gras">
+                        {{pourcentage|get:num_enigme}} %
+                    </span>
+                </td>
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+    <div class="modal-actualisation" id="modale-actualisation">
+        <div class="modal-actualisation-content">
+            <img src="{% static 'enigmes/img/wait-loader.svg' %}" alt="icone chargement">
+        </div>
+    </div>
+</div>
+
+
+
+{% load static %}
+<!-- Style zone d'apercu -->
+<script src="{% static 'enigmes/js/resultats.js' %}"></script>
+
+{% endblock %}

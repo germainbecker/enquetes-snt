@@ -1,0 +1,15 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" page="accueil" %}
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p>Bonjour {{ user.first_name }} {{ user.last_name }}.</p>
+{% else %}
+  <p>Pour accéder à cette page, veuillez vous connecter : <a href="{% url 'login' %}">se connecter</a>.</p>
+{% endif %}
+
+{% endblock %}

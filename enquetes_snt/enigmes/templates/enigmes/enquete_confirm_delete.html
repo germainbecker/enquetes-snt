@@ -1,0 +1,29 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        <p><a href="{% url 'espace-perso' %}">Retour à mon espace personnel</a></p>
+    {% else %}
+        <h1>Supprimer une enquête</h1>
+        <div class="form-creation">
+            <form method="POST">
+                {% csrf_token %}            
+                {% if enquete.description != '' %}
+                    <h2>Êtes-vous sûr de vouloir supprimer l'enquete "{{ enquete.description }}" ?</h2>
+                    <p>La suppression entraînera la perte de tous les résultats de l'enquête. Assurez-vous donc de les avoir bien sauvegardés au préalable.</p>
+                {% else %}
+                    <h2>Êtes-vous sûr de vouloir supprimer l'enquete n° {{ enquete.pk }} ?</h2>
+                    <p>La suppression entraînera la perte de tous les résultats de l'enquête. Assurez-vous donc de les avoir bien sauvegardés au préalable.</p>
+                {% endif %}
+                <div class="btn-form-supp-valid">
+                    <button class="btn-suppression" type="submit">Supprimer</button>
+                    <a class="btn-annulation" href="{% url 'enquete-detail' enquete_id=enquete.pk %}">Annuler</a>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

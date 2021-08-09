@@ -1,0 +1,35 @@
+{% extends "enigmes/base.html" %}
+
+{% block balise_body%}
+<body class="couleur">
+{% endblock %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav=None %}
+{% endblock %}
+
+{% block content %}
+  <div class="form-inscription">
+    <h2>Identification</h2>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="btn-form">
+        <button class="btn-validation" type="submit">Se connecter</button>
+    </div>
+    </form>
+    <div>
+      <p>
+        <small>
+          Mot de passe oublié ? <a href="{% url 'password_reset' %}">Cliquez ici</a>
+        </small>
+      </p>
+      <p>
+        <small>
+          Pas encore de compte ? <a href="{% url 'inscription' %}">S'inscrire</a>
+        </small>
+      </p>
+      
+    </div>
+  </div> 
+{% endblock %}

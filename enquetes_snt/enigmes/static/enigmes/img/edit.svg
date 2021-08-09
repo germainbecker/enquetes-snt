@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="800"
+   version="1.1"
+   viewBox="0 0 800.00001 800.00001"
+   id="svg21"
+   sodipodi:docname="edit.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata25">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1184"
+     inkscape:window-height="630"
+     id="namedview23"
+     showgrid="false"
+     inkscape:zoom="0.295"
+     inkscape:cx="-22.033898"
+     inkscape:cy="400"
+     inkscape:window-x="-32000"
+     inkscape:window-y="-32000"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg21" />
+  <defs
+     id="defs13">
+    <linearGradient
+       id="c"
+       x1="378.39"
+       x2="-76.698"
+       y1="434.19"
+       y2="837.58"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0"
+         id="stop2" />
+      <stop
+         stop-opacity=".42"
+         offset="1"
+         id="stop4" />
+    </linearGradient>
+    <mask
+       id="b"
+       maskUnits="userSpaceOnUse">
+      <circle
+         cx="400"
+         cy="400"
+         r="400"
+         color="#000000"
+         color-rendering="auto"
+         fill="#fff"
+         image-rendering="auto"
+         shape-rendering="auto"
+         solid-color="#000000"
+         style="isolation:auto;mix-blend-mode:normal"
+         id="circle7" />
+    </mask>
+    <mask
+       id="a"
+       maskUnits="userSpaceOnUse">
+      <circle
+         cx="400"
+         cy="400"
+         r="400"
+         color="#000000"
+         color-rendering="auto"
+         fill="#fff"
+         image-rendering="auto"
+         shape-rendering="auto"
+         solid-color="#000000"
+         style="isolation:auto;mix-blend-mode:normal"
+         id="circle10" />
+    </mask>
+  </defs>
+  <circle
+     cx="400"
+     cy="400"
+     r="400"
+     color="#000000"
+     color-rendering="auto"
+     fill="#1c8adb"
+     image-rendering="auto"
+     shape-rendering="auto"
+     solid-color="#000000"
+     style="isolation:auto;mix-blend-mode:normal;fill:#5d21bc;fill-opacity:1"
+     id="circle15" />
+  <path
+     d="m361.47 213.51c-25.515-0.19085-51.028 8.2488-76.543 34.596l-67.516 67.508c-2.9881-0.82508-6.3536-1.8601-10.326-2.9609l-197.64 197.64c5.8469 52.506 38.881 94.138 66.073 138.11 108.56-108.59 216.36-216.41 319.66-319.64-5.1416-4.1381-9.307-8.1224-12.643-11.963l81.666-78.342c-34.242-8.8933-68.485-24.687-102.73-24.943zm204.96 16.83c-9.5058-0.17375-18.891 2.8241-26.744 9.9805l-118.54 116.95-13.846-13.846c-103.53 103.53-210.9 210.91-318.38 318.38 68.382 88.468 162.67 130.3 276.23 137.46l220.34-220.34c15.308-14.011 20.723-38.013 1.1738-56.117l-95.985-95.996 117.74-117.74c27.428-36.98-8.047-78.102-41.996-78.723z"
+     fill="url(#c)"
+     fill-rule="evenodd"
+     mask="url(#a)"
+     opacity=".42"
+     id="path17"
+     style="opacity:0.29" />
+  <path
+     d="m361.48 213.51c-38.807-0.29028-77.614 19.377-116.42 91.665-13.189 16.969-18.648 12.83-37.963 7.4778l-25.308 25.308 76.788 76.788 23.583-23.582c13.419-53.199 32.287-32.907 57.231-6.6147l55.794-55.794c-69.919-56.273 36.336-84.861 69.023-90.305-34.242-8.8933-68.484-24.688-102.73-24.944zm204.96 16.832c-9.5058-0.17375-18.892 2.8233-26.746 9.9796l-99.847 98.224 18.961 18.962c12.459-11.91 87.397-87.492 87.397-87.492l9.1517 9.1528-87.449 87.449 14.158 14.158c9.4496-8.8237 88.744-88.807 88.744-88.807l9.1517 9.1517-88.775 88.776 18.209 18.198 99.041-99.03c27.428-36.98-8.0472-78.101-41.996-78.722zm-159.13 113.09-54.907 54.908 177.33 181.4c39.902 34.443 94.509-22.147 56.94-56.94l-179.36-179.37zm-38.232 112.66-85.005 79.717-17.488 35.385 12.201 9.7623 40.469-27.047 73.819-73.82-23.997-23.997z"
+     fill="#fff"
+     fill-rule="evenodd"
+     mask="url(#b)"
+     id="path19" />
+</svg>

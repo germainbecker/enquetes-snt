@@ -1,0 +1,20 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+    <h1>Supprimer une énigme</h1>
+    <div class="form-creation">
+        <form method="POST">
+            {% csrf_token %}            
+            
+            <h2>Êtes-vous sûr de vouloir supprimer l'énigme {{ enigme.id }} ?</h2>
+            <div class="btn-form-supp-valid">
+                <button class="btn-suppression" type="submit">Supprimer</button>
+                <a class="btn-annulation" href="{% url 'enigme-detail' enigme.id %}">Annuler</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

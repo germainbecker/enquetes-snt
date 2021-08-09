@@ -1,0 +1,59 @@
+{% extends 'enigmes/base.html' %}
+
+{% block balise_body%}
+<body class="couleur">
+{% endblock %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav=None %}
+{% endblock %}
+
+{% block content %}
+
+{% load custom_tags %}
+{% load static %}
+
+<div class="resultat">
+    <img class="image-responsive" src="{% static 'enigmes/img/bilan.png' %}" alt="icone bilan">    
+    <div class="score-obtenu">
+        <h1>Score</h1>
+        <p>{{ score }} / {{ enigmes|length }}</p>
+    </div>
+</div>
+
+<p>Tu peux voir la correction ci-dessous. <em>L'ordre des énigmes n'est pas forcément respecté.</em> </p>
+
+{% include 'enigmes/modale_images.html' %}
+
+<form class="form-reponses-enquete" action="" method="POST">
+    {% csrf_token %}
+    <!-- pour empêcher une validation du formulaire par l'appui sur entrée -->
+    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+        
+    {% for enigme in enigmes %}
+        <div class="enigme-container">
+            
+            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True %}
+
+            <div class="{% if correction|get:enigme.pk %}zone-reponse-correcte{% else %}zone-reponse-incorrecte{% endif %}" >
+                <p>
+                    <label for="{{enigme.pk}}">Réponse :</label>
+                </p>
+                <p>
+                    <input type="text" name="{{enigme.pk}}" placeholder="{{reponses|get:enigme.pk}}">
+                </p>
+                <p class="reponse">
+                    {% if correction|get:enigme.pk %}
+                        ✔️ Réponse correcte !
+                    {% else %}
+                        ❌ Réponse incorrecte, la réponse attendue était <strong>{{ enigme.reponse }}</strong>.
+                    {% endif %}
+                </p>
+            </div>            
+        </div>
+    {% endfor %}
+
+</form>
+
+<script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
+{% endblock %}

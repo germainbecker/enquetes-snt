@@ -1,0 +1,20 @@
+<div class="modif-pj">
+    {% if widget.is_initial %}
+        <div class="pj-actuelle">
+            <p>Cochez la case "Effacer" pour supprimer le fichier actuel <strong>ou</strong> sélectionnez un autre fichier qui remplacera le premier.</p>
+            <p><strong>Fichier actuel</strong> : <a id="lien-{{ widget.name }}" href="{{ widget.value.url }}">{{ widget.value.basename }}</a>  <!-- CHANGEMENT widget.value.BASENAME-->
+            {% if not widget.required %}
+                <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
+                <label class="label-effacer" for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
+            {% endif %}
+            </p>
+        </div>
+        <div class="changer-pj">
+            <p><strong>Remplacer par un autre fichier</strong> :
+                <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+            </p>
+        </div>
+    {% else %}
+        <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+    {% endif %}
+</div>

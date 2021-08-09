@@ -1,0 +1,36 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+<h1>Création d'une enquête</h1>
+<p>Un enquête consiste à sélectionner une ou plusieurs énigmes qui formeront l'enquête.</p>
+<p>Vous avez deux possibilités pour créer une enquête :</p>
+<ul>
+    <li><a href="{% url 'enquete-manuelle-create' %}">Par sélection manuelle</a> : vous parcourez les énigmes de la base et cochez celles vous intéressent</li>
+    <li><a href="{% url 'enquete-liste-create' %}">À partir d'une liste</a> : vous renseignez les numéros des énigmes qui vous intéressent, ce qui constituera la <em>clé</em> de l'enquête</li>
+</ul>
+<p>Pour chaque enquête, vous devrez :</p>
+<ul>
+    <li>renseigner <strong>une description de l'enquête</strong> (à destination uniquement de l'enseignant). Cette description peut contenir le nom de la classe ou du groupe concerné, le(s) thème(s) de l'enquête, etc. Cette description permettra de mieux vous y retrouver.</li>
+    <li>choisir si une correction est proposée aux élèves à la fin de leur enquête</li>
+    <li>choisir si les énigmes de l'enquête sont proposées dans un ordre aléatoire aux élèves</li>
+</ul>
+<p><em>Attention, ces choix ne pourront pas être modifiés après la création de l'enquête. Dans ce cas, il faudra créer une nouvelle enquête, ce qui peut néanmoins se faire très rapidement avec la liste des numéros des énigmes.</em></p>
+
+<p>Les enquêtes ne sont pas partagées avec les autres utilisateurs.</p>
+
+<p>Pour chaque enquête, un <strong>code unique</strong> à 8 caractères sera généré. C'est ce code qu'il faut communiquer à vos élèves et qu'ils doivent saisir sur la page d'accueil de l'application pour démarrer l'enquête. Vous pourrez aussi leur communiquer une URL directe vers l'enquête.</p>
+
+<p>Pour différencier vos différents élèves, un <strong>identifiant</strong> leur sera demandé. C'est à vous de définir les identifiants de vos élèves (un numéro par élève par exemple). Ces identifiants seront stockés dans la base de donnnées.</p>
+
+<p>Vous retrouverez chaque enquête proposée ainsi que dans votre <strong>tableau de bord</strong> sur la page <a href="{% url 'espace-perso' %}">Espace personnel</a>.</p>
+
+<p>Par défaut, une enquête créée est <em>active</em>, c'est-à-dire qu'un élève muni du code de l'enquête peut lancer l'enquête pour la résoudre. Il est possible de la désactiver (et réactiver si besoin) via le tableau de bord, ce qui rendra son lancement impossible évidemment.</p>
+
+<p>Vous pouvez également supprimer une enquête via le tableau de bord.</p>
+
+
+{% endblock %}

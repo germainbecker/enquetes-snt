@@ -1,0 +1,47 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" page="enigmes"%}
+{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+<div class="liste-enigmes-titre">
+    <h1>{{ titre }}</h1>
+    <a href="{% url 'enigme-create' %}">
+        <svg class="icone" id="plus" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="122.875px" height="122.648px" viewBox="0 0 122.875 122.648" enable-background="new 0 0 122.875 122.648" xml:space="preserve"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M108.993,47.079c7.683-0.059,13.898,6.12,13.882,13.805 c-0.018,7.683-6.26,13.959-13.942,14.019L75.24,75.138l-0.235,33.73c-0.063,7.619-6.338,13.789-14.014,13.78 c-7.678-0.01-13.848-6.197-13.785-13.818l0.233-33.497l-33.558,0.235C6.2,75.628-0.016,69.448,0,61.764 c0.018-7.683,6.261-13.959,13.943-14.018l33.692-0.236l0.236-33.73C47.935,6.161,54.209-0.009,61.885,0 c7.678,0.009,13.848,6.197,13.784,13.818l-0.233,33.497L108.993,47.079L108.993,47.079z"/></g></svg>
+        <span>Ajouter une énigme</span>
+    </a>
+</div>
+{% if enigmes_perso %}
+    <p class="para-enonce">Voici la liste des énigmes que vous avez créées.</p>
+{% else %}
+    <p class="para-enonce">Voici la liste de toutes les énigmes de la base de données. Vous pouvez filtrer et trier les énigmes avec les outils ci-dessous. Un bouton en haut à droite des énigmes dont vous êtes l'auteur vous permet de les modifier (cette fonctionnalité est aussi accessible depuis votre espace personnel).</p>
+{% endif %}
+
+
+{% include 'enigmes/filtre.html' with enigmes_perso=enigmes_perso %}
+{% include 'enigmes/modale_images.html' %}
+
+{% load markdownify %}
+{% load static %}
+{% load custom_tags %}
+<div id="liste-enigmes">
+    {% for enigme in enigmes %}
+    <div class="enigme-container filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur.first_name }}{{ enigme.auteur.last_name }}">
+        
+        {% include 'enigmes/enigme.html' with enigme=enigme %}
+    
+    </div>
+{% endfor %}
+</div>
+
+{% include 'enigmes/boutons_scroll.html' %}
+
+
+<script src="{% static 'enigmes/js/filtre.js' %}"></script>
+<script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
+
+
+
+{% endblock %}
