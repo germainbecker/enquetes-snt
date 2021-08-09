@@ -105,7 +105,7 @@ function apercuFichiers() {
     
     console.log(fichierPj.files.length);
     if (fichierPj.files.length == 1 && fichierPj.files[0]) {
-        if (/\.(csv|xls|ods|py|html|css)$/i.test(fichierPj.files[0].name)) {
+        if (/\.(csv|xls|ods|py|html|css|jpg|jpeg|png)$/i.test(fichierPj.files[0].name)) {
             fichierPjReader.readAsDataURL(fichierPj.files[0]);
             apercuPj.style.display = "flex";
             lienPj.innerHTML = fichierPj.files[0].name;
