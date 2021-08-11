@@ -2,4 +2,6 @@ env/
 enquetes_snt/db.sqlite3
 enquetes_snt/enquetes_snt/.env
 enquetes_snt/enquetes_snt/__pycache__/
+enquetes_snt/media/
+enquetes_snt/mediafiles/
 __pycache__/
