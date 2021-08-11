@@ -21,6 +21,8 @@
                     <div class="apercu-container">
                         <div class="apercu">
                             <div class="apercu-image">
+                                {% load static %}
+                                <object id="image-theme" class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/python-logo.svg' %}"></object>
                                 <img id="image" class="centre image-responsive" src="" alt="image illustration">
                             </div>
                             <div class="apercu-enonce"></div>

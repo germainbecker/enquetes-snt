@@ -24,6 +24,8 @@
     <div class="enigme-image">
         {% if enigme.image %}
             <img class="centre image-responsive agrandir" src="{{ enigme.image.url }}" alt="illustration énigme">
+        {% else %}
+            {% include 'enigmes/img-theme.html' with theme=enigme.theme %}
         {% endif %}
     </div>
     <div class="enigme-enonce">

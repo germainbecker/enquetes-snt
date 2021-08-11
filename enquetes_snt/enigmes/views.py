@@ -12,7 +12,7 @@ from django.views.generic import (
 )
 from django.db import transaction, IntegrityError
 
-from .forms import CustomClearableFileInput, EnqueteCreateForm, EnigmeUpdateForm
+from .forms import CustomClearableFileInput, EnqueteCreateForm, EnigmeUpdateForm, EnigmeCreateForm
 from .models import Enigme, Enquete, Resultat
 from django.http import HttpResponse
 import csv
@@ -88,8 +88,8 @@ class EnigmeDetailView(LoginRequiredMixin, DetailView):
 
 class EnigmeCreateView(LoginRequiredMixin, CreateView):
     model = Enigme
-    fields = ['theme', 'enonce', 'reponse', 'indication', 'image', 'fichier']
     context_object_name = 'enigme'
+    form_class = EnigmeCreateForm
 
     def form_valid(self, form):
         """Ajoute l'auteur de l'énigme en bdd lors de la validation du formulaire"""
@@ -238,6 +238,7 @@ def creation_enquete_manuelle(request):
         else:
             liste_num_enigmes = request.POST.getlist('enigmes')
             description = request.POST.get('description')
+            indications = request.POST.get('choix_indications')
             correction = request.POST.get('choix_correction')
             ordre = request.POST.get('choix_ordre')
             if liste_num_enigmes == [] or description == "":
@@ -251,6 +252,7 @@ def creation_enquete_manuelle(request):
                             enquete.enigmes.add(enigme)
                         enquete.cle = ";".join(liste_num_enigmes)
                         enquete.description = description
+                        enquete.indications = True if indications == "oui" else False
                         enquete.correction = True if correction == "oui" else False
                         enquete.ordre_aleatoire = True if ordre == "oui" else False
                         enquete.save()
@@ -265,6 +267,7 @@ def creation_enquete_liste(request):
     if request.method == 'POST':
         cle_entree = request.POST.get('cle')
         description = request.POST.get('description')
+        indications = request.POST.get('choix_indications')
         correction = request.POST.get('choix_correction')
         ordre = request.POST.get('choix_ordre')
         cle_nettoyee = cle_entree.replace(" ", "")  # suppression des espaces
@@ -278,6 +281,7 @@ def creation_enquete_liste(request):
                     enquete.enigmes.add(enigme)
                 enquete.cle = cle_nettoyee
                 enquete.description = description
+                enquete.indications = True if indications == "oui" else False
                 enquete.correction = True if correction == "oui" else False
                 enquete.ordre_aleatoire = True if ordre == "oui" else False
                 enquete.save()

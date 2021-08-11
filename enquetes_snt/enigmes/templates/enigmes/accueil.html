@@ -8,6 +8,10 @@
 
 {% if user.is_authenticated %}
   <p>Bonjour {{ user.first_name }} {{ user.last_name }}.</p>
+  {% load static %}
+  <p class="para-couleur">
+    <object type="image/svg+xml" data="{% static 'enigmes/img/theme-RS.svg' %}" class="theme"></object>
+  </p>
 {% else %}
   <p>Pour accéder à cette page, veuillez vous connecter : <a href="{% url 'login' %}">se connecter</a>.</p>
 {% endif %}

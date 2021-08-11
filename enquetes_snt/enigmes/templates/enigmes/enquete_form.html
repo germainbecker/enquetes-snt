@@ -34,7 +34,7 @@
             {% endfor %}
         </div>
         <div>
-            <p>Avant de créer l'enquête, veuillez renseigner les trois informations ci-dessous.</p>
+            <p>Avant de créer l'enquête, veuillez renseigner les quatre informations ci-dessous.</p>
         </div>
 
 
@@ -46,6 +46,20 @@
             <p class="input">
                 <input type="text" name="description" id="description" placeholder="" maxlength="200" required>
             </p>               
+        </div>
+        <div class="input-container">
+            <p class="label">Indications</p>
+            <p class="consigne">Les indications (si elles existent) doivent-elles être affichées pour les élèves ?</p>
+            <div class="radio">
+                <div>
+                    <input type="radio" name="choix_indications" value="oui" checked>
+                    <label for="choix_indications">Oui</label>
+                </div>
+                <div>
+                    <input type="radio" name="choix_indications" value="Non">
+                    <label for="choix_indications">Non</label>
+                </div>
+            </div>
         </div>
         <div class="input-container">
             <p class="label">Correction</p>

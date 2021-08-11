@@ -1,0 +1,19 @@
+{% load static %}
+{% if theme == "INT" %}
+    <object class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/theme-int.svg' %}"></object>
+{% elif theme == "WEB" %}
+    <object class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/theme-web.svg' %}"></object>
+{% elif theme == "RS" %}
+    <object class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/theme-rs.svg' %}"></object>
+{% elif theme == "DATA" %}
+    <object class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/theme-data.svg' %}"></object>
+{% elif theme == "LCM" %}
+    <object class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/theme-lcm.svg' %}">
+    </object>
+{% elif theme == "IEOC" %}
+    <object class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/theme-ieoc.svg' %}"></object>
+{% elif theme == "IMG" %}
+    <object class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/theme-img.svg' %}"></object>
+{% elif theme == "PY" %}
+    <object class="centre" type="image/svg+xml" data="{% static 'enigmes/img/python-logo.svg' %}"></object>
+{% endif %}

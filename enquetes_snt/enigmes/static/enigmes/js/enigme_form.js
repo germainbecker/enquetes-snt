@@ -1,3 +1,14 @@
+var THEMES = {
+    'INT': "/static/enigmes/img/theme-int.svg",
+    'WEB': "/static/enigmes/img/theme-web.svg",
+    'RS': "/static/enigmes/img/theme-rs.svg",
+    'DATA': "/static/enigmes/img/theme-data.svg",
+    'LCM': "/static/enigmes/img/theme-lcm.svg",
+    'IEOC': "/static/enigmes/img/theme-ieoc.svg",
+    'IMG': "/static/enigmes/img/theme-img.svg",
+    'PY': "/static/enigmes/img/python-logo.svg"
+}
+
 function conversion() {
     /* Image */
     /* let imageURL = document.getElementById('id_image').value;
@@ -9,6 +20,8 @@ function conversion() {
         document.querySelector(".apercu-image").style.display = "none";
     } */
 
+    /* Thème choisi */
+    let theme = document.querySelector('#id_theme').value;
 
     /* Énoncé */
     let enonceMD = document.getElementById('id_enonce').value;
@@ -27,7 +40,7 @@ function conversion() {
         document.querySelector(".apercu-indication").style.display = "none";
     }
 
-    apercuFichiers();
+    apercuFichiers(theme);
     gestionImages();
     gestionLiens();
     gestionTableaux();
@@ -55,7 +68,7 @@ function conversion() {
     Prism.highlightAll(async=true);
 }
 
-
+document.querySelector("#image-theme").style.display = "none";  // ne pas afficher au départ
 
 document.querySelector(".apercu-indication").style.display = "none";  // ne pas afficher au départ
 
@@ -67,11 +80,39 @@ document.querySelector('.piece-jointe').style.display = "none";
 
 document.querySelector('.enigme-reponse').style.display = "none";
 
-function apercuFichiers() {
+function apercuFichiers(theme) {
     // voir https://developer.mozilla.org/fr/docs/Web/API/FileReader/readAsDataURL
-    // Aperçu image
+    
+    // Aperçu image en fonction du thème choisi
     var apercuImage = document.querySelector("#image");
     var fichierImage = document.getElementById("id_image");
+    var imageTheme = document.querySelector("#image-theme");
+    var imageActuelle = document.getElementById("lien-image");
+    var checkBoxImageActuelle = document.getElementById("image-clear_id");
+    
+    if (!(theme == "NC")) {
+        if (fichierImage.files.length == 0 && Boolean(imageActuelle) && checkBoxImageActuelle.checked){
+            imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+            imageTheme.data = THEMES[theme];
+        } else {
+            imageTheme.style.display = "none";
+            imageTheme.data = "none";
+        }
+    } else {
+        imageTheme.style.display = "none";
+        imageTheme.data = "none";
+    }
+    
+    /* if (fichierImage.files.length == 0 || imageActuelle && checkBoxImageActuelle.checked == true) {  // si aucune image n'est sélectionnée
+        console.log(fichierImage.files.length, imageActuelle);
+        if (!(theme == "NC")) {  // et si un thème est sélectionné
+            imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+            imageTheme.data = THEMES[theme];
+        }        
+    } else {
+        imageTheme.style.display = "none";
+    } */
+
     var fichierImageReader = new FileReader();
     fichierImageReader.addEventListener("load", function () {
         apercuImage.src = fichierImageReader.result;
@@ -103,7 +144,6 @@ function apercuFichiers() {
         lienPj.href = fichierPjReader.result;
       }, false);
     
-    console.log(fichierPj.files.length);
     if (fichierPj.files.length == 1 && fichierPj.files[0]) {
         if (/\.(csv|xls|ods|py|html|css|jpg|jpeg|png)$/i.test(fichierPj.files[0].name)) {
             fichierPjReader.readAsDataURL(fichierPj.files[0]);
@@ -125,7 +165,7 @@ function apercuFichiers() {
     }
 }
 
-function redimensionnementImage() {
+/* function redimensionnementImage() {
     var image = document.querySelector("#image");
     image.addEventListener("load", function() {
         
@@ -143,7 +183,7 @@ function redimensionnementImage() {
         // ajout classes
         image.classList.add("centre", "image-responsive"); 
       });
-}
+} */
 
 /* function reload_prism(){
     var js_section = document.querySelector('.js-files');
@@ -220,3 +260,143 @@ function gestionTableaux() {
         tableau.classList.add("tbl");
     });
 }); */
+
+
+// VALIDATION DES FICHIERS A TELEVERSER
+
+// Image
+
+document.getElementById("id_image").addEventListener("change", validationImage);
+
+function validationImage(){
+    let btnResetImage = document.querySelector('#reset-image');
+
+    const extensionsAcceptees =  ['jpeg','jpg','png'],
+            tailleMax = 300_000; // 300 Ko
+
+    // si un fichier image a été choisi
+    if (this.files.length == 1 && this.files[0]) {
+        
+        // récupération du nom et de la taille à partir de l'objet fichier
+        const {name: nomFichier, size: tailleFichier} = this.files[0];
+
+        // récupération de l'extension de l'image
+        const extensionFichier = nomFichier.split(".").pop();
+
+        // vérification de l'extension et de la taille de l'image
+        if(!extensionsAcceptees.includes(extensionFichier)){
+            alert("Extension non acceptée. Seules les images aux formats .jpg ou .png sont acceptées.");
+            this.value = null;
+            return false;
+        }else if(tailleFichier > tailleMax){
+            alert("Fichier trop volumineux. Assurez-vous que l'image ait une taille inférieure à 300 Ko.")
+            this.value = null;
+            return false;
+        } else {            
+            btnResetImage.style.display = "flex";
+            return true;
+        }
+    } else {
+        btnResetImage.style.display = "none";
+        return false;
+    }
+    
+}
+
+// Pièce jointe
+
+document.getElementById("id_fichier").addEventListener("change", validationPieceJointe);
+
+function validationPieceJointe(){
+
+    let btnResetFichier = document.querySelector('#reset-fichier');
+
+    const extensionsAcceptees =  ['csv','xls','ods','py','html','css','jpeg','jpg','png'],
+            tailleMax = 1_000_000; // 1 Mo
+
+    // si un fichier a été choisi
+    if (this.files.length == 1 && this.files[0]) {
+        
+        // récupération du nom et de la taille à partir de l'objet fichier
+        const { name:nomFichier, size:tailleFichier } = this.files[0];
+        
+        // récupération de l'extension du fichier
+        const extensionFichier = nomFichier.split(".").pop();
+
+        // vérification de l'extension et de la taille du fichier
+        if (!extensionsAcceptees.includes(extensionFichier)){
+            alert("Extension non acceptée. Seules les fichiers aux formats .csv, .xls, .ods, .py, .html, .css, .jpeg, .jpg et .png sont acceptés.");
+            this.value = null;
+            return false;
+        } else if (tailleFichier > tailleMax){
+            alert("Fichier trop volumineux. Assurez-vous que le fichier joint ait une taille inférieure à 300 Ko.")
+            this.value = null;
+            return false;
+        } else {
+            btnResetFichier.style.display = "flex";
+            return true;
+        }
+    } else {
+        btnResetFichier.style.display = "none";
+        return true;
+    }  
+}
+
+// Suppression de l'image sélectionnée
+
+/* function btnReset(type) {
+    let btnResetImage = document.querySelector('#reset-image');
+    let btnResetFichier = document.querySelector('#reset-image');
+    var fichierImage = document.getElementById("id_image");
+    var fichierPj = document.getElementById("id_fichier");
+    if (!(fichierImage.value === none)) {
+        btnResetImage.display.style = "block";
+    } else {
+
+    }
+
+} */
+
+let btnResetImage = document.querySelector('#reset-image');
+btnResetImage.addEventListener('click', resetImage);
+
+function resetImage() {
+    var fichierImage = document.getElementById("id_image");
+    fichierImage.value = '';
+    btnResetImage.style.display = "none";
+}
+
+
+
+// Suppression du fichier sélectionné
+
+let btnResestFichier = document.querySelector('#reset-fichier');
+btnResestFichier.addEventListener("click", resetFichier);
+
+function resetFichier() {
+    var fichier = document.getElementById("id_fichier");
+    fichier.value = '';
+    btnResestFichier.style.display = "none";
+}
+
+// VALIDATION FORMULAIRE (le thème ne doit pas être NC)
+
+document.querySelector("form").addEventListener("submit", function(event) {
+    let theme = document.querySelector('#id_theme').value;
+    let selectTheme = document.querySelector("#id_theme");
+    if (theme === "NC") {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth" 
+        });
+        
+        selectTheme.style.border = "1px solid red";
+        alert("Veuillez sélectionner un thème. Si une énigme s'appuie sur plusieurs d'entre eux, choisissez celui qui vous semble le plus cohérent.");
+        event.preventDefault();
+        return false;
+    } else {
+        selectTheme.style.border = "inherit";
+        return true;
+    }
+});

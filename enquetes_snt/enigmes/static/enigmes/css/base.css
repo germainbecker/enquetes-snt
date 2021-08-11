@@ -795,7 +795,7 @@ svg#logo g.snt path {
 
 .enigme {
     margin-bottom: 20px;
-    line-height: 1.3em;
+    line-height: 1.4em;
 }
 
 @media all and (max-width: 768px) {
@@ -1179,9 +1179,21 @@ summary span:hover {
 
 /* Aperçu énigme avant ajout */
 
-.apercu-container {
+/* .apercu-container {
     padding: 10px 20px;
 }
+
+@media all and (max-width: 768px) {
+    .apercu-container {
+        padding: 10px 15px;
+    }
+}
+
+@media all and (max-width: 500px) {
+    .apercu-container {
+        padding: 8px 10px;
+    }
+} */
 
 .apercu {
     margin-bottom: 20px;
@@ -1189,6 +1201,11 @@ summary span:hover {
 
 .apercu-enonce p {
     display: flex;
+}
+
+.icone-theme { /* largeur et hauteur de l'image par défaut d'un thème */
+    width: 200px;
+    height: 200px;
 }
 
 .apercu-image img {
@@ -1210,6 +1227,19 @@ summary span:hover {
 .apercu blockquote {
     padding: 10px 20px;
     margin: 30px 100px;
+}
+
+@media all and (max-width: 768px) {
+    .apercu blockquote {
+        padding: 10px;
+        margin: 30px 5%;
+    }
+}
+
+@media all and (max-width: 500px) {
+    .apercu blockquote {
+        margin: 30px 2%;
+    }
 }
 
 .apercu blockquote[class*="apercu-indication"]{
@@ -2130,7 +2160,7 @@ input:checked + .slider:before {
     line-height: 20px;
 }
 
-.form-creation select {
+#id_theme {
     background-color: white;
     border: 1px solid #888;
     font-size: 15px;
@@ -2167,9 +2197,10 @@ input:checked + .slider:before {
 
 .helptext {
     margin-top: 10px;
-    font-size: 0.8em;
+    font-size: 0.9em;
     font-style: italic;
-    color: #444;
+    color: rgb(36 123 0);
+    display: block;
 }
 
 .form-creation {
@@ -2235,6 +2266,23 @@ input:checked + .slider:before {
 
 /* --- Formulaire Modification énigme --- */
 
+.file-reset {
+    display: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.file-reset img {
+    width: 20px;
+}
+
+.modif-pj {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .modif-pj p {
     display: block;
 }
@@ -2244,6 +2292,21 @@ input:checked + .slider:before {
     font-weight: inherit;
 }
 
+/* #fichier-actuel {
+    display: flex;
+    margin: 1em 0;
+    gap: 10px;
+}
+
+#fichier-actuel .file-reset {
+    display: block;
+} */
+
+.changer-pj {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
 
 
 /* ENQUETE VUE ELEVE */
@@ -2443,6 +2506,7 @@ input:checked + .slider:before {
 
 .zone-apercu p {
     display: block;
+    line-height: 1.4em;
 }
 
 .btn-apercu {
