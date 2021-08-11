@@ -1204,8 +1204,8 @@ summary span:hover {
 }
 
 .icone-theme { /* largeur et hauteur de l'image par défaut d'un thème */
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
 }
 
 .apercu-image img {
