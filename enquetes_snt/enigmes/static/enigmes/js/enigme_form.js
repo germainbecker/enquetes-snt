@@ -90,18 +90,35 @@ function apercuFichiers(theme) {
     var imageActuelle = document.getElementById("lien-image");
     var checkBoxImageActuelle = document.getElementById("image-clear_id");
     
-    if (!(theme == "NC")) {
-        if (fichierImage.files.length == 0 && Boolean(imageActuelle) && checkBoxImageActuelle.checked){
-            imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-            imageTheme.data = THEMES[theme];
+    if (!(checkBoxImageActuelle)) {  // en cas d'une image non présente
+        if (!(theme == "NC")) {
+            if (fichierImage.files.length == 0){
+                imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+                imageTheme.data = THEMES[theme];
+            } else {
+                imageTheme.style.display = "none";
+                imageTheme.data = "none";
+            }
         } else {
             imageTheme.style.display = "none";
             imageTheme.data = "none";
         }
-    } else {
-        imageTheme.style.display = "none";
-        imageTheme.data = "none";
+    } else {  // modification en cas d'une image déjà présente
+        if (!(theme == "NC")) {
+            if (fichierImage.files.length == 0 && Boolean(imageActuelle) && checkBoxImageActuelle.checked){
+                imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+                imageTheme.data = THEMES[theme];
+            } else {
+                imageTheme.style.display = "none";
+                imageTheme.data = "none";
+            }
+        } else {
+            imageTheme.style.display = "none";
+            imageTheme.data = "none";
+        }
     }
+
+    
     
     /* if (fichierImage.files.length == 0 || imageActuelle && checkBoxImageActuelle.checked == true) {  // si aucune image n'est sélectionnée
         console.log(fichierImage.files.length, imageActuelle);
