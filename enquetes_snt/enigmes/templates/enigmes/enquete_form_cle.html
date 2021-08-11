@@ -5,83 +5,84 @@
 {% endblock %}
 
 {% block content %}
-<h1>Créer une enquête à partir d'une liste</h1>
+<div class="enquete-creation-cle-container">
+    <h1>Créer une enquête à partir d'une liste</h1>
 
-<p>Renseignez les champs ci-dessous puis validez.</p>
-
-<div class="form-creation-enquete">
-    <form method="POST">
-        {% csrf_token %}
-        <div class="input-container">
-            <p class="label">
-                <label for="cle">Clé de l'enquête</label>
-            </p>
-            <p class="consigne">Saisissez la liste des énigmes souhaitées. Indiquez les numéros des énigmes en les séparant par des point-virgules. <br>Par exemple, <em>7;5;8;2</em> va générer une enquête avec les énigmes n° 7, 5, 8 et 2.</p>
-            <p class="input">
-                <input type="text" name="cle" id="cle" placeholder="Exemple : 7;5;8;2" maxlength="200" required>
-            </p>
-            
-            
-        </div>
-        <div class="input-container">
-            <p class="label">
-                <label for="description" class="label">Description</label>
-            </p>
-            <p class="consigne">Renseignez une description pour l'enquête (à destination du professeur uniquement, 200 caractères max.).</p>
-            <p class="input">
-                <input type="text" name="description" id="description" placeholder="" maxlength="200" required>
-            </p>               
-        </div>
-        <div class="input-container">
-            <p class="label">Correction</p>
-            <p class="consigne">La correction doit-elle être proposée aux élèves après leur enquête ?</p>
-            <div class="radio">
-                <div>
-                    <input type="radio" id="choix_correction" name="choix_correction" value="oui">
-                    <label for="choix_correction">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" id="choix_correction" name="choix_correction" value="Non" checked>
-                    <label for="choix_correction">Non</label>
+    <p>Renseignez les champs ci-dessous puis validez.</p>
+    
+    <div class="form-creation-enquete">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-container">
+                <p class="label">
+                    <label for="cle">Clé de l'enquête</label>
+                </p>
+                <p class="consigne">Saisissez la liste des énigmes souhaitées. Indiquez les numéros des énigmes en les séparant par des point-virgules. <br>Par exemple, <em>7;5;8;2</em> va générer une enquête avec les énigmes n° 7, 5, 8 et 2.</p>
+                <p class="input">
+                    <input type="text" name="cle" id="cle" placeholder="Exemple : 7;5;8;2" maxlength="200" required>
+                </p>
+                
+                
+            </div>
+            <div class="input-container">
+                <p class="label">
+                    <label for="description" class="label">Description</label>
+                </p>
+                <p class="consigne">Renseignez une description pour l'enquête (à destination du professeur uniquement, 200 caractères max.).</p>
+                <p class="input">
+                    <input type="text" name="description" id="description" placeholder="" maxlength="200" required>
+                </p>               
+            </div>
+            <div class="input-container">
+                <p class="label">Correction</p>
+                <p class="consigne">La correction doit-elle être proposée aux élèves après leur enquête ?</p>
+                <div class="radio">
+                    <div>
+                        <input type="radio" id="choix_correction" name="choix_correction" value="oui">
+                        <label for="choix_correction">Oui</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="choix_correction" name="choix_correction" value="Non" checked>
+                        <label for="choix_correction">Non</label>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="input-container">
-            <p class="label">Ordre aléatoire</p>
-            <p class="consigne">Les énigmes de l'enquête doivent-elles être proposées dans un ordre aléatoire aux élèves ?</p>
-            <div class="radio">
-                <div>
-                    <input type="radio" name="choix_ordre" value="oui">
-                    <label for="choix_ordre">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" name="choix_ordre" value="Non" checked>
-                    <label for="choix_ordre">Non</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="input-container">
-            <p class="label">Ordre aléatoire</p>
-            <p class="consigne">Les énigmes de l'enquête doivent-elles être proposées dans un ordre aléatoire aux élèves ?</p>
-            <div class="radio">
-                <div>
-                    <input type="radio" id="choix_ordre" name="choix_ordre" value="oui">
-                    <label for="choix_ordre">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" id="choix_ordre" name="choix_ordre" value="Non" checked>
-                    <label for="choix_ordre">Non</label>
+    
+            <div class="input-container">
+                <p class="label">Ordre aléatoire</p>
+                <p class="consigne">Les énigmes de l'enquête doivent-elles être proposées dans un ordre aléatoire aux élèves ?</p>
+                <div class="radio">
+                    <div>
+                        <input type="radio" name="choix_ordre" value="oui">
+                        <label for="choix_ordre">Oui</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="choix_ordre" value="Non" checked>
+                        <label for="choix_ordre">Non</label>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="btn-form">
-            <button class="btn-validation" type="submit">Créer l'enquête</button>
-        </div>
-    </form>
+    
+            <div class="input-container">
+                <p class="label">Ordre aléatoire</p>
+                <p class="consigne">Les énigmes de l'enquête doivent-elles être proposées dans un ordre aléatoire aux élèves ?</p>
+                <div class="radio">
+                    <div>
+                        <input type="radio" id="choix_ordre" name="choix_ordre" value="oui">
+                        <label for="choix_ordre">Oui</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="choix_ordre" name="choix_ordre" value="Non" checked>
+                        <label for="choix_ordre">Non</label>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="btn-form">
+                <button class="btn-validation" type="submit">Créer l'enquête</button>
+            </div>
+        </form>
+    </div>
 </div>
-
 
 {% endblock %}

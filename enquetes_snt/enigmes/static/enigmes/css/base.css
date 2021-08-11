@@ -141,6 +141,12 @@ body.index {
     display: none;
 }
 
+.nav #croix {
+    display: none;
+    stroke: white;
+    stroke-width: 15px;
+}
+
 /* Liste lien */
 
 #menu {
@@ -233,8 +239,8 @@ body.index {
     .nav #btn-hamburger:checked + ul {
         display: flex;
         flex-direction: column;
-
     }
+
     .nav #icone-hamburger {
         display: block;
     }
@@ -253,6 +259,12 @@ body.index {
     }
 }
 
+@media screen and (max-width: 500px) {
+    .nav a {
+        padding: 0;
+        font-size: 0.9em;
+    }
+}
 
 /* ##### INDEX.HTML pour élèves ##### */
 
@@ -271,12 +283,35 @@ body.index {
 
 .accueil-container .accueil-gauche-container svg {
     width: 400px;
-    
 }
 
 .accueil-container .accueil-droite-container {
     width: 500px;
     /* background-color: violet; */
+}
+
+@media all and (max-width: 1000px) {
+    .accueil-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .accueil-container .accueil-gauche-container,
+    .accueil-container .accueil-droite-container {
+        width: auto;
+    }
+
+    .accueil-container .accueil-gauche-container svg {
+        width: 300px;
+        height: 400px;
+    }
+
+    .accueil-container .accueil-gauche-container,
+    .accueil-container .accueil-droite-container {
+        text-align: center;
+        font-size: 0.9em;
+    }
 }
 
 /* h1.titre-accueil {
@@ -289,6 +324,29 @@ body.index {
 svg#logo {
     min-width: 300px;
     max-width: 400px;
+}
+
+@media all and (max-width: 768px) {
+    .accueil-container .accueil-gauche-container svg {
+        width: 250px;
+        height: 300px;
+    }
+    svg#logo {
+        width: 300px;
+    }
+}
+
+@media all and (max-width: 500px) {
+    .accueil-container .accueil-gauche-container svg {
+        width: 120px;
+        height: 150px;
+    }
+    svg#logo {
+        min-width: 200px;
+        max-width: 200px;
+        height: auto;
+        margin-top: 15px;
+    }
 }
 
 svg#logo g.lettres path {
@@ -370,6 +428,39 @@ svg#logo g.snt path {
     border: 1px solid white;
 }
 
+@media all and (max-width: 500px) {
+    .form-code-eleve-container {
+        font-size: 0.9em;
+    }
+    .form-code-eleve-container form {
+        width: 70%;
+        margin: auto;
+        margin-top: 15px;
+        background-color: var(--main-darker);
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+
+    .form-code-eleve-container form p {
+        margin: 5px 0;
+    }
+    
+    .form-code-eleve-container form label {
+        font-size: 20px;
+    }
+    
+    .form-code-eleve-container form input {
+        line-height: 25px;
+        font-size: 20px;
+    }
+    
+    .form-code-eleve-container form .btn-validation {
+        font-size: 20px;
+        padding: 5px 10px;
+        margin-top: 5px;
+    }
+}
+
 /* Enseignants */
 
 .content-wrapper {
@@ -384,13 +475,15 @@ svg#logo g.snt path {
 
 .content-container #zone-message-enseignants {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     flex-wrap: wrap;
     gap: 30px;
     margin-bottom: 50px;
 }
 
 .content-container #zone-message-enseignants #message-enseignants {
-    width: 600px;
+    max-width: 600px;
     min-width: 300px;
 }
 
@@ -424,7 +517,7 @@ svg#logo g.snt path {
 }
 
 .content-container .btn-enseignants {
-    min-width: 225px;
+    min-width: 200px;
     height: 100px;
     border-radius: 10px;
     color: white;
@@ -438,9 +531,47 @@ svg#logo g.snt path {
     background-color: var(--second);
 }
 
+@media all and (max-width: 768px) {
+    .content-container #zone-message-enseignants {
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .content-container #zone-message-enseignants #message-enseignants {
+        max-width: 600px;
+        min-width: 0px;
+        font-size: 0.9em;
+    }
+    
+    .content-container #image-enseignants {
+        width: 150px;
+        height: 90px;
+    }
+}
 
+@media all and (max-width: 500px) {
+    .content-container #zone-message-enseignants #message-enseignants {
+        font-size: 0.8em;
+    }
+    .content-container .btn-enseignants-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .content-container .btn-enseignants {
+        min-width: 200px;
+        max-width: 200px;
+        height: auto;
+        padding: 10px 0;
+        font-size: 20px;
+    }
+}
 
-
+@media all and (max-width: 250px) {
+    .content-container .btn-enseignants {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
 
 
 
@@ -594,6 +725,18 @@ svg#logo g.snt path {
 
 /* --- Création énigme --- */
 
+@media all and (max-width: 768px) {
+    .enigme-creation-container {
+        font-size: 0.9em;
+    }
+    .enigme-creation-container #id_theme,
+    .enigme-creation-container #id_enonce,
+    .enigme-creation-container #id_reponse,
+    .enigme-creation-container #id_indication {
+        font-size: 13px;
+    }
+}
+
 .input-container * {
     box-sizing: border-box;
     margin: 0;
@@ -638,8 +781,14 @@ svg#logo g.snt path {
     border-radius: 10px;
 }
 
+.zone-filtre-tri-recherche svg.icone {
+    width: 40px;
+    height: 40px;
+}
+
 @media all and (max-width: 768px) {
-    .zone-filtre-tri-recherche .btn-filtres-container .btn {
+    .zone-filtre-tri-recherche .btn-filtres-container .btn,
+    .zone-filtre-tri-recherche .tri .btn {
         font-size: 0.9em;
         padding: 4px 9px;
     }
@@ -653,11 +802,6 @@ svg#logo g.snt path {
         width: 30px;
         height: 30px;
     }
-}
-
-.zone-filtre-tri-recherche svg.icone {
-    width: 40px;
-    height: 40px;
 }
 
 .zone-filtre-tri-recherche svg.icone path {
@@ -1208,6 +1352,13 @@ summary span:hover {
     height: 180px;
 }
 
+@media all and (max-width: 500px) {
+    .icone-theme {
+        width: 150px;
+        height: 150px;
+    }
+}
+
 .apercu-image img {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -1280,6 +1431,39 @@ summary span:hover {
 .selected-enigme-container .checkbox-container {
     padding: 20px 10px 0 10px;
     background-color: whitesmoke;
+}
+
+@media all and (max-width: 768px) {
+    .form-enquete-tri {
+        font-size: 0.9em;
+    }
+    .selected-enigme-container .checkbox-container {
+        padding: 20px 5px 0 5px;
+    }
+}
+
+@media all and (max-width: 500px) {
+    .form-enquete-tri {
+        font-size: 0.8em;
+    }
+    .selected-enigme-container .checkbox-container {
+        padding: 20px 3px 0 3px;
+    }
+}
+
+@media all and (max-width: 768px) {
+    .enquete-creation-cle-container {
+        font-size: 0.9em;
+    }
+
+    .input-container .label {
+        font-size: 17px;
+    }
+    
+    .enquete-creation-cle-container .input-container .input input,
+    .enquete-creation-cle-container .input-container .input input {
+        font-size: 13px;
+    }
 }
 
 .selected-enigme-container .checkbox-container:hover {
@@ -1604,6 +1788,12 @@ summary span:hover {
 /* ##### ESPACE PERSO ##### */
 
 /* Zone création */
+
+@media all and (max-width: 768px) {
+    .espace-perso-container {
+        font-size: 0.9em;
+    }
+}
 
 .zone-container {
     margin-bottom: 50px;
@@ -2127,7 +2317,7 @@ input:checked + .slider:before {
 /* ###### FORMULAIRES ###### */
 
 .form-inscription {
-    width: 400px;
+    max-width: 400px;
     margin: auto auto;
     padding: 10px 20px;
     border: 1px solid var(--main);
@@ -2265,6 +2455,18 @@ input:checked + .slider:before {
 
 
 /* --- Formulaire Modification énigme --- */
+
+@media all and (max-width: 768px) {
+    .enigme-modification-container {
+        font-size: 0.9em;
+    }
+    .enigme-modification-container #id_theme,
+    .enigme-modification-container #id_enonce,
+    .enigme-modification-container #id_reponse,
+    .enigme-modification-container #id_indication {
+        font-size: 13px;
+    }
+}
 
 .file-reset {
     display: none;

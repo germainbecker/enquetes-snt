@@ -5,9 +5,12 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ titre }}</h1>
-<p>Sélectionner les énigmes à ajouter à votre enquête puis valider en bas de page.</p>
-<p>N'hésitez pas à filtrer les énigmes pour aller plus vite.</p>
+<div class="form-enquete-tri">
+    <h1>{{ titre }}</h1>
+</div>
+
+<p class="para-enonce">Sélectionner les énigmes à ajouter à votre enquête puis valider en bas de page.</p>
+<p class="para-enonce">N'hésitez pas à filtrer les énigmes pour aller plus vite.</p>
 
 {% include 'enigmes/filtre.html' %}
 {% include 'enigmes/modale_images.html' %}
@@ -101,6 +104,8 @@
         </div>
     </form>
 </div>
+
+{% include 'enigmes/boutons_scroll.html' %}
 
 {% load static %}
 <!-- Style zone d'apercu -->

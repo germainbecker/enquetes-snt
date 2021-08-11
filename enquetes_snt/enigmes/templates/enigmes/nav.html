@@ -133,14 +133,21 @@
                 </svg>
             </div>
         </div>
+
         <label for="btn-hamburger" id="icone-hamburger">
-            <svg viewbox="0 0 100 80" width="30" height="30">
+            <svg id="hamburger" viewbox="0 0 100 80" width="30" height="30">
                 <rect width="100" height="15"></rect>
                 <rect y="35" width="100" height="15"></rect>
                 <rect y="70" width="100" height="15"></rect>
             </svg>
+            <svg id="croix" viewbox="0 0 100 80" width="30" height="30">
+                <line x1="10" y1="10" x2="90" y2="80"></line>
+                <line x1="10" y1="80" x2="90" y2="10"></line>
+            </svg>
+            <!-- <span id="croix">&times;</span> -->
         </label>
         <input type="checkbox" id="btn-hamburger">
+        
 
         <ul class="menu" id="menu">
             {% if user.is_authenticated %}

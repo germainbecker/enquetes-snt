@@ -22,7 +22,7 @@ function changeCouleur(item) {
         conteneurCase.style.backgroundColor = couleurFond;
     } else {
         caseACocher.checked = true;
-        conteneurCase.style.backgroundColor = "powderblue";
+        conteneurCase.style.backgroundColor = "var(--main)";
     }
 }
 
@@ -35,7 +35,7 @@ function initialisationCouleur() {
         let conteneurCase = document.getElementById(id_case);
         if (elt.checked) {
             console.log(num);
-            conteneurCase.style.backgroundColor = "powderblue";
+            conteneurCase.style.backgroundColor = "var(--main)";
         }
     })
 }
