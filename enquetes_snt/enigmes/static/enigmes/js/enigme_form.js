@@ -1,4 +1,4 @@
-var THEMES = {
+var THEMES = {  // ne doit pas être modifié !!!!
     'INT': "/static/enigmes/img/theme-int.svg",
     'WEB': "/static/enigmes/img/theme-web.svg",
     'RS': "/static/enigmes/img/theme-rs.svg",
@@ -10,15 +10,6 @@ var THEMES = {
 }
 
 function conversion() {
-    /* Image */
-    /* let imageURL = document.getElementById('id_image').value;
-    if (!(imageURL == "")) {
-        imageCodeHTML = "<img class=\"centre image-responsive\" src=\"" + imageURL + "\" alt=\"image illustration\">"
-        document.querySelector(".apercu-image").innerHTML = imageCodeHTML;
-        document.querySelector(".apercu-image").style.display = 'inline';    
-    } else {
-        document.querySelector(".apercu-image").style.display = "none";
-    } */
 
     /* Thème choisi */
     let theme = document.querySelector('#id_theme').value;
@@ -44,7 +35,6 @@ function conversion() {
     gestionImages();
     gestionLiens();
     gestionTableaux();
-    //redimensionnementImage();
     
     /* Réponse */
     let reponseMD = document.getElementById("id_reponse").value;
@@ -58,13 +48,10 @@ function conversion() {
         document.querySelector(".enigme-reponse").style.display = "none";
     }
 
-    //rechargeCSS();
-
     // recharger mathjax
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
 
     // recharger JS
-    //reload_prism();
     Prism.highlightAll(async=true);
 }
 
@@ -118,18 +105,6 @@ function apercuFichiers(theme) {
         }
     }
 
-    
-    
-    /* if (fichierImage.files.length == 0 || imageActuelle && checkBoxImageActuelle.checked == true) {  // si aucune image n'est sélectionnée
-        console.log(fichierImage.files.length, imageActuelle);
-        if (!(theme == "NC")) {  // et si un thème est sélectionné
-            imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-            imageTheme.data = THEMES[theme];
-        }        
-    } else {
-        imageTheme.style.display = "none";
-    } */
-
     var fichierImageReader = new FileReader();
     fichierImageReader.addEventListener("load", function () {
         apercuImage.src = fichierImageReader.result;
@@ -162,7 +137,7 @@ function apercuFichiers(theme) {
       }, false);
     
     if (fichierPj.files.length == 1 && fichierPj.files[0]) {
-        if (/\.(csv|xls|ods|py|html|css|jpg|jpeg|png)$/i.test(fichierPj.files[0].name)) {
+        if (/\.(csv|xls|xlsx|ods|py|html|css|jpg|jpeg|png|json)$/i.test(fichierPj.files[0].name)) {
             fichierPjReader.readAsDataURL(fichierPj.files[0]);
             apercuPj.style.display = "flex";
             lienPj.innerHTML = fichierPj.files[0].name;
@@ -181,41 +156,6 @@ function apercuFichiers(theme) {
 
     }
 }
-
-/* function redimensionnementImage() {
-    var image = document.querySelector("#image");
-    image.addEventListener("load", function() {
-        
-        // redimensionnement
-        var largeur = image.clientWidth;
-        var hauteur = image.clientHeight;
-        if (largeur > 500 || hauteur > 500) {
-            if (largeur < hauteur) {
-                this.style.height = "500px";
-            } else {
-                this.style.width = "500px";
-            }
-        }
-
-        // ajout classes
-        image.classList.add("centre", "image-responsive"); 
-      });
-} */
-
-/* function reload_prism(){
-    var js_section = document.querySelector('.js-files');
-    var script= document.createElement('script');
-    script.src= "/static/enigmes/js/prism.js";
-    js_section.appendChild(script);
-}
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('pre code').forEach((el) => {
-      hljs.highlightElement(el);
-    });
-  }); */
-
-
 
 var enigmeContainer = document.querySelector(".apercu");
 
@@ -246,12 +186,6 @@ function gestionImages() {
 }
 
 
-/* enigmesContainers.forEach(enigmeContainer => {
-    enigmeContainer.querySelectorAll('img:not(.dim-fixe)').forEach(image => {
-        image.classList.add("centre", "image-responsive", "agrandir");
-    });
-}); */
-
 // Ajout target="_blank" à tous les liens d'une énigme (pour ne pas quitter une enquête)
 function gestionLiens() {
     enigmeContainer.querySelectorAll('a:not(.lien-detail)').forEach(lien => {
@@ -259,11 +193,6 @@ function gestionLiens() {
     });
 }
 
-/* enigmesContainers.forEach(enigmeContainer => {
-    enigmeContainer.querySelectorAll('a:not(.lien-detail)').forEach(lien => {
-        lien.setAttribute("target", "_blank");
-    });
-}); */
 
 // Ajout de la classe tbl à tous les tableaux
 function gestionTableaux() {
@@ -271,13 +200,6 @@ function gestionTableaux() {
         tableau.classList.add("tbl");
     });
 }
-
-/* enigmesContainers.forEach(enigmeContainer => {
-    enigmeContainer.querySelectorAll('table').forEach(tableau => {
-        tableau.classList.add("tbl");
-    });
-}); */
-
 
 // VALIDATION DES FICHIERS A TELEVERSER
 
@@ -289,7 +211,7 @@ function validationImage(){
     let btnResetImage = document.querySelector('#reset-image');
 
     const extensionsAcceptees =  ['jpeg','jpg','png'],
-            tailleMax = 300_000; // 300 Ko
+            tailleMax = 1024*300; // 300 Kio
 
     // si un fichier image a été choisi
     if (this.files.length == 1 && this.files[0]) {
@@ -306,7 +228,7 @@ function validationImage(){
             this.value = null;
             return false;
         }else if(tailleFichier > tailleMax){
-            alert("Fichier trop volumineux. Assurez-vous que l'image ait une taille inférieure à 300 Ko.")
+            alert("Fichier trop volumineux. Assurez-vous que l'image ait une taille inférieure à 300 Kio.")
             this.value = null;
             return false;
         } else {            
@@ -329,7 +251,7 @@ function validationPieceJointe(){
     let btnResetFichier = document.querySelector('#reset-fichier');
 
     const extensionsAcceptees =  ['csv','xls','ods','py','html','css','jpeg','jpg','png'],
-            tailleMax = 1_000_000; // 1 Mo
+            tailleMax = 1024 * 1000; // 1 Mio
 
     // si un fichier a été choisi
     if (this.files.length == 1 && this.files[0]) {
@@ -342,11 +264,11 @@ function validationPieceJointe(){
 
         // vérification de l'extension et de la taille du fichier
         if (!extensionsAcceptees.includes(extensionFichier)){
-            alert("Extension non acceptée. Seules les fichiers aux formats .csv, .xls, .ods, .py, .html, .css, .jpeg, .jpg et .png sont acceptés.");
+            alert("Extension non acceptée. Seuls les fichiers aux formats .csv, .ods, .xls, .xlsx, .py, .html, .css, .jpg, .png et .json sont acceptés.");
             this.value = null;
             return false;
         } else if (tailleFichier > tailleMax){
-            alert("Fichier trop volumineux. Assurez-vous que le fichier joint ait une taille inférieure à 300 Ko.")
+            alert("Fichier trop volumineux. Assurez-vous que le fichier joint ait une taille inférieure à 1 Mio.")
             this.value = null;
             return false;
         } else {
@@ -360,19 +282,6 @@ function validationPieceJointe(){
 }
 
 // Suppression de l'image sélectionnée
-
-/* function btnReset(type) {
-    let btnResetImage = document.querySelector('#reset-image');
-    let btnResetFichier = document.querySelector('#reset-image');
-    var fichierImage = document.getElementById("id_image");
-    var fichierPj = document.getElementById("id_fichier");
-    if (!(fichierImage.value === none)) {
-        btnResetImage.display.style = "block";
-    } else {
-
-    }
-
-} */
 
 let btnResetImage = document.querySelector('#reset-image');
 btnResetImage.addEventListener('click', resetImage);

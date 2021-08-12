@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 #from .utils import generer_code_enquete_unique
 from django import forms
+from enigmes.validators import FileValidator 
 
 from django.utils.translation import gettext_lazy as _
 import random, os
@@ -61,10 +62,37 @@ class Enigme(models.Model):
         blank=True,
         max_length=100,
         upload_to=repertoire_auteur,
-        #widgets=forms.FileField(attrs={'accept':'.png, .jpg, .jpeg, image/*'})
+        validators=[
+            FileValidator(
+                max_size=1024 * 300, # 300 Kio
+                content_types=(
+                    'image/jpeg',
+                    'image/png',
+                ))]
     )
 
-    fichier = models.FileField("Fichier en pièce jointe", blank=True, max_length=100, upload_to=repertoire_auteur)
+    fichier = models.FileField(
+        "Fichier en pièce jointe",
+        blank=True,
+        max_length=100,
+        upload_to=repertoire_auteur,
+        validators=[
+            FileValidator(
+                max_size=1024 * 1000, # 1 Mio
+                content_types=(
+                    'text/csv',
+                    'application/vnd.oasis.opendocument.spreadsheet',  #.ods
+                    'application/vnd.ms-excel',  #.xls
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',  #.xlsx
+                    'text/x-python',  #.py
+                    'text/html',
+                    'text/css',
+                    'application/json',
+                    'image/jpeg',
+                    'image/png',
+                )
+            )]
+        )
 
     def __str__(self):
         return str(self.id) + " / " + str(self.auteur)

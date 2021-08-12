@@ -12,6 +12,7 @@
     
     <div class="form-inscription">
         <h2>Créer un compte</h2>
+        <p><em>Tous les champs sont obligatoires.</em></p>
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}

@@ -37,7 +37,7 @@
             {% endfor %}
         </div>
         <div>
-            <p>Avant de créer l'enquête, veuillez renseigner les quatre informations ci-dessous.</p>
+            <p>Avant de créer l'enquête, veuillez renseigner les cinq informations ci-dessous.</p>
         </div>
 
 
@@ -45,9 +45,9 @@
             <p class="label">
                 <label for="description" class="label">Description</label>
             </p>
-            <p class="consigne">Renseignez une description pour l'enquête (à destination du professeur uniquement, 200 caractères max.).</p>
+            <p class="consigne">Renseignez une description pour l'enquête (à destination du professeur uniquement, 100 caractères max.).</p>
             <p class="input">
-                <input type="text" name="description" id="description" placeholder="" maxlength="200" required>
+                <input type="text" name="description" id="description" placeholder="" maxlength="100" required>
             </p>               
         </div>
         <div class="input-container">
@@ -66,31 +66,31 @@
         </div>
 
         <div class="input-container">
-            <p class="label">Score</p>
-            <p class="consigne">Le score de l'élève doit-il être affiché après leur enquête ? Si la correction est activée (voir ci-dessous), le score est automatiquement affiché.</p>
-            <div class="radio">
-                <div>
-                    <input type="radio" name="choix_score" value="oui">
-                    <label for="choix_score">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" name="choix_score" value="Non" checked>
-                    <label for="choix_score">Non</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="input-container">
             <p class="label">Correction</p>
             <p class="consigne">La correction doit-elle être proposée aux élèves après leur enquête ?</p>
             <div class="radio">
                 <div>
-                    <input type="radio" name="choix_correction" value="oui">
+                    <input id="correction_oui" type="radio" name="choix_correction" value="oui">
                     <label for="choix_correction">Oui</label>
                 </div>
                 <div>
                     <input type="radio" name="choix_correction" value="Non" checked>
                     <label for="choix_correction">Non</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <p class="label">Score</p>
+            <p class="consigne">Le score de l'élève doit-il être affiché après leur enquête ? Si la correction est activée (juste au-dessus), le score est automatiquement affiché.</p>
+            <div class="radio">
+                <div>
+                    <input id="score_oui" type="radio" name="choix_score" value="oui">
+                    <label for="choix_score">Oui</label>
+                </div>
+                <div>
+                    <input id="score_non" type="radio" name="choix_score" value="Non" checked>
+                    <label for="choix_score">Non</label>
                 </div>
             </div>
         </div>
