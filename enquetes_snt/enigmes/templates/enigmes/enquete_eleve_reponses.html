@@ -13,14 +13,18 @@
 {% load custom_tags %}
 {% load static %}
 
+{% if enquete.score %}
+<h1>Merci</h1>
+<p>Ta participation a bien été enregistrée !</p>
 <div class="resultat">
-    <img class="image-responsive" src="{% static 'enigmes/img/bilan.png' %}" alt="icone bilan">    
+    <img class="image-responsive" src="{% static 'enigmes/img/inspection.svg' %}" alt="icone bilan">    
     <div class="score-obtenu">
         <h1>Score</h1>
         <p>{{ score }} / {{ enigmes|length }}</p>
     </div>
 </div>
-
+{% endif %}
+{% if enquete.correction %}
 <p>Tu peux voir la correction ci-dessous. <em>L'ordre des énigmes n'est pas forcément respecté.</em> </p>
 
 {% include 'enigmes/modale_images.html' %}
@@ -33,7 +37,7 @@
     {% for enigme in enigmes %}
         <div class="enigme-container">
             
-            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True %}
+            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True reponses_eleves=True %}
 
             <div class="{% if correction|get:enigme.pk %}zone-reponse-correcte{% else %}zone-reponse-incorrecte{% endif %}" >
                 <p>
@@ -54,6 +58,7 @@
     {% endfor %}
 
 </form>
+{% endif %}
 
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
 {% endblock %}

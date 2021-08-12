@@ -6,7 +6,7 @@
     <div class="enigme-metadata">
         {% if not pour_eleves %}
             <div class="metadata">
-                <h3 class="num-enigme"><a class="lien-detail" href="{% url 'enigme-detail' enigme.id %}">Énigme n° {{ enigme.pk }}</a></h3>
+                <h2 class="num-enigme"><a class="lien-detail" href="{% url 'enigme-detail' enigme.id %}">Énigme n° {{ enigme.pk }}</a></h2>
                 <small class="theme-enigme">{{ enigme.get_theme_display }}</small>
                 <p class="auteur">{{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}</p>
                 <small class="date-ajout">{{ enigme.date_creation|date:"d F Y" }}</small>
@@ -16,7 +16,7 @@
             {% endif %}
         {% else %}
             <div class="metadata">
-                <h3 class="num-enigme">Énigme n° {{ forloop.counter }}</h2>
+                <h2 class="num-enigme">Énigme n° {{ forloop.counter }}</h2>
                 <small class="theme-enigme">{{ enigme.get_theme_display }}</small>
             </div>
         {% endif %}
@@ -44,7 +44,7 @@
     <div class="piece-jointe vide">
     </div>
     {% endif %}
-    {% if enigme.indication != '' %}
+    {% if enigme.indication != '' and indications_activees %}
         <blockquote class="enigme-indication">
                 <img class="dim-fixe" src="{% static 'enigmes/img/info.svg' %}" alt="logo indication" width="30" height="30">
             {% autoescape off %}
@@ -61,6 +61,15 @@
                 <summary><span class="voir-reponse">Voir la réponse</span></summary>
                 <p>Réponse attendue : <span class="reponse">{{ enigme.reponse }}</span></p>
             </details>
+        </div>
+    {% elif not reponses_eleves %}
+        <div class="zone-reponse">
+            <p>
+                <label for="{{enigme.pk}}">Réponse :</label>
+            </p>
+            <p>
+                <input type="text" name="{{enigme.pk}}">
+            </p>
         </div>
     {% endif %}
 </div>

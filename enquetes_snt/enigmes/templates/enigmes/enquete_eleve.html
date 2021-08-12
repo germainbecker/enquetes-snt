@@ -41,16 +41,8 @@
         {% for enigme in enigmes %}
         <div class="enigme-container">
             
-            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True %}
+            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True indications_activees=enquete.indications %}
 
-            <div class="zone-reponse">
-                <p>
-                    <label for="{{enigme.pk}}">Réponse :</label>
-                </p>
-                <p>
-                    <input type="text" name="{{enigme.pk}}">
-                </p>
-            </div>
         </div>
     {% endfor %}
     </div>   

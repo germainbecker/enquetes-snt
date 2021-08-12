@@ -155,11 +155,26 @@ def enquete(request, enquete_id):
                         enquete.active = False
                         enquete.save()
                         messages.success(request, "L'enquête est maintenant désactivée.")
+                elif 'activer-indications' in request.POST:
+                    if not enquete.active:
+                        enquete.indications = True
+                        enquete.save()
+                        messages.success(request, "Les indications seront affichées (si elles existent).")
+                    else:
+                        messages.warning(request, "Attention, vous ne pouvez pas modifier ce paramètre si l'enquête est active. Commencez par désactiver l'enquête.")
+                elif 'desactiver-indications' in request.POST:
+                    if not enquete.active:
+                        enquete.indications = False
+                        enquete.save()
+                        messages.success(request, "Les indications ne seront pas affichées (si elles existent).")
+                    else:
+                        messages.warning(request, "Attention, vous ne pouvez pas modifier ce paramètre si l'enquête est active. Commencez par désactiver l'enquête.")
                 elif 'activer-correction' in request.POST:
                     if not enquete.active:
                         enquete.correction = True
+                        enquete.score = True
                         enquete.save()
-                        messages.success(request, "Modification enregistrée ! Les élèves auront accès à la correction à la fin de l'enquête.")
+                        messages.success(request, "Modification enregistrée ! Les élèves auront accès à la correction à la fin de l'enquête. Le score est aussi par défaut activé dans ce cas.")
                     else:
                         messages.warning(request, "Attention, vous ne pouvez pas modifier ce paramètre si l'enquête est active. Commencez par désactiver l'enquête.")
                 elif 'desactiver-correction' in request.POST:
@@ -167,6 +182,25 @@ def enquete(request, enquete_id):
                         enquete.correction = False
                         enquete.save()
                         messages.success(request, "Modification enregistrée ! Les élèves n'auront pas accès à la correction à la fin de l'enquête.")
+                    else:
+                        messages.warning(request, "Attention, vous ne pouvez pas modifier ce paramètre si l'enquête est active. Commencez par désactiver l'enquête.")
+                elif 'activer-score' in request.POST:
+                    if not enquete.active:
+                        enquete.score = True
+                        enquete.save()
+                        messages.success(request, "Modification enregistrée ! Les élèves connaîtront leur score à la fin de l'enquête.")
+                    else:
+                        messages.warning(request, "Attention, vous ne pouvez pas modifier ce paramètre si l'enquête est active. Commencez par désactiver l'enquête.")
+                elif 'desactiver-score' in request.POST:
+                    if not enquete.active:
+                        if enquete.correction:
+                            enquete.score = True
+                            enquete.save()
+                            messages.warning(request, "Vous ne pouvez pas désactiver l'affichage du score car la correction est activée.")
+                        else:
+                            enquete.score = False
+                            enquete.save()
+                            messages.success(request, "Modification enregistrée ! Les élèves ne connaîtront pas leur score à la fin de l'enquête.")
                     else:
                         messages.warning(request, "Attention, vous ne pouvez pas modifier ce paramètre si l'enquête est active. Commencez par désactiver l'enquête.")
                 elif 'activer-ordre-aleatoire' in request.POST:
@@ -239,6 +273,7 @@ def creation_enquete_manuelle(request):
             liste_num_enigmes = request.POST.getlist('enigmes')
             description = request.POST.get('description')
             indications = request.POST.get('choix_indications')
+            score = request.POST.get('choix_score')
             correction = request.POST.get('choix_correction')
             ordre = request.POST.get('choix_ordre')
             if liste_num_enigmes == [] or description == "":
@@ -252,6 +287,7 @@ def creation_enquete_manuelle(request):
                             enquete.enigmes.add(enigme)
                         enquete.cle = ";".join(liste_num_enigmes)
                         enquete.description = description
+                        enquete.score = True if score == "oui" or indications == "oui" else False
                         enquete.indications = True if indications == "oui" else False
                         enquete.correction = True if correction == "oui" else False
                         enquete.ordre_aleatoire = True if ordre == "oui" else False
@@ -345,9 +381,13 @@ def eleve(request, code_enquete):
         messages.warning(request, "L'enquête n'est pas activée par le professeur.")
         return redirect('index')
 
-
-    liste_enigmes = enquete.liste_enigmes_ordre_initial()
-    print(liste_enigmes)
+    if not enquete.ordre_aleatoire:
+        liste_enigmes = enquete.liste_enigmes_ordre_initial()
+        print(liste_enigmes)
+    else:
+        liste_enigmes = enquete.liste_enigmes()
+        print(liste_enigmes)
+    
     context = {
         "enquete": enquete,
         "enigmes": liste_enigmes
@@ -368,12 +408,13 @@ def eleve(request, code_enquete):
             reponses=str(dic_reponses) 
         )
         # si réponses affichées
-        if enquete.correction:
+        if enquete.correction or enquete.score:
             context['reponses'] = dic_reponses
             context['score'] = resultat.calcul_score()
             context['correction'] =  resultat.bonnes_mauvaises_reponses()
             return render(request, 'enigmes/enquete_eleve_reponses.html', context)
         # sinon redirection vers remerciements
+        
         else:
             return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
 

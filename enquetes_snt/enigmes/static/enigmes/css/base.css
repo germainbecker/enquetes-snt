@@ -997,14 +997,14 @@ svg#logo g.snt path {
 
 } */
 
-.enigme-metadata .metadata h3[class*="num-enigme"] a {
+.enigme-metadata .metadata h2[class*="num-enigme"] a {
 /*     background-color: var(--second);
     color: white; */
     color: #111;
     text-decoration: none;
 }
 
-.enigme-metadata .metadata h3[class*="num-enigme"] a:hover {
+.enigme-metadata .metadata h2[class*="num-enigme"] a:hover {
 /*     background-color: var(--second);
     color: white; */
     color: var(--second);
@@ -1148,7 +1148,7 @@ img.agrandir {
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
-    margin-top: 20px;
+    margin: 20px 0;
     padding: 10px;
     background-color: var(--main-light);
     border-radius: 0 5px 5px 0;
@@ -1500,6 +1500,13 @@ summary span:hover {
 
 /* Détails enquête */
 
+@media all and (max-width: 768px) {
+    .details-enquete-container {
+        font-size: 0.9em;
+    }
+}
+
+
 .alerte {
     display: flex;
     align-items: center;
@@ -1519,8 +1526,16 @@ summary span:hover {
     border-radius: 5px;
     line-height: 1.6em;
     gap: 30px;
-    height: 100%;
+    margin-bottom: 30px;
 }
+
+@media all and (max-width: 500px) {
+    .details-enquete {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 .details-enquete * {
     margin: 0;
 }
@@ -1531,7 +1546,7 @@ summary span:hover {
 }
 
 .infos-enquete {
-    min-width: 320px;
+    /* min-width: 320px; */
     max-width: 400px;
     background-color: var(--main-darker);
     color: white;
@@ -1566,7 +1581,16 @@ summary span:hover {
     cursor: pointer;
 }
 
+.infos-enquete span.oui-non {
+    color: var(--main-darker);
+    background-color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
 .infos-enquete .btn-suppression-enquete {
+    margin-top: 20px;
     color: white;
     background: none;
     border: none;
@@ -1578,14 +1602,73 @@ summary span:hover {
     cursor: pointer;
 }
 
+
+.infos-enquete .form-activer-desactiver {
+    display: inline-block;
+}
+
+.infos-enquete .btn-activer,
+.infos-enquete .btn-desactiver {
+    color: white;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-size: 1em;
+}
+
+.infos-enquete .btn-activer:hover,
+.infos-enquete .btn-desactiver:hover {
+    cursor: pointer;
+}
+
+
+
+.infos-enquete .btn-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.infos-enquete .btn-actions button {
+    font-size: 15px;
+    width: 100px;
+    color: white;
+    background-color: var(--main);
+    border: 1px solid var(--main);
+    border-radius: 5px;
+    margin: 4px 2px;
+}
+
+.infos-enquete .btn-actions button:hover {
+    color: white;
+    background-color: var(--main);
+}
+
+.infos-enquete .btn-activer,
+.infos-enquete .btn-desactiver {
+    margin: 2px;
+}
+
+.infos-enquete .btn-activer:hover,
+.infos-enquete .btn-desactiver:hover {
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
 .param-enquete {
-    min-width: 240px;
+    /* min-width: 280px; */
     background-color: var(--third-light);
-    color: var(--third);
+    color: var(--second);
 }
 
 .param-enquete .icone-titre h3 {
-    color: var(--third);  
+    color: var(--second);  
 }
 
 .param-enquete .icone-titre img {
@@ -1600,7 +1683,26 @@ summary span:hover {
     gap: 15px;
     margin-bottom: 20px;
     padding-bottom: 5px;
-    border-bottom: 2px solid var(--third);
+    border-bottom: 2px solid var(--second);
+}
+
+.param-enquete .form-activer-desactiver {
+    display: inline-block;
+}
+
+.param-enquete .btn-activer,
+.param-enquete .btn-desactiver {
+    color: var(--third-semi-light);
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-size: 1em;
+}
+
+.param-enquete .btn-activer:hover,
+.param-enquete .btn-desactiver:hover {
+    cursor: pointer;
+    color: var(--second);
 }
 
 .param-enquete .info {
@@ -1610,17 +1712,17 @@ summary span:hover {
 
 .param-enquete span.oui-non {
     color: white;
-    background-color: var(--third);
+    background-color: var(--second);
     padding: 5px 10px;
     border-radius: 10px;
 }
 
 .param-enquete li {
-    margin: 5px 0 0 0;
+    margin: 20px 0 0 0;
 }
 
 .bilan-enquete {    
-    min-width: 240px;
+    /* min-width: 240px; */
     background-color: var(--main-light);
     color: var(--main);
 }
@@ -1711,8 +1813,8 @@ summary span:hover {
 
 .param-enquete .btn-actions button:hover {
     color: white;
-    background-color: var(--third);
-    border: 1px solid var(--third);
+    background-color: var(--second);
+    border: 1px solid var(--second);
 }
 
 .param-enquete .btn-activer,
@@ -1782,6 +1884,14 @@ summary span:hover {
 
 .bilan-enquete li#ligne-telechargement button:hover {
     cursor: pointer;
+}
+
+
+@media all and (max-width: 500px) {
+    .infos-enquete, .param-enquete, .bilan-enquete {
+        max-width: 95%;
+        width: 90%;
+    }
 }
 
 
@@ -1874,7 +1984,7 @@ summary span:hover {
 }
 
 .zone-creation .creation-contenu svg.icone path {
-    fill: var(--third);
+    fill: var(--second);
 }
 
 .lien-div::before {
@@ -1897,6 +2007,7 @@ summary span:hover {
 
 #tableau-de-bord {
     border-collapse: collapse;
+    margin-bottom: 30px;
 }
 
 #tableau-de-bord td, #tableau-de-bord th {
@@ -1905,11 +2016,11 @@ summary span:hover {
 }
 
 #tableau-de-bord tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #fafafa;
 }
 
 #tableau-de-bord tr:nth-child(odd) {
-    background-color: #ddd;
+    background-color: #ececec;
 }
 
 /* #tableau-de-bord tr:hover {
@@ -2535,6 +2646,23 @@ input:checked + .slider:before {
         flex-direction: column;
         align-items: center;
     }
+    .consignes-container .image-consignes svg {
+        width: 180px;
+        height: 200px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .consignes-container .image-consignes svg {
+        width: 130px;
+        height: 150px;
+    }
+    .piece-jointe svg.icone {
+        min-width: 25px;
+        max-width: 25px;
+        min-height: 25px;
+        max-height: 25px;
+    }
 }
 
 /* --- Formulaire réponses élèves --- */
@@ -2623,14 +2751,15 @@ input:checked + .slider:before {
     justify-content: space-around;
     align-items: center;
     margin: auto;
-    background-color: powderblue;
+    background-color: var(--main-darker);
+    color: white;
     padding: 20px;
     border-radius: 10px;
 }
 
 .resultat img {
-    max-width: 150px;
-    max-height: 150px;
+    max-width: 120px;
+    max-height: 120px;
 }
 
 .score-obtenu {
@@ -2646,7 +2775,24 @@ input:checked + .slider:before {
     font-weight: bold;
 }
 
-
+@media all and (max-width: 500px) {
+    .resultat {
+        padding: 10px;
+        justify-content: space-evenly;
+    }
+    .resultat img {
+        max-width: 80px;
+        max-height: 80px;
+    }
+    .score-obtenu h1 {
+        margin-bottom: 10px;
+    }
+    
+    .score-obtenu p {
+        font-size: 30px;
+        font-weight: bold;
+    }
+}
 
 .form-reponses-enquete .zone-reponse-correcte *,
 .form-reponses-enquete .zone-reponse-incorrecte * {

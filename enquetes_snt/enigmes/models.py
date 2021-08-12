@@ -81,6 +81,7 @@ class Enquete(models.Model):
     date_creation = models.DateTimeField('date de création', auto_now_add=True)
     active = models.BooleanField('active', default=True)
     indications = models.BooleanField('indications', default=True)  # indications affichées par défaut
+    score =  models.BooleanField('score', default=True)  # score affichés après l'enquête
     correction = models.BooleanField('correction', default=False)  # reponses non affichées après l'enquête par défaut
     ordre_aleatoire = models.BooleanField('ordre aléatoire des énigmes', default=False)  # pas d'ordre aléatoire des énigmes par défaut
     auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)  # si un utilisateur supprime son compte, ses énigmes sont supprimées
