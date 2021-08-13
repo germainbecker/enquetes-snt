@@ -137,7 +137,7 @@ function apercuFichiers(theme) {
       }, false);
     
     if (fichierPj.files.length == 1 && fichierPj.files[0]) {
-        if (/\.(csv|xls|xlsx|ods|py|html|css|jpg|jpeg|png|json)$/i.test(fichierPj.files[0].name)) {
+        if (/\.(csv|xls|xlsx|ods|py|html|css|txt|jpg|jpeg|png|json)$/i.test(fichierPj.files[0].name)) {
             fichierPjReader.readAsDataURL(fichierPj.files[0]);
             apercuPj.style.display = "flex";
             lienPj.innerHTML = fichierPj.files[0].name;
@@ -249,8 +249,7 @@ document.getElementById("id_fichier").addEventListener("change", validationPiece
 function validationPieceJointe(){
 
     let btnResetFichier = document.querySelector('#reset-fichier');
-
-    const extensionsAcceptees =  ['csv','xls','ods','py','html','css','jpeg','jpg','png'],
+    const extensionsAcceptees =  ['csv', 'xls', 'ods', 'xlsx' ,'py', 'html', 'css', 'txt', 'jpeg', 'jpg', 'png', 'json'],
             tailleMax = 1024 * 1000; // 1 Mio
 
     // si un fichier a été choisi

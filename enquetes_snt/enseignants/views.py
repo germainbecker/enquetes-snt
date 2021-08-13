@@ -15,7 +15,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import UserRegisterForm, ParagraphErrorList, MyAuthenticationForm
 
-liste_adresses_correctes = [
+LISTE_ADRESSES_CORRECTES = [
     'ac-aix-marseille.fr',
     'ac-amiens.fr',
     'ac-besancon.fr',
@@ -52,13 +52,12 @@ liste_adresses_correctes = [
     'ac-wf.wf', # wallis et futuna ?
 ]
 
-liste_adresses_exceptions = settings.EMAIL_EXCEPTIONS
+LISTE_ADRESSES_EXCEPTIONS = settings.EMAIL_EXCEPTIONS
 
 def adresse_email_valide(adresse: str) -> bool:
     """Renvoie True si et seulement si adresse est une adresse e-mail valide"""
     academie = adresse.split('@')[1]
-    print(liste_adresses_exceptions)
-    return academie in liste_adresses_correctes or adresse in liste_adresses_exceptions
+    return academie in LISTE_ADRESSES_CORRECTES or adresse in LISTE_ADRESSES_EXCEPTIONS
 
 def inscription(request):
     if request.method == 'POST':

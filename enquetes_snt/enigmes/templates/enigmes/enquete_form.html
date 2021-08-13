@@ -124,9 +124,14 @@
 {% include 'enigmes/boutons_scroll.html' %}
 
 {% load static %}
-<!-- Style zone d'apercu -->
+
+
+{% endblock %}
+
+{% block jsfiles %}
+{% load static %}
 <script src="{% static 'enigmes/js/enquete_form.js' %}"></script>
 <script src="{% static 'enigmes/js/filtre.js' %}"></script>
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
-
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

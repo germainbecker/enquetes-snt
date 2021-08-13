@@ -100,7 +100,10 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block jsfiles %}
 {% load static %}
 <script src="{% static 'enigmes/js/enquete_form_cle.js' %}"></script>
-
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

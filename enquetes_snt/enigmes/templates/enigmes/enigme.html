@@ -55,14 +55,14 @@
         </blockquote>                    
     {% endif %}
     
-    {% if not pour_eleves %}
+    {% if affiche_reponses %}
         <div class="enigme-reponse">
             <details>
                 <summary><span class="voir-reponse">Voir la réponse</span></summary>
-                <p>Réponse attendue : <span class="reponse">{{ enigme.reponse }}</span></p>
+                <p>Réponse attendue : <span class="reponse-attendue">{{ enigme.reponse }}</span></p>
             </details>
         </div>
-    {% elif not reponses_eleves %}
+    {% elif zone_saisie_reponses %}
         <div class="zone-reponse">
             <p>
                 <label for="{{enigme.pk}}">Réponse :</label>

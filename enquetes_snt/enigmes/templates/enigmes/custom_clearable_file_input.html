@@ -1,31 +1,3 @@
-<!-- <div class="modif-pj">
-    {% if widget.is_initial %}
-        <div class="pj-actuelle">
-            <p>Cochez la case "Effacer" pour supprimer le fichier actuel <strong>ou</strong> sélectionnez un autre fichier qui remplacera le premier.</p>
-            <div id="fichier-actuel"><strong>Fichier actuel :</strong> <a id="lien-{{ widget.name }}" href="{{ widget.value.url }}">{{ widget.value.basename }}</a>
-            {% if not widget.required %}
-                <div class="file-reset" id="reset-actual-{{widget.name}}">
-                    {% load static %}
-                    <img src="{% static 'enigmes/img/remove-button.svg' %}" alt="bouton effacer">
-                </div>
-            {% endif %}
-            </div>
-        </div>
-        <div class="changer-pj">
-            <div><strong>Remplacer par un autre fichier</strong> :
-                <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
-            </div>
-        </div>
-    {% else %}
-        <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
-        <div class="file-reset" id="reset-{{widget.name}}">
-            {% load static %}
-            <img src="{% static 'enigmes/img/remove-button.svg' %}" alt="bouton effacer">
-        </div>
-    {% endif %}
-</div> -->
-
-
 <div class="modif-pj">
     {% if widget.is_initial %}
         <div class="pj-actuelle">

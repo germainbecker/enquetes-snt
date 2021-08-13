@@ -1293,14 +1293,18 @@ summary span:hover {
     padding-left: 15px;
 }
 
-.enigme-reponse details p .reponse {
+.enigme-reponse details p .reponse-attendue {
     font-weight: bold;
 }
 
-.enigme-reponse details p .reponse p {
+.enigme-reponse details p .reponse-attendue p {
     display: inline-block;
     margin: 0;
     padding: 0;
+}
+
+.enigme-reponse details {
+    margin-top: 20px;
 }
 
 
@@ -1756,7 +1760,7 @@ summary span:hover {
     gap: 15px;
     margin-bottom: 20px;
     padding-bottom: 5px;
-    border-bottom: 2px solid var(--main);
+    border-bottom: 2px solid var(--main-darker);
 }
 
 /* .bilan-enquete img.external-link {
@@ -1864,7 +1868,7 @@ summary span:hover {
 .bilan-enquete span#nb-resultats {
     padding: 5px 10px;
     margin-left: 10px;
-    background-color: var(--main);
+    background-color: var(--main-darker);
     color: white;
     border-radius: 10px;
 }
@@ -2040,6 +2044,15 @@ summary span:hover {
     color: white;
 }
 
+td.enquete-active span {
+    font-weight: bold;
+    color: white;
+    background: var(--main-darker);
+    padding: 5px;
+    border-radius: 5px;
+
+}
+
 #tableau-de-bord .btn-actions {
     display: flex;
     flex-direction: column;
@@ -2047,15 +2060,16 @@ summary span:hover {
 
 #tableau-de-bord .btn-actions button {
     font-size: 15px;
-    color: var(--main);
+    color: var(--main-darker);
     background-color: white;
-    border: 1px solid var(--main);
+    border: 1px solid var(--main-darker);
     border-radius: 5px;
 }
 
 #tableau-de-bord .btn-actions button:hover {
     color: white;
     background-color: var(--main);
+    border: 1px solid var(--main);
 }
 
 #tableau-de-bord .btn-activer,
@@ -2331,8 +2345,8 @@ input:checked + .slider:before {
     border-collapse: separate;
     border-spacing: 5px;
     font-size: 0.9em;
+    margin-bottom: 40px;
 }
-
 
 .zone-eleve-score {
     display: flex;

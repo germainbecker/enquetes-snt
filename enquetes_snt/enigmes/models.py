@@ -87,6 +87,7 @@ class Enigme(models.Model):
                     'text/x-python',  #.py
                     'text/html',
                     'text/css',
+                    'text/plain', #.txt
                     'application/json',
                     'image/jpeg',
                     'image/png',

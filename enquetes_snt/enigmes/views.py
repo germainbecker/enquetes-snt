@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import (
     ListView,
     DetailView,
@@ -86,10 +87,11 @@ class EnigmeDetailView(LoginRequiredMixin, DetailView):
     model = Enigme
     context_object_name = 'enigme'
 
-class EnigmeCreateView(LoginRequiredMixin, CreateView):
+class EnigmeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Enigme
     context_object_name = 'enigme'
     form_class = EnigmeCreateForm
+    success_message = "Votre énigme a bien été ajoutée à la base 😊"
 
     def form_valid(self, form):
         """Ajoute l'auteur de l'énigme en bdd lors de la validation du formulaire"""
@@ -374,11 +376,13 @@ def espace_perso(request):
             enquete = Enquete.objects.get(pk=enquete_id)
             enquete.active = True
             enquete.save()
+            messages.success(request, "L'enquête de code {} a bien été activée.".format(enquete.code))
         elif 'desactiver' in request.POST:
             enquete_id = int(request.POST.get('desactiver'))
             enquete = Enquete.objects.get(pk=enquete_id)
             enquete.active = False
             enquete.save()
+            messages.success(request, "L'enquête de code {} a bien été désactivée.".format(enquete.code))
         elif 'supprimer' in request.POST:
             enquete_id = int(request.POST.get('supprimer'))
             enquete = Enquete.objects.get(pk=enquete_id)
@@ -410,7 +414,6 @@ def suppression_enquete(request, enquete_id):
 
 def eleve(request, code_enquete):
     enquete = get_object_or_404(Enquete, code=code_enquete)
-    print(enquete)
     # Si l'enquête n'est pas active
     if enquete.active == False:
         messages.warning(request, "L'enquête n'est pas activée par le professeur.")
@@ -418,10 +421,8 @@ def eleve(request, code_enquete):
 
     if not enquete.ordre_aleatoire:
         liste_enigmes = enquete.liste_enigmes_ordre_initial()
-        print(liste_enigmes)
     else:
         liste_enigmes = enquete.liste_enigmes()
-        print(liste_enigmes)
     
     context = {
         "enquete": enquete,
@@ -490,7 +491,8 @@ def resultats_enquete(request, enquete_id):
     
     context = {
             "enquete": enquete,
-            "enigmes": liste_num_enigmes,
+            "num_enigmes": liste_num_enigmes,
+            "enigmes": liste_enigmes,
             "reponses": liste_resultats,
             "resultats": liste_complete,
             "pourcentage": pourcentage_bonnes_reponses

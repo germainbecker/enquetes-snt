@@ -174,65 +174,24 @@
         {% csrf_token %}
         <!-- pour empêcher une validation du formulaire par l'appui sur entrée -->
         <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-        <!-- <div class="zone-id">
-            <label for="id_eleve">Identifiant :</label>
-            <input type="text" name="id_eleve" required>
-        </div> -->
         <div id="liste-enigmes">
             {% for enigme in enigmes %}
                 <div class="enigme-container">
                     
-                    {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True indications_activees=enquete.indications %}
+                    {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True zone_saisie_reponses=True indications_activees=enquete.indications %}
                 
                 </div>
             {% endfor %}
         </div>
-        
-            
-        <!-- {% for enigme in enigmes %}
-            <div class="enigme-container">
-                <div class="enigme">
-                    {% load markdownify %}
-                    <div class="enigme-metadata">
-                        <h2 class="num-enigme">Énigme n° {{ forloop.counter }}</h2>
-                        <small class="theme-enigme">{{ enigme.get_theme_display }}</small>
-                    </div>
-                    <div class="enigme-image">
-                        {% if enigme.image %}
-                            <img class="centre image-responsive agrandir" src="{{ enigme.image.url }}" alt="illustration énigme">
-                        {% endif %}
-                    </div>
-                    <div class="enigme-enonce">
-                        {{ enigme.enonce|markdownify }}
-                    </div>
-                    {% if enigme.indication != '' %}
-                        <blockquote class="enigme-indication">
-                                <img class="dim-fixe" src="{% static 'enigmes/img/info.svg' %}" alt="logo indication" width="30" height="30">
-                            {% autoescape off %}
-                                <p>{{ enigme.indication|markdownify }}</p>
-                            {% endautoescape %}
-                        </blockquote>                    
-                    {% endif %}
-                </div>
-                <div class="zone-reponse">
-                    <p>
-                        <label for="{{enigme.pk}}">Réponse :</label>
-                    </p>
-                    <p>
-                        <input type="text" name="{{enigme.pk}}">
-                    </p>
-                </div>
-            </div>
-        {% endfor %} -->
-        
-        <!-- <div class="btn-form">
-            <button class="btn-validation" type="submit" value="{{enquete.pk}}">Valider mes réponses</button>
-        </div> -->
     </form>
     
     
 {% endif %}
+{% endblock %}
 
+{% block jsfiles %}
+{% load static %}
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
 <script src="{% static 'enigmes/js/gestion_modale_copie_csv.js' %}"></script>
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

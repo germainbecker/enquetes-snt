@@ -41,7 +41,7 @@
         {% for enigme in enigmes %}
         <div class="enigme-container">
             
-            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True indications_activees=enquete.indications %}
+            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True affiche_reponses=False zone_saisie_reponses=True indications_activees=enquete.indications %}
 
         </div>
     {% endfor %}
@@ -52,5 +52,10 @@
     </div>
 </form>
 
+{% endblock %}
+
+{% block jsfiles %}
+{% load static %}
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

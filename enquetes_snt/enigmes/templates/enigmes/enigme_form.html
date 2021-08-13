@@ -56,6 +56,9 @@
         </div>
     </div>
     
+{% endblock %}
+
+{% block jsfiles %}
 {% load static %}
 <!-- Style zone d'apercu -->
 <script src="{% static 'enigmes/js/enigme_form.js' %}"></script>
@@ -68,4 +71,5 @@
 
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
 
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

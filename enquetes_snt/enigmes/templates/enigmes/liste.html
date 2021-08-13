@@ -30,7 +30,7 @@
     {% for enigme in enigmes %}
         <div class="enigme-container filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur.first_name }}{{ enigme.auteur.last_name }}">
             
-            {% include 'enigmes/enigme.html' with enigme=enigme %}
+            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=False affiche_reponses=True %}
         
         </div>
     {% endfor %}
@@ -38,10 +38,11 @@
 
 {% include 'enigmes/boutons_scroll.html' %}
 
+{% endblock %}
 
+{% block jsfiles %}
+{% load static %}
 <script src="{% static 'enigmes/js/filtre.js' %}"></script>
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
-
-
-
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

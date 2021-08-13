@@ -52,7 +52,7 @@ class EnigmeCreateForm(ModelForm):
         }
         help_texts = {
             'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
-            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
+            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
         }
 
 class EnigmeUpdateForm(ModelForm):
@@ -60,7 +60,7 @@ class EnigmeUpdateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         # pour personnaliser la liste d'erreurs (ErrorList)
         kwargs.update({'error_class': ParagraphErrorList})
-        super(EnigmeCreateForm, self).__init__(*args, **kwargs)
+        super(EnigmeUpdateForm, self).__init__(*args, **kwargs)
     
     class Meta:
         model = Enigme
@@ -71,5 +71,5 @@ class EnigmeUpdateForm(ModelForm):
         }
         help_texts = {
             'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
-            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
+            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
         }

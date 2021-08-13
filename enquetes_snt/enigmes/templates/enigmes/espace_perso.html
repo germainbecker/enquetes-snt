@@ -69,6 +69,7 @@
     
     <div class="detail-enquetes">
         <h2>Tableau de bord de vos enquêtes</h2>
+        <p>Vous pouvez accéder au détail d'une enquête en cliquant sur sa description. Vous pourrez notamment y trouver les paramètres de l'enquête (et les modifier si besoin), la liste des énigmes composant l'enquête, un lien pour voir le détail des résultats, un autre pour exporter les résultats dans un fichier CSV, etc.</p>
         {% if enquetes_perso.count == 0 %}
         <p><em>Aucune enquête pour le moment</em></p>
         {% else %}
@@ -105,16 +106,22 @@
                         <td>*</td>
                     {% endif %}
                     {% if enquete.active %}
-                        <td>Oui</td>
+                        <td class="enquete-active"><span>Oui</span></td>
                     {% else %}
                         <td>Non</td>
                     {% endif %}
                     <td>
+                        {% if enquete.active %}
+                        <form class="btn-actions" action="" method="POST">
+                            {% csrf_token %}
+                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver">Désactiver</button>
+                        </form>
+                        {% else %}
                         <form class="btn-actions" action="" method="POST">
                             {% csrf_token %}
                             <button class="btn-activer" type="submit" value="{{enquete.pk}}" name="activer">Activer</button>
-                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver">Désactiver</button>
                         </form>
+                        {% endif %}
                     </td>
                     {% if enquete.code %}
                         <td>{{ enquete.code }}</td>
@@ -187,7 +194,11 @@
     </div>
 </div>
 
+
+
+{% endblock %}
+
+{% block jsfiles %}
+{% load static %}
 <script src="{% static 'enigmes/js/gestion_modale_copie_csv.js' %}"></script>
-
-
 {% endblock %}

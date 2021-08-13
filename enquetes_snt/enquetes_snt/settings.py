@@ -28,7 +28,12 @@ environ.Env.read_env(env_file=str(BASE_DIR / "enquetes_snt" / ".env"))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG")
+PROD = env.bool("PROD")
+
+if PROD == True:
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
@@ -95,26 +100,27 @@ AUTHENTICATION_BACKENDS = [
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASE_CHOICE = env.int("DATABASE_CHOICE")
-
-if DATABASE_CHOICE == 1 :
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    } 
-else :
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': env("DB_MYSQL_NAME"),
-            'HOST': env("DB_MYSQL_HOST"),
-            'PORT': env("DB_MYSQL_PORT"),
-            'USER': env("DB_MYSQL_USER"),
-            'PASSWORD': env("DB_MYSQL_PASSWORD"),
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env("DB_MYSQL_NAME"),
+        'HOST': env("DB_MYSQL_HOST"),
+        'PORT': env("DB_MYSQL_PORT"),
+        'USER': env("DB_MYSQL_USER"),
+        'PASSWORD': env("DB_MYSQL_PASSWORD"),
+        'TEST': {
+            'NAME': env("TEST_DB_MYSQL_NAME"),
         }
     }
+}
+
+# BDD SQLite
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#} 
 
 
 # Password validation

@@ -57,7 +57,9 @@
         </div>
     </div>
     
+{% endblock %}
 
+{% block jsfiles %}
 {% load static %}
 <!-- Style zone d'apercu -->
 <script src="{% static 'enigmes/js/enigme_form.js' %}"></script>
@@ -69,4 +71,6 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.9/purify.min.js"></script>
 
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
+
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

@@ -63,8 +63,8 @@
                     <span class="flex-grow">Élève</span>
                     <span class="score">Score</span>
                 </th>
-                {% for num_enigme in enigmes %}
-                    <th><a href="{% url 'enigme-detail' pk=num_enigme %}">Enigme n° {{ forloop.counter }}</a></th>
+                {% for num_enigme in num_enigmes %}
+                    <th><a href="#enigme-num-{{ forloop.counter }}">Enigme n° {{ forloop.counter }}</a></th>
                 {% endfor %}
                 <th>Date</th>
             </tr>
@@ -74,9 +74,9 @@
             <tr>
                 <td class="zone-eleve-score cache-eleve" data-cache="&#9679;&#9679;&#9679;&#9679;">
                     <span class="flex-grow id-eleve" data-resultats="{{forloop.counter}}">{{ resultat.id }}</span>
-                    <span class="score-eleve">{{ resultat.score }} / {{ enigmes|length }}</span>
+                    <span class="score-eleve">{{ resultat.score }} / {{ num_enigmes|length }}</span>
                 </td>
-                {% for num_enigme in enigmes %}
+                {% for num_enigme in num_enigmes %}
                     {% if resultat.reponses|get:num_enigme|get:'correct' == True %}
                         <td class="correct">
                             <div class="reponse-eleve">
@@ -104,7 +104,7 @@
             <td class="zone-eleve-score">
                 <span class="gras">Réussite</span>
             </td>
-            {% for num_enigme in enigmes %}
+            {% for num_enigme in num_enigmes %}
                 <td class="pourcentage">
                     <span class="centre gras">
                         {{pourcentage|get:num_enigme}} %
@@ -121,10 +121,26 @@
     </div>
 </div>
 
+<h2>Voici les énigmes de l'enquête et leurs réponses :</h2>
 
+<form class="form-reponses-enquete" action="" method="POST">
+    {% csrf_token %}
+    <!-- pour empêcher une validation du formulaire par l'appui sur entrée -->
+    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+    <div id="liste-enigmes">
+        {% for enigme in enigmes %}
+            <div class="enigme-container" id="enigme-num-{{ forloop.counter }}">
+                
+                {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True affiche_reponses=True zone_saisie_reponses=False indications_activees=enquete.indications %}
+            
+            </div>
+        {% endfor %}
+    </div>
+</form>
 
+{% endblock %}
+
+{% block jsfiles %}
 {% load static %}
-<!-- Style zone d'apercu -->
 <script src="{% static 'enigmes/js/resultats.js' %}"></script>
-
 {% endblock %}

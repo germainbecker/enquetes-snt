@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    {% load static %}
+    <link rel="shortcut icon" href="{%  static 'enigmes/img/favicon.ico' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block styles %}
     {% load static %}
@@ -84,17 +86,13 @@
         </div>
     </footer>
 
-    <div class="js-files">
+    <div class="js-files"></div>    
       <script src="{% static 'enigmes/js/btn_menu.js' %}"></script>
-      
-      <!-- Prism (code highlighter)-->
-      <script src="{% static 'enigmes/js/prism.js' %}"></script>
+      {% block jsfiles %}{% endblock %}
 
       <!-- jQuery -->
       <script src="{% static 'enigmes/js/jquery.js' %}"></script>
 
-      <!-- Bootstrap Core JavaScript -->
-      <script src="{% static 'enigmes/js/bootstrap.min.js' %}"></script>
     </div>
 
   </body>
