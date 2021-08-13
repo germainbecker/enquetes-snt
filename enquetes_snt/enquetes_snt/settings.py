@@ -95,16 +95,26 @@ AUTHENTICATION_BACKENDS = [
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'enquetes_snt',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
+DATABASE_CHOICE = env.int("DATABASE_CHOICE")
+
+if DATABASE_CHOICE == 1 :
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    } 
+else :
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': env("DB_MYSQL_NAME"),
+            'HOST': env("DB_MYSQL_HOST"),
+            'PORT': env("DB_MYSQL_PORT"),
+            'USER': env("DB_MYSQL_USER"),
+            'PASSWORD': env("DB_MYSQL_PASSWORD"),
+        }
     }
-}
 
 
 # Password validation

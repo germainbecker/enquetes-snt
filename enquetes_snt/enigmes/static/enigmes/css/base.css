@@ -1381,6 +1381,10 @@ summary span:hover {
     margin: 30px 100px;
 }
 
+.apercu .enigme-reponse details {
+    margin-top: 20px;
+}
+
 @media all and (max-width: 768px) {
     .apercu blockquote {
         padding: 10px;
