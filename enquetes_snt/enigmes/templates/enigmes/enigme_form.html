@@ -12,7 +12,21 @@
         <div class="form-creation">
             <form method="POST" enctype='multipart/form-data'>
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <p>
+                        <label for="{{ field.id_for_label }}">
+                            {{field.label}} {% if field.field.required %} (obligatoire) {% endif %} :
+                        </label>
+                        {{field}}
+                        {{field.errors}}
+                        {% if field.help_text %}
+                            <span class="helptext">{{ field.help_text|safe }}</span>
+                        {% endif %}
+                    </p>
+                    
+                {% endfor %}
+                <!-- {{ form.as_p }} -->
                 
                 <div class="zone-apercu">
                     <div class="btn-apercu">

@@ -13,46 +13,50 @@ from django.views.generic import (
 )
 from django.db import transaction, IntegrityError
 
-from .forms import CustomClearableFileInput, EnqueteCreateForm, EnigmeUpdateForm, EnigmeCreateForm
+from .forms import CustomClearableFileInput, EnqueteCreateForm, EnigmeUpdateForm, EnigmeCreateForm, CodeEnqueteForm, EnqueteEleveForm
 from .models import Enigme, Enquete, Resultat
 from django.http import HttpResponse
 import csv
 
 def index(request):
-    context = {
-        "nav": "nav_mini"
-    }
-
+    
     # Si le formulaire est validé
     if request.method == 'POST':
-        print(request.POST)
-        code_enquete = request.POST.get('code')
+        # création d'une instance de formulaire et remplissage avec les données saisies
+        form = CodeEnqueteForm(request.POST)
+        
+        # si le form est valide
+        if form.is_valid():
+            # on récupère le code
+            code_enquete = form.cleaned_data['code']
 
-        try:
-            enquete = Enquete.objects.get(code=code_enquete)
-        except Enquete.DoesNotExist:
-            enquete = None
+            try:
+                enquete = Enquete.objects.get(code=code_enquete)
+            except Enquete.DoesNotExist:
+                enquete = None
+            
+            # Si l'enquête n'existe pas
+            if enquete == None :
+                messages.warning(request, "Le code saisi est incorrect.")               
+            
+            # Si l'enquête n'est pas activée
+            elif enquete.active == False:
+                messages.warning(request, "L'enquête n'est pas activée par le professeur.")
         
-        # Si l'enquête n'existe pas
-        if enquete == None :
-            messages.warning(request, "Le code ne correspond à aucune enquête.")
-            return render(request, 'enigmes/index.html', context = {})
-        
-        # Si l'enquête n'est pas activée
-        if enquete.active == False:
-            messages.warning(request, "L'enquête n'est pas activée par le professeur.")
-            return render(request, 'enigmes/index.html', context = {})
+            else:
+                return redirect('enquete-eleve', code_enquete=code_enquete)
     
-        else:
-            return redirect('enquete-eleve', code_enquete=code_enquete)
+    else:
+        form = CodeEnqueteForm()
     
+    context = {'form': form}
     return render(request, 'enigmes/index.html', context)
 
 def enseignants(request):
     if request.user.is_authenticated:
         return redirect('accueil')
     else:
-        return render(request, 'enseignants/enseignants.html', {"nav": "nav_complete"})
+        return render(request, 'enseignants/enseignants.html')
 
 @login_required
 def accueil(request):
@@ -76,9 +80,9 @@ class EnigmeListView(LoginRequiredMixin, ListView):
     ordering = ['date_creation']
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
+        # Appel à l'implémentation d'origine pour récupérer le contexte
         context = super().get_context_data(**kwargs)
-        # Add in the publisher
+        # Ajout au contexte
         context['titre'] = "Toutes les énigmes"
         context['enigmes_perso'] = False
         return context
@@ -413,11 +417,80 @@ def suppression_enquete(request, enquete_id):
     
 
 def eleve(request, code_enquete):
-    enquete = get_object_or_404(Enquete, code=code_enquete)
+    try:
+        enquete = Enquete.objects.get(code=code_enquete)
+    except Enquete.DoesNotExist:
+        enquete = None
+    if enquete is None:
+        messages.warning(request, "Ce code est incorrect")
+        return redirect('index')
+    
     # Si l'enquête n'est pas active
     if enquete.active == False:
         messages.warning(request, "L'enquête n'est pas activée par le professeur.")
         return redirect('index')
+    
+
+    if not enquete.ordre_aleatoire:
+        liste_enigmes = enquete.liste_enigmes_ordre_initial()
+    else:
+        liste_enigmes = enquete.liste_enigmes()
+    
+    context = {
+        "enquete": enquete,
+        "enigmes": liste_enigmes
+    }
+
+    if request.method == 'POST':
+        print(request.POST)
+        form = EnqueteEleveForm(request.POST, enigmes=liste_enigmes)
+        if form.is_valid():
+            donnees = form.cleaned_data
+            print("ici :", donnees)
+            identifiant_eleve = donnees['id_eleve']
+            # recupération des réponses
+            liste_num_enigmes = enquete.liste_numeros_enigmes()  # liste de int
+            # construction du champ "reponses" du modèle
+            dic_reponses = {num: donnees[str(num)] for num in liste_num_enigmes}
+            # enregistrement
+            resultat = Resultat.objects.create(
+                enquete=enquete,
+                id_eleve=identifiant_eleve,
+                reponses=str(dic_reponses) 
+            )
+            # si réponses affichées
+            if enquete.correction or enquete.score:
+                context['reponses'] = dic_reponses
+                context['score'] = resultat.calcul_score()
+                context['correction'] =  resultat.bonnes_mauvaises_reponses()
+                return render(request, 'enigmes/enquete_eleve_reponses.html', context)
+            # sinon redirection vers remerciements
+            
+            else:
+                return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
+        else:
+            messages.warning(request, "Une erreur est survenue. Les réponses n'ont pas été envoyées.")
+            return render(request, 'enigmes/enquete_eleve_form.html', context)
+    else:
+        form = EnqueteEleveForm(enigmes=liste_enigmes)
+        context['form'] = form
+    return render(request, 'enigmes/enquete_eleve.html', context)
+
+
+""" def eleve(request, code_enquete):
+    try:
+        enquete = Enquete.objects.get(code=code_enquete)
+    except Enquete.DoesNotExist:
+        enquete = None
+    if enquete is None:
+        messages.warning(request, "Ce code est incorrect")
+        return redirect('index')
+    
+    # Si l'enquête n'est pas active
+    if enquete.active == False:
+        messages.warning(request, "L'enquête n'est pas activée par le professeur.")
+        return redirect('index')
+    
 
     if not enquete.ordre_aleatoire:
         liste_enigmes = enquete.liste_enigmes_ordre_initial()
@@ -454,8 +527,7 @@ def eleve(request, code_enquete):
         else:
             return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
 
-
-    return render(request, 'enigmes/enquete_eleve.html', context)
+    return render(request, 'enigmes/enquete_eleve.html', context)    """
 
 @login_required
 def resultats_enquete(request, enquete_id):

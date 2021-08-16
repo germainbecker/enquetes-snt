@@ -154,10 +154,10 @@
             <form class="form-code-eleve" method="POST">
                 {% csrf_token %}
                 <p>
-                    <label for="code" class="">Code à saisir</label>
+                    {{ form.code.label_tag }}
                 </p>
                 <p>
-                    <input type="text" name="code" id="code" class="" maxlength="10" required>
+                    {{ form.code }}
                 </p>
                 <p>
                     <button class="btn-validation" type="submit">Valider</button>

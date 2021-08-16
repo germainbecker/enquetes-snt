@@ -266,6 +266,13 @@ body.index {
     }
 }
 
+.fullscreen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
 /* ##### INDEX.HTML pour élèves ##### */
 
 .accueil-container {
@@ -697,7 +704,7 @@ svg#logo g.snt path {
     gap: 10px;
     position: fixed;
     right: 20px;
-    bottom: 20px;
+    bottom: 50px;
 }
 
 .btn-scroll {
@@ -3136,10 +3143,4 @@ footer
 
 #a-propos-titre img {
     width: 30px;
-}
-
-.fullscreen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
