@@ -1017,6 +1017,9 @@ svg#logo g.snt path {
 }
 
 .enigme-metadata .metadata .auteur {
+    display: flex;
+    align-items: end;
+    gap: 5px;
     /* background-color: var(--main); */
     color: var(--main-darker);
     /* padding: 2px 5px; */
@@ -1027,6 +1030,9 @@ svg#logo g.snt path {
 }
 
 .enigme-metadata .metadata .date-ajout {
+    display: flex;
+    align-items: end;
+    gap: 5px;
     color: #888;
 }
 
@@ -2993,9 +2999,147 @@ input:checked + .slider:before {
 
 /* FOOTER */
 
+
+#footer-transition {
+    margin-top: auto; /* pour coller en bas de l'écran */
+    width: 100%;
+    height: 30px;
+    background-color: var(--main-darker);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    color: white;
+    font-size: 0.8em;
+}
+
+#footer-transition > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#footer-transition a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#footer-transition a:hover{
+    text-decoration: underline;
+}
+
+#footer-transition img {
+    width: 20px;
+}
+
 footer
 {
-	background-color: #eee;
+	background-color: var(--black);
+    color: rgb(220 220 220);
     width: 100%;
 	margin-top: auto;
+}
+
+#footer-content {
+    width: 1000px;
+    font-size: 0.9em;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+#footer-content a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#footer-content a:hover{
+    color: white;
+}
+
+@media all and (max-width: 1040px) {
+    #footer-content {
+        width: auto;
+    }
+}
+
+@media all and (max-width: 768px) {
+    #footer-content {
+        gap: 30px;
+    }
+}
+
+@media all and (max-width: 500px) {
+    #footer-content {
+        justify-content: flex-start;
+        font-size: 0.8em;
+    }
+}
+
+#footer-logo {
+    display: flex;
+    flex-direction: column;
+    max-width: 200px;
+    gap: 5px;
+}
+
+#footer-logo .icones-liens {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#footer-logo .icones-liens img {
+    width: 20px;
+}
+
+#footer-logo p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+
+#footer-icones {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+}
+
+#footer-icones .icones-liens {
+    display: flex;
+    gap: 20px;
+}
+
+#footer-icones .icones-liens img {
+    width: 35px;
+}
+
+#footer-a-propos {
+    width: 400px;
+}
+
+#footer-a-propos p {
+    line-height: 1.3em;
+}
+
+#a-propos-titre {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: white;
+}
+
+#a-propos-titre img {
+    width: 30px;
+}
+
+.fullscreen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32.509823mm"
+   height="31.914495mm"
+   viewBox="0 0 32.509823 31.914495"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="double-fleches-bas.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="28.482268"
+     inkscape:cy="54.264879"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-88.822469,-129.09632)">
+    <g
+       id="g817"
+       transform="matrix(0.26458333,0,0,0.26458333,88.822704,129.09655)"
+       style="fill:#e6e6e6;fill-opacity:1">
+      <path
+         id="path815"
+         d="m 108.91,54.03 c 1.63,-1.55 3.74,-2.31 5.85,-2.28 2.11,0.03 4.2,0.84 5.79,2.44 l 0.12,0.12 c 1.5,1.58 2.23,3.6 2.2,5.61 -0.03,2.01 -0.82,4.02 -2.37,5.55 -17.66,17.66 -35.61,35.13 -53.4,52.68 -0.05,0.07 -0.1,0.13 -0.16,0.19 -1.63,1.55 -3.76,2.31 -5.87,2.28 -2.11,-0.03 -4.21,-0.85 -5.8,-2.45 L 55.01,117.9 C 37.47,100.43 19.87,82.98 2.36,65.46 0.82,63.93 0.03,61.93 0,59.92 -0.03,57.91 0.7,55.89 2.21,54.31 l 0.15,-0.15 c 1.58,-1.57 3.66,-2.38 5.76,-2.41 2.1,-0.03 4.22,0.73 5.85,2.28 l 47.27,47.22 z m -2,-51.77 c 1.62,-1.54 3.73,-2.29 5.83,-2.26 2.11,0.03 4.2,0.84 5.79,2.44 l 0.12,0.12 c 1.5,1.57 2.23,3.6 2.21,5.61 -0.03,2.01 -0.82,4.02 -2.37,5.55 -17.29,17.29 -34.29,35.15 -51.37,52.67 -0.05,0.07 -0.11,0.14 -0.17,0.21 -1.63,1.55 -3.76,2.31 -5.87,2.28 -2.11,-0.03 -4.21,-0.85 -5.8,-2.45 C 38.33,48.94 21.44,31.36 4.51,13.83 L 4.38,13.71 C 2.84,12.18 2.06,10.18 2.03,8.17 2,6.16 2.73,4.14 4.23,2.56 L 4.38,2.41 C 5.96,0.84 8.05,0.03 10.14,0 c 2.1,-0.03 4.22,0.73 5.85,2.28 l 45.24,47.18 z"
+         inkscape:connector-curvature="0"
+         style="fill:#e6e6e6;fill-opacity:1" />
+    </g>
+  </g>
+</svg>

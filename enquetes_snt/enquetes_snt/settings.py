@@ -108,6 +108,9 @@ DATABASES = {
         'PORT': env("DB_MYSQL_PORT"),
         'USER': env("DB_MYSQL_USER"),
         'PASSWORD': env("DB_MYSQL_PASSWORD"),
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',
+        },
         'TEST': {
             'NAME': env("TEST_DB_MYSQL_NAME"),
         }

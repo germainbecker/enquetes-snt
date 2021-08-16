@@ -8,8 +8,14 @@
             <div class="metadata">
                 <h2 class="num-enigme"><a class="lien-detail" href="{% url 'enigme-detail' enigme.id %}">Énigme n° {{ enigme.pk }}</a></h2>
                 <small class="theme-enigme">{{ enigme.get_theme_display }}</small>
-                <p class="auteur">{{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}</p>
-                <small class="date-ajout">{{ enigme.date_creation|date:"d F Y" }}</small>
+                <p class="auteur">
+                    <img src="{% static 'enigmes/img/avatar.svg' %}" alt="icone avatar profil" width="20" style="display: inline-block">
+                    {{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}
+                </p>
+                <small class="date-ajout">
+                    <img src="{% static 'enigmes/img/calendar.svg' %}" alt="icone avatar profil" width="17" style="display: inline-block">
+                    {{ enigme.date_creation|date:"d F Y" }}
+                </small>
             </div>            
             {% if enigme.auteur == user %}
                 <a class="btn-modif" href="{% url 'enigme-update' enigme.id %}">Modifier l'énigme</a>
@@ -17,7 +23,7 @@
         {% else %}
             <div class="metadata">
                 <h2 class="num-enigme">Énigme n° {{ forloop.counter }}</h2>
-                <small class="theme-enigme">{{ enigme.get_theme_display }}</small>
+                <p class="theme-enigme">{{ enigme.get_theme_display }}</p>
             </div>
         {% endif %}
     </div>
