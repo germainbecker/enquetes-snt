@@ -1,4 +1,5 @@
 from django.db.models.base import Model
+from django.db.models.fields import BooleanField, TextField
 from django.forms import Form, ModelForm, ModelMultipleChoiceField, CheckboxSelectMultiple, TextInput, CharField, CheckboxSelectMultiple, ModelChoiceField, MultipleChoiceField
 from django.forms import widgets
 from django.utils.html import format_html
@@ -33,8 +34,14 @@ class EnigmeCreateForm(ModelForm):
         model = Enigme
         fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'fichier')
         widgets = {
+            'enonce': Textarea(
+                attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
+            ),
             'reponse': TextInput(
                 attrs={'placeholder': '100 caractères max.'}
+            ),
+            'indication': Textarea(
+                attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
             ),
             'image': CustomClearableFileInput(),
             'fichier': CustomClearableFileInput(),
@@ -81,7 +88,7 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
 
 On peut aussi écrire tout cela directement en HTML.
 '''
-        indication = '''Les indications sont facultatives (il faut alors laisser ce champ vide). On peut les écrire en **markdown** ou en `html`.'''
+        indication = '''Les indications sont facultatives (il faut alors laisser ce champ vide). On peut les écrire en **Markdown** ou en **HTML**.'''
         initial = {
             'enonce': enonce,
             'indication': indication,
@@ -93,8 +100,14 @@ On peut aussi écrire tout cela directement en HTML.
         model = Enigme
         fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'fichier')
         widgets = {
+            'enonce': Textarea(
+                attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
+            ),
             'reponse': TextInput(
                 attrs={'placeholder': '100 caractères max.'}
+            ),
+            'indication': Textarea(
+                attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
             ),
             'image': CustomClearableFileInput(),
             'fichier': CustomClearableFileInput(),
@@ -136,6 +149,39 @@ class EnqueteEleveForm(Form):
         super(EnqueteEleveForm, self).__init__(*args, **kwargs)
         for enigme in enigmes:
             self.fields[str(enigme.pk)] = CharField(max_length=100, label='Réponse', required=False)
+
+class EnqueteCreateListForm(ModelForm):
+    class Meta:
+        model = Enquete
+        fields = ['cle', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire']
+        help_texts = {
+            'cle': format_html(
+                "Saisissez la liste des énigmes souhaitées. Indiquez les numéros des énigmes en les séparant par des point-virgules. <br>Par exemple, <em>7;5;8;2</em> va générer une enquête avec les énigmes n° 7, 5, 8 et 2."
+            ),
+            'description': format_html(
+                "Renseignez une description pour l'enquête (à destination du professeur uniquement)."
+            ),
+            'indications': format_html(
+                "Les indications (si elles existent) doivent-elles être affichées pour les élèves ?"
+            ),
+            'correction': format_html(
+                "La correction doit-elle être proposée aux élèves après leur enquête ?"
+            ),
+            'score': format_html(
+                "Le score de l'élève doit-il être affiché après leur enquête ? Si la correction est activée (juste au-dessus), le score est automatiquement affiché."
+            ),
+            'ordre_aleatoire': format_html(
+                "Les énigmes de l'enquête doivent-elles être proposées dans un ordre aléatoire aux élèves ?"
+            )
+        }
+        widgets = {
+            'cle' : TextInput(
+                attrs={'placeholder': 'Ex : 7;5;8;2'}
+            ),
+            'description': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            )
+        }
 
 # ---------- NON UTILISÉ ----------
 

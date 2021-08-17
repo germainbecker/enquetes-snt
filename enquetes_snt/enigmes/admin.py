@@ -8,7 +8,6 @@ admin.site.register(Enquete)
 admin.site.register(Resultat)
 #admin.site.register(User)
 
-# pas utilisé pour le moment
 class MyUserAdmin(UserAdmin):
     list_display = ('id', 'last_name', 'first_name', 'email', 'username', 'is_active', 'date_joined', 'last_login', 'is_staff')
     search_fields = ('email', 'username', 'last_name', 'first_name')

@@ -53,8 +53,8 @@
     
                 <div class="btn-form">
                     <button class="btn-validation" type="submit">Enregistrer les modifications</button>
-                    <a href="{% url 'enigme-detail' pk=enigme.pk %}">
-                        <button class="btn-suppression">Annuler</button>
+                    <a class="btn-suppression" href="{{ request.META.HTTP_REFERER|escape }}">
+                        Annuler
                     </a>
                 </div>
             </form>

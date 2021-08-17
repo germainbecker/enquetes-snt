@@ -106,7 +106,7 @@ class Enigme(models.Model):
 
 
 class Enquete(models.Model):
-    description = models.CharField('description', max_length=100, blank=True, default='')  # ne sert que pour l'auteur
+    description = models.CharField('description', max_length=100, default='')  # ne sert que pour l'auteur
     date_creation = models.DateTimeField('date de création', auto_now_add=True)
     active = models.BooleanField('active', default=True)
     indications = models.BooleanField('indications', default=True)  # indications affichées par défaut
@@ -115,7 +115,7 @@ class Enquete(models.Model):
     ordre_aleatoire = models.BooleanField('ordre aléatoire des énigmes', default=False)  # pas d'ordre aléatoire des énigmes par défaut
     auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)  # si un utilisateur supprime son compte, ses énigmes sont supprimées
     enigmes = models.ManyToManyField(Enigme, related_name='enigmes', blank=True)
-    cle = models.CharField('clé', max_length=200, blank=True, default='')
+    cle = models.CharField('clé', max_length=200, default='')
     code = models.CharField(
         "code de l'enquête",
         max_length=10,

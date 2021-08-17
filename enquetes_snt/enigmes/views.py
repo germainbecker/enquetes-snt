@@ -13,7 +13,15 @@ from django.views.generic import (
 )
 from django.db import transaction, IntegrityError
 
-from .forms import EnqueteCreateForm, EnigmeExampleCreateForm, EnigmeUpdateForm, EnigmeCreateForm, CodeEnqueteForm, EnqueteEleveForm
+from .forms import (
+    EnqueteCreateForm,
+    EnigmeExampleCreateForm,
+    EnigmeUpdateForm, 
+    EnigmeCreateForm,
+    CodeEnqueteForm, 
+    EnqueteEleveForm,
+    EnqueteCreateListForm
+)
 from .models import Enigme, Enquete, Resultat
 from django.http import HttpResponse
 import csv
@@ -112,7 +120,7 @@ class EnigmeExampleCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
     def get_initial(self):
         return self.form_class.get_initial()
 
-class EnigmeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EnigmeUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = Enigme
     #fields = ['theme', 'enonce', 'reponse', 'indication', 'image', 'fichier']
     context_object_name = 'enigme'
@@ -120,11 +128,6 @@ class EnigmeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = EnigmeUpdateForm
     success_message = "Les modifications ont bien été enregistrées 😊"
 
-    def form_valid(self, form):
-        """Ajoute l'auteur de l'énigme en bdd lors de la validation"""
-        form.instance.auteur = self.request.user
-        return super().form_valid(form)
-    
     def test_func(self):
         """Seul l'auteur d'une énigme peut la modifier"""
         enigme = self.get_object()
@@ -289,7 +292,6 @@ def creation_enquete_manuelle(request):
         else:
             liste_num_enigmes = request.POST.getlist('enigmes')
             description = request.POST.get('description')
-            print(description)
             indications = request.POST.get('choix_indications')
             score = request.POST.get('choix_score')
             correction = request.POST.get('choix_correction')
@@ -317,7 +319,8 @@ def creation_enquete_manuelle(request):
     return render(request, 'enigmes/enquete_form.html', context)
 
 def cle_est_valide(cle):
-    '''Renvoie True ssi la clé est valide.
+    '''Renvoie (True,) si la clé est valide et (False, errors) sinon,
+    où errors est une liste de messages d'erreurs
     Une clé valide est au format <int>;<int>;<int>;...'''
     valide = True
     errors = []
@@ -337,50 +340,70 @@ def cle_est_valide(cle):
         else:
             valide = False
             errors.append('le numéro {} est présent plusieurs fois dans la clé'.format(c))
-    return (valide, errors)
+    if valide:
+        return (True,)
+    else:
+        return (False, errors)
 
 @login_required
-def creation_enquete_liste(request): 
+def creation_enquete_liste(request):
+    # Si le formulaire est validé
     if request.method == 'POST':
-        cle_entree = request.POST.get('cle')
-        description = request.POST.get('description')
-        indications = request.POST.get('choix_indications')
-        correction = request.POST.get('choix_correction')
-        ordre = request.POST.get('choix_ordre')
-        cle_nettoyee = cle_entree.replace(" ", "")  # suppression des espaces éventuels
-        if len(description) > 100:
-            messages.warning(request, "La description est limitée à 100 caractères maximum.")
-            return render(request, 'enigmes/enquete_form_cle.html')
-        if not cle_est_valide(cle_nettoyee)[0]:
-            messages.warning(request, "Le format de la clé saisie (" + cle_entree + ") n'est pas valide : {}".format(" ; ".join(cle_est_valide(cle_nettoyee)[1])))
-            return render(request, 'enigmes/enquete_form_cle.html')
-        liste_num_enigmes = cle_nettoyee.split(";")
-        print(liste_num_enigmes)
-        try:
-            with transaction.atomic():
-                enquete = Enquete.objects.create(auteur = request.user)
-                try :
-                    for num_enigme in liste_num_enigmes:
-                        enigme = Enigme.objects.get(pk=int(num_enigme))  # génère une ValueError si 
-                        enquete.enigmes.add(enigme)
-                except ValueError:
-                    messages.warning(request, "Le format de la clé saisie (" + cle_entree + ") n'est pas valide. Vérifiez que les numéros des énignes sont bien des entiers.")
-                    return render(request, 'enigmes/enquete_form_cle.html')
-                except Enigme.DoesNotExist:
-                    messages.warning(request, "La clé saisie (" + cle_entree + ") n'est pas valide car au moins un numéro fait référence à une énigme qui n'existe pas.")
-                    return render(request, 'enigmes/enquete_form_cle.html')
-                enquete.cle = cle_nettoyee
-                enquete.description = description
-                enquete.indications = True if indications == "oui" else False
-                enquete.correction = True if correction == "oui" else False
-                enquete.ordre_aleatoire = True if ordre == "oui" else False
-                enquete.save()
-                messages.success(request, "L'enquête a bien été créée.")
-                return redirect('espace-perso')
-        except IntegrityError:
-            messages.warning(request, "Une erreur interne est apparue. Merci de recommencer.")
-
-    return render(request, 'enigmes/enquete_form_cle.html')
+        
+        # création d'une instance de formulaire et remplissage avec les données saisies
+        form = EnqueteCreateListForm(request.POST)
+        context = {'form': form}
+        
+        # si le form est valide
+        if form.is_valid():
+            
+            donnees = form.cleaned_data            
+            cle_entree = donnees['cle']
+            description = donnees['description']
+            indications = donnees['indications']
+            correction = donnees['correction']
+            ordre = donnees['ordre_aleatoire']
+            cle_nettoyee = cle_entree.replace(" ", "")  # suppression des espaces éventuels
+            
+            if len(description) > 100:
+                messages.warning(request, "La description est limitée à 100 caractères maximum.")
+            
+            if not cle_est_valide(cle_nettoyee)[0]:
+                messages.warning(request, "Le format de la clé saisie (" + cle_entree + ") n'est pas valide : {}".format(" ; ".join(cle_est_valide(cle_nettoyee)[1])))
+            liste_num_enigmes = cle_nettoyee.split(";")
+            
+            try:
+                with transaction.atomic():
+                    
+                    enquete = Enquete.objects.create(auteur = request.user)
+                    
+                    try :
+                        for num_enigme in liste_num_enigmes:
+                            enigme = Enigme.objects.get(pk=int(num_enigme))  # génère une ValueError si num_enigme ne peut être converti en un entier ou Object.DoesNotExist si un numéro ne correspond à aucune enquête
+                            enquete.enigmes.add(enigme)
+                    except ValueError:
+                        messages.warning(request, "Le format de la clé saisie (" + cle_entree + ") n'est pas valide. Vérifiez que les numéros des énignes sont bien des entiers.")
+                        return render(request, 'enigmes/enquete_form_cle_essai.html', context)
+                    except Enigme.DoesNotExist:
+                        messages.warning(request, "La clé saisie (" + cle_entree + ") n'est pas valide car au moins un numéro fait référence à une énigme qui n'existe pas.")
+                        return render(request, 'enigmes/enquete_form_cle_essai.html', context)
+                    
+                    enquete.cle = cle_nettoyee
+                    enquete.description = description
+                    enquete.indications = True if indications == "oui" else False
+                    enquete.correction = True if correction == "oui" else False
+                    enquete.ordre_aleatoire = True if ordre == "oui" else False
+                    enquete.save()
+                    messages.success(request, "L'enquête a bien été créée.")
+                    return redirect('espace-perso')
+            
+            except IntegrityError:
+                messages.warning(request, "Une erreur interne est apparue. Merci de recommencer.")
+    else:
+        form = EnqueteCreateListForm()
+    
+    context = {'form': form}
+    return render(request, 'enigmes/enquete_form_cle_essai.html', context)
 
 @login_required
 def espace_perso(request):

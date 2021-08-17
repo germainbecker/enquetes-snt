@@ -732,6 +732,22 @@ svg#logo g.snt path {
 
 /* --- Création énigme --- */
 
+#infos-creation-enigme {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--main-light);
+    padding: 5px 10px;
+}
+
+#infos-creation-enigme-icone svg path {
+    fill: var(--main-darker);
+}
+
+#infos-creation-enigme-icone {
+    min-width: 30px;
+}
+
 li {
     margin: 0.5em 0;
     line-height: 1.2em;
@@ -2533,6 +2549,10 @@ input:checked + .slider:before {
     background-color: var(--second);
 }
 
+.btn-form a {
+    text-decoration: none;
+}
+
 .btn-form .btn-suppression {
     border: 0;
     background-color: white;
@@ -2562,7 +2582,9 @@ input:checked + .slider:before {
 }
 
 .form-creation textarea {
-    font-size: 15px; 
+    font-size: 15px;
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
 .form-creation #id_enonce {
