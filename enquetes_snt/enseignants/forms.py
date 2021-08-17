@@ -15,7 +15,7 @@ class UserRegisterForm(UserCreationForm):
         kwargs.update({'error_class': ParagraphErrorList})
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         self.fields['email'].help_text = 'Seule une adresse académique est valide (du type prenom.nom@ac-&lt;academie&gt;.&lt;domaine&gt;).'
-        self.fields['password1'].help_text = 'Le mot de passe doit contenir au moins 8 caractères, ne peut pas être constitué uniquement de chiffres.'
+        self.fields['password1'].help_text = 'Le mot de passe doit contenir au moins 8 caractères, ne peut pas être constitué uniquement de chiffres et ne doit pas être trop courant.'
         self.fields['password2'].help_text = None
 
     first_name = forms.CharField(label="Prénom", max_length=100)
@@ -38,7 +38,7 @@ class UserRegisterForm(UserCreationForm):
 class MySetPasswordForm(SetPasswordForm):
     def __init__(self, *args, **kwargs):  # redéfinition de la méthode  __init__ de la classe 
         super().__init__(*args, **kwargs)
-        self.fields['new_password1'].help_text = 'Le mot de passe doit contenir au moins 8 caractères, ne peut pas être constitué uniquement de chiffres.'
+        self.fields['new_password1'].help_text = 'Le mot de passe doit contenir au moins 8 caractères, ne peut pas être constitué uniquement de chiffres et ne doit pas être trop courant.'
         self.fields['new_password2'].help_text = None
 
 class ParagraphErrorList(ErrorList):

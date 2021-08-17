@@ -732,6 +732,11 @@ svg#logo g.snt path {
 
 /* --- Création énigme --- */
 
+li {
+    margin: 0.5em 0;
+    line-height: 1.2em;
+}
+
 @media all and (max-width: 768px) {
     .enigme-creation-container {
         font-size: 0.9em;
@@ -2528,6 +2533,22 @@ input:checked + .slider:before {
     background-color: var(--second);
 }
 
+.btn-form .btn-suppression {
+    border: 0;
+    background-color: white;
+    color: var(--main-darker);
+    border: 1px solid var(--main-darker);
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-form .btn-suppression:hover {
+    background-color: var(--main-darker);
+    color: white;
+}
+
 .helptext {
     margin: 10px 5px;
     font-size: 0.9em;
@@ -2566,7 +2587,7 @@ input:checked + .slider:before {
 }
 
 .btn-form-supp-valid .btn-annulation {
-    background-color: var(--main);
+    background-color: var(--main-darker);
     color: white;
     font-size: 15px;
     padding: 10px 20px;
@@ -2580,9 +2601,9 @@ input:checked + .slider:before {
 }
 
 .btn-form-supp-valid .btn-suppression {
-    border: 1px solid var(--main);
+    border: 1px solid var(--main-darker);
     background-color: white;
-    color: var(--main);
+    color: var(--main-darker);
     font-size: 15px;
     padding: 10px 20px;
     border-radius: 5px;
@@ -2591,7 +2612,7 @@ input:checked + .slider:before {
 
 .btn-form-supp-valid .btn-suppression:hover {
     border: 1px solid white;
-    background-color: var(--main);
+    background-color: var(--main-darker);
     color: white;
 }
 

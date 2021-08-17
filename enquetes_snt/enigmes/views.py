@@ -13,7 +13,7 @@ from django.views.generic import (
 )
 from django.db import transaction, IntegrityError
 
-from .forms import CustomClearableFileInput, EnqueteCreateForm, EnigmeUpdateForm, EnigmeCreateForm, CodeEnqueteForm, EnqueteEleveForm
+from .forms import EnqueteCreateForm, EnigmeExampleCreateForm, EnigmeUpdateForm, EnigmeCreateForm, CodeEnqueteForm, EnqueteEleveForm
 from .models import Enigme, Enquete, Resultat
 from django.http import HttpResponse
 import csv
@@ -91,6 +91,7 @@ class EnigmeDetailView(LoginRequiredMixin, DetailView):
     model = Enigme
     context_object_name = 'enigme'
 
+
 class EnigmeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Enigme
     context_object_name = 'enigme'
@@ -102,12 +103,22 @@ class EnigmeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         form.instance.auteur = self.request.user
         return super().form_valid(form)
 
+class EnigmeExampleCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Enigme
+    template_name = 'enigmes/enigme_example_form.html'
+    context_object_name = 'enigme'
+    form_class = EnigmeExampleCreateForm
+
+    def get_initial(self):
+        return self.form_class.get_initial()
+
 class EnigmeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Enigme
     #fields = ['theme', 'enonce', 'reponse', 'indication', 'image', 'fichier']
     context_object_name = 'enigme'
     template_name_suffix = '_update_form'
     form_class = EnigmeUpdateForm
+    success_message = "Les modifications ont bien été enregistrées 😊"
 
     def form_valid(self, form):
         """Ajoute l'auteur de l'énigme en bdd lors de la validation"""

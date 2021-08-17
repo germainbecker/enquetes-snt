@@ -7,12 +7,24 @@
 {% block content %}
 {% include 'enigmes/modale_images.html' %}
     <div class="enigme-creation-container">
-        <h1>Ajouter une énigme</h1>
-        <p>Complétez les champs suivants afin de créer une nouvelle énigme.</p>
-        <p><strong>Important</strong> : vous trouverez des explications en suivant ce lien : <a href="{% url 'enigme-example-create' %}" target="_blank">explications et exemples</a>.</p>
+        <h1>Ajouter une énigme - EXPLICATIONS et EXEMPLES</h1>
+        <p>Pour ajouter une énigme, il faut remplir les champs ci-dessous. voici quelques explications :</p>
+        <ul>
+            <li>Un bouton <em>Aperçu de l'énigme</em> est situé en bas de formulaire pour visualiser le rendu avant d'ajouter l'énigme à la base de données. Une fois ajoutée à la base, une énigme peut être modifiée par son auteur si nécessaire.</li>
+            <li>Seuls les champs <strong>Thème</strong>, <strong>Énoncé</strong> et <strong>Réponse</strong> sont obligatoires.</li>
+            <li>Le champ <strong>Réponse</strong> est limité à 100 caractères et est sensible à la casse.</li>
+            <li>Le champ <strong>Indication</strong> a pour but d'apporter une aide aux élèves (un indice ou lien par exemple pour trouver la réponse). Il est optionnel et il suffit de le laisser vide pour ne pas ajouter d'indications à votre énigme.</li>
+            <li>Lors de la création d'une enquête pour vos élèves, il est possible de spécifier si ces derniers auront accès aux indications des énigmes ou non (si celles-ci existent). Il est donc possible d'ajouter une indication à l'énigme et choisir ensuite de la donner ou non aux élèves.</li>
+            <li>Les champs <strong>Énoncé</strong> et <strong>Indication</strong> peuvent être rédigés en Markdown ou en HTML : ces deux champs sont complétés ci-dessous pour vous donner des exemples.</li>
+            <li>Le choix du <strong>Thème</strong> est obligatoire (il ne peut rester <em>Non défini</em>. Si une énigme fait appel à plusieurs thèmes du programme, il faut choisir celui qui semble le plus pertinent.</li>
+            <li>Lorsqu'un thème est défini, une image illustrative correspondant au thème est ajoutée en début d'énigme : c'est plus joli ! Cette image est remplacée par l'image d'illustration si celle-ci est définie.</li>
+            <li>Le champ <strong>Image d'illustration</strong> est optionnel. Il permet d'ajouter à l'énigme une image soit pour l'illustrer, soit parce que l'image est nécessaire pour répondre à l'énigme. Celle-ci est positionnée au début de l'énigme (en remplacement de l'image par défaut du thème de l'énigme) et est automatiquement redimensionnée, centrée et cliquable pour l'afficher en plein écran.</li>
+            <li>Le champ <strong>Fichier en pièce jointe</strong> est également optionnel et permet de joindre un fichier à l'énigme. Ce fichier pourra être téléchargé par les élèves et le lien de téléchargement est positionné entre l'énoncé et l'indication.</li>
+            <li>Les formats acceptés pour les images d'illustration et les fichiers en pièce jointe sont indiqués au niveau des champs en question. Pour des raisons de mémoire et de sécurité, les images d'illustration et les fichiers en pièces jointes sont limités en taille, respectivement 300 Kio et 1Mio.</li>
+        </ul>
+        <p>Vous pouvez observer et jouer avec l'exemple ci-dessous si vous le souhaitez.</p>
         <div class="form-creation">
-            <form method="POST" enctype='multipart/form-data'>
-                {% csrf_token %}
+            <form>
                 {{ form.non_field_errors }}
                 {% for field in form %}
                     <p>
@@ -63,9 +75,6 @@
                             </div>   
                         </div>
                     </div>
-                </div>                
-                <div class="btn-form">
-                    <button class="btn-validation" type="submit">Ajouter l'énigme dans la base</button>
                 </div>
             </form>
         </div>

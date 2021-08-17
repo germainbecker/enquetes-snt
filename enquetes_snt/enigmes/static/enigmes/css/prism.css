@@ -6,6 +6,23 @@ https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javasc
  * @author Lea Verou
  */
 
+ /* Ajout */
+
+ :not(pre) > code {   /* AJOUT */
+	font-size: 1em;
+	padding: .1em;
+	border-radius: 1px;
+	border: solid 1px #ccc;
+	white-space: normal;
+	background: #f5f2f0;
+}
+
+code{
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+/* --- */
+
 code[class*="language-"],
 pre[class*="language-"] {
 	color: black;

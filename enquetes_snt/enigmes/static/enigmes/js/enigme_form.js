@@ -130,10 +130,11 @@ function apercuFichiers(theme) {
     // Aperçu fichier joint
     var apercuPj = document.querySelector('.piece-jointe');
     var lienPj = document.querySelector("#nom-fichier");
+    var hrefPJ = document.querySelector('#fichier');
     var fichierPj = document.getElementById("id_fichier");
     var fichierPjReader = new FileReader();
     fichierPjReader.addEventListener("load", function () {
-        lienPj.href = fichierPjReader.result;
+        hrefPJ.href = fichierPjReader.result;
       }, false);
     
     if (fichierPj.files.length == 1 && fichierPj.files[0]) {
@@ -141,11 +142,12 @@ function apercuFichiers(theme) {
             fichierPjReader.readAsDataURL(fichierPj.files[0]);
             apercuPj.style.display = "flex";
             lienPj.innerHTML = fichierPj.files[0].name;
+            hrefPJ.download = fichierPj.files[0].name;
         }
     } else {
         var fichierActuel = document.getElementById("lien-fichier");
         var checkBoxFichierActuel = document.getElementById("fichier-clear_id");
-        if (fichierActuel && checkBoxFichierActuel.checked == false) {  // si l'image actuelle existe et n'est pas à supprimer
+        if (fichierActuel && checkBoxFichierActuel.checked == false) {  // si le fichier actuel existe et n'est pas à supprimer
             // on l'utilise pour l'apercu
             lienPj.href = fichierActuel.href;
             lienPj.innerHTML = fichierActuel.innerHTML;
