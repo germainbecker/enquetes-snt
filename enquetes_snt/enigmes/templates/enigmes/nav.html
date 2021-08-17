@@ -156,7 +156,11 @@
             <!-- <li><a href="{% url 'enigme-create' %}">Créer une énigme</a></li> -->
             <li class="gauche"><a class="{% if page == 'espace_perso' %}active{% endif %}" href="{% url 'espace-perso' %}">Espace personnel</a></li>                
             <li class="droite username">{{user.username}}</li>
-            <li><a href="{% url 'logout'%}?next=/">Se déconnecter</a></li>
+            <li id="logout">
+                <a href="{% url 'logout'%}?next=/">
+                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89.6 122.88"><title>Se déconnecter</title><path d="M66.4,68.66H40.29a7.23,7.23,0,0,1,0-14.45H66.4l-8.48-9.46a7.25,7.25,0,0,1,.51-10.16,7.06,7.06,0,0,1,10.05.5L87.7,56.54a7.27,7.27,0,0,1,.06,9.72L68.48,87.77a7.05,7.05,0,0,1-10.05.51,7.25,7.25,0,0,1-.51-10.16l8.48-9.46ZM42.94,108.57a7.22,7.22,0,0,1-2.83,14.17l-3.37-.68C12.84,117.32,0,114.63,0,80.2V40.63C0,7.65,13.78,5.07,36.6.81L40.17.13A7.21,7.21,0,0,1,42.88,14.3L39.25,15c-15.46,2.89-24.8,4.63-24.8,25.65V80.2c0,22.61,8.77,24.46,25.1,27.7l3.39.67Z"/></svg>
+                </a>
+            </li>
             {% else %}
             <li class="droite"><a href="{% url 'login'%}">Se connecter</a></li>
             <li><a href="{% url 'inscription'%}">S'inscrire</a></li>

@@ -220,7 +220,14 @@ body.index {
     /* background-color: var(--second); */
 }
 
+li#logout svg {
+    width: 20px;
+    height: 25px;
+}
 
+li#logout svg path {
+    fill: white;
+}
 
 
 /* Barre nav responsive */
