@@ -1,6 +1,6 @@
 from django.db.models.base import Model
 from django.db.models.fields import BooleanField, TextField
-from django.forms import Form, ModelForm, ModelMultipleChoiceField, CheckboxSelectMultiple, TextInput, CharField, CheckboxSelectMultiple, ModelChoiceField, MultipleChoiceField
+from django.forms import Form, ModelForm, ModelMultipleChoiceField, TextInput, CharField, CheckboxSelectMultiple, ModelChoiceField, MultipleChoiceField
 from django.forms import widgets
 from django.utils.html import format_html
 
@@ -139,7 +139,6 @@ class EnigmeUpdateForm(ModelForm):
 class CodeEnqueteForm(Form):
     code = CharField(label='Code à saisir', max_length=10)
 
-
 class EnqueteEleveForm(Form):
     
     id_eleve = CharField(max_length=50)
@@ -154,6 +153,40 @@ class EnqueteCreateListForm(ModelForm):
     class Meta:
         model = Enquete
         fields = ['cle', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire']
+        help_texts = {
+            'cle': format_html(
+                "Saisissez la liste des énigmes souhaitées. Indiquez les numéros des énigmes en les séparant par des point-virgules. <br>Par exemple, <em>7;5;8;2</em> va générer une enquête avec les énigmes n° 7, 5, 8 et 2."
+            ),
+            'description': format_html(
+                "Renseignez une description pour l'enquête (à destination du professeur uniquement)."
+            ),
+            'indications': format_html(
+                "Cochez la case pour que les indications (si elles existent) soient affichées pour les élèves."
+            ),
+            'correction': format_html(
+                "Cochez la case pour que la correction soit proposée aux élèves après leur enquête."
+            ),
+            'score': format_html(
+                "Cochez la case pour que le score des élèves soit affiché après leur enquête. Si la correction est activée (juste au-dessus), le score est automatiquement affiché."
+            ),
+            'ordre_aleatoire': format_html(
+                "Cochez la case pour que les énigmes de l'enquête soient proposées dans un ordre aléatoire aux élèves."
+            )
+        }
+        widgets = {
+            'cle' : TextInput(
+                attrs={'placeholder': 'Ex : 7;5;8;2'}
+            ),
+            'description': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            )
+        }
+
+class EnqueteCreateForm(ModelForm):
+    
+    class Meta:
+        model = Enquete
+        fields = ['enigmes', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire']
         help_texts = {
             'cle': format_html(
                 "Saisissez la liste des énigmes souhaitées. Indiquez les numéros des énigmes en les séparant par des point-virgules. <br>Par exemple, <em>7;5;8;2</em> va générer une enquête avec les énigmes n° 7, 5, 8 et 2."
@@ -182,24 +215,9 @@ class EnqueteCreateListForm(ModelForm):
                 attrs={'placeholder': '100 caractères max.'}
             )
         }
-
-# ---------- NON UTILISÉ ----------
-
-class CustomSelectMultiple(ModelMultipleChoiceField):
-    def label_from_instance(self, obj: Model) -> str:
-        return format_html(obj.enonce)
-
-class EnqueteCreateForm(ModelForm):
-    enigmes = ModelMultipleChoiceField(
-        widget = CheckboxSelectMultiple,
-        queryset=Enigme.objects.all()
-    )
-
-    class Meta:
-        model = Enquete
-        fields = ['enigmes', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire']
-        widgets = {
-            'enigmes': CheckboxSelectMultiple,
-        }
     
-# ------------------------------
+    enigmes = ModelMultipleChoiceField(
+        queryset=Enigme.objects.all(),
+        widget=CheckboxSelectMultiple
+    )
+ 

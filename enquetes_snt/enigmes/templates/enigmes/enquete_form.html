@@ -20,6 +20,7 @@
 <div class="form-creation-enquete">
     <form method="POST" id="form">
         {% csrf_token %}
+
         <div id="liste-enigmes">
             {% for enigme in enigmes %}
                 {% load markdownify %}
@@ -36,77 +37,45 @@
                                 
             {% endfor %}
         </div>
-        <div>
-            <p>Avant de créer l'enquête, veuillez renseigner les cinq informations ci-dessous.</p>
-        </div>
-
 
         <div class="input-container">
             <p class="label">
-                <label for="description" class="label">Description</label>
+                <label for="description" class="label">{{ form.description.label }}</label>
             </p>
-            <p class="consigne">Renseignez une description pour l'enquête (à destination du professeur uniquement, 100 caractères max.).</p>
+            <p class="consigne">{{ form.description.help_text }}</p>
             <p class="input">
-                <input type="text" name="description" id="description" placeholder="" maxlength="100" required>
+                {{form.description}}
             </p>               
         </div>
         <div class="input-container">
-            <p class="label">Indications</p>
-            <p class="consigne">Les indications (si elles existent) doivent-elles être affichées pour les élèves ?</p>
-            <div class="radio">
-                <div>
-                    <input type="radio" name="choix_indications" value="oui" checked>
-                    <label for="choix_indications">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" name="choix_indications" value="Non">
-                    <label for="choix_indications">Non</label>
-                </div>
+            <p class="label">{{ form.indications.label }}</p>                
+            <div class="checkbox">                    
+                {{ form.indications }}
+                <span class="consigne">{{ form.indications.help_text }}</span>
             </div>
         </div>
 
         <div class="input-container">
-            <p class="label">Correction</p>
-            <p class="consigne">La correction doit-elle être proposée aux élèves après leur enquête ?</p>
-            <div class="radio">
-                <div>
-                    <input id="correction_oui" type="radio" name="choix_correction" value="oui">
-                    <label for="choix_correction">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" name="choix_correction" value="Non" checked>
-                    <label for="choix_correction">Non</label>
-                </div>
+            <p class="label">{{ form.correction.label }}</p>                
+            <div class="checkbox">
+                {{ form.correction }}
+                <span class="consigne">{{ form.correction.help_text }}</span>
             </div>
         </div>
 
         <div class="input-container">
-            <p class="label">Score</p>
-            <p class="consigne">Le score de l'élève doit-il être affiché après leur enquête ? Si la correction est activée (juste au-dessus), le score est automatiquement affiché.</p>
-            <div class="radio">
-                <div>
-                    <input id="score_oui" type="radio" name="choix_score" value="oui">
-                    <label for="choix_score">Oui</label>
-                </div>
-                <div>
-                    <input id="score_non" type="radio" name="choix_score" value="Non" checked>
-                    <label for="choix_score">Non</label>
-                </div>
+            <p class="label">{{form.score.label}}</p>
+            <div class="checkbox">
+                {{ form.score }}
+                <span class="consigne">{{form.score.help_text}}</span>
             </div>
         </div>
 
         <div class="input-container">
-            <p class="label">Ordre aléatoire</p>
-            <p class="consigne">Les énigmes de l'enquête doivent-elles être proposées dans un ordre aléatoire aux élèves ?</p>
-            <div class="radio">
-                <div>
-                    <input type="radio" name="choix_ordre" value="oui">
-                    <label for="choix_ordre">Oui</label>
-                </div>
-                <div>
-                    <input type="radio" name="choix_ordre" value="Non" checked>
-                    <label for="choix_ordre">Non</label>
-                </div>
+            <p class="label">{{form.ordre_aleatoire.label}}</p>
+            <div class="checkbox">
+                {{ form.ordre_aleatoire }}
+                <span class="consigne">{{ form.ordre_aleatoire.help_text }}</span>
             </div>
         </div>
         

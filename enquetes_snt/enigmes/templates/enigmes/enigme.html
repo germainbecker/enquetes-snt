@@ -2,24 +2,24 @@
     {% load markdownify %}
     {% load static %}
     {% load custom_tags %}
-
+    
     <div class="enigme-metadata">
         {% if not pour_eleves %}
             <div class="metadata">
                 <h2 class="num-enigme"><a class="lien-detail" href="{% url 'enigme-detail' enigme.id %}">Énigme n° {{ enigme.pk }}</a></h2>
                 <small class="theme-enigme">{{ enigme.get_theme_display }}</small>
-                <p class="auteur">
-                    <img src="{% static 'enigmes/img/avatar.svg' %}" alt="icone avatar profil" width="20" style="display: inline-block">
+                {% if enigme.auteur == user %}
+                    <a class="btn-modif" href="{% url 'enigme-update' enigme.id %}">Modifier l'énigme</a>
+                {% endif %}
+                <small class="auteur">
+                    <img class="icone-auteur dim-fixe" src="{% static 'enigmes/img/avatar.svg' %}" alt="icone avatar profil">
                     {{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}
-                </p>
+                </small>
                 <small class="date-ajout">
-                    <img src="{% static 'enigmes/img/calendar.svg' %}" alt="icone avatar profil" width="17" style="display: inline-block">
+                    <img class="icone-date dim-fixe" src="{% static 'enigmes/img/calendar.svg' %}" alt="icone avatar profil">
                     {{ enigme.date_creation|date:"d F Y" }}
                 </small>
             </div>            
-            {% if enigme.auteur == user %}
-                <a class="btn-modif" href="{% url 'enigme-update' enigme.id %}">Modifier l'énigme</a>
-            {% endif %}
         {% else %}
             <div class="metadata">
                 <h2 class="num-enigme">Énigme n° {{ forloop.counter }}</h2>

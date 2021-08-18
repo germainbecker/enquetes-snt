@@ -65,26 +65,29 @@ let liste_num_enigmes = [];
 const couleurFond = document.querySelector(".checkbox-container").style.backgroundColor;
 initialisationCouleur();
 
-// Gestion boutons radio pour la correction et le score
+// Gestion cases à cocher pour la correction et le score
 
-let btnCorrection = document.getElementById("correction_oui");
+let CbCorrection = document.getElementById('id_correction');
+let CbScore = document.getElementById('id_score');
 
-btnCorrection.addEventListener("click", () => {
+CbCorrection.addEventListener('change', () => {
     // si correction activée alors il faut activer par défaut le score
-    let btnScore = document.getElementById("score_oui");
-    btnScore.checked = true;
+    if (CbCorrection.checked){
+        CbScore.checked = true;
+    }
 })
 
-
-let btnPasDeScore = document.getElementById("score_non");
-
-btnPasDeScore.addEventListener("click", () => {
-    // si correction activée le bouton de score ne peut pas être mis à non
-    if (btnCorrection.checked) {
-        let btnScore = document.getElementById("score_oui");
-        btnScore.checked = true;
+CbScore.addEventListener('click', () => {
+    console.log(CbCorrection.checked)
+    // si correction activée alors il faut activer par défaut le score
+    if (CbCorrection.checked) {
+        CbScore.checked = true;
     } else {
-        btnPasDeScore.checked = true;
+        if (CbScore.checked) {
+            CbScore.checked = true;
+        } else {
+            CbScore.checked = false;
+        }
     }
 })
 
