@@ -197,11 +197,18 @@ body.index {
 }
 
 #menu li.username {
-    padding: 5px 10px;
+    padding: 5px;
     color: var(--main);
     background-color: white;
     border-radius: 5px;
     margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+#menu li.username img {
+    width: 20px;
 }
 
 .nav a {
@@ -595,6 +602,7 @@ svg#logo g.snt path {
     box-sizing: border-box;
     width: 1000px;
     margin: 20px auto;
+    margin-bottom: 100px;
 }
 
 /* .alert-container {
@@ -796,12 +804,16 @@ li {
     font-size: 17px;
 }
 
-.input-container .radio {
+.input-container .checkbox {
     margin-top: 10px;
 }
 
-.input-container .radio > * {
+.input-container .checkbox > * {
     margin-top: 3px;
+}
+
+.input-container .checkbox span {
+    margin-left: 10px;
 }
 
 /* --- Filtres énigmes --- */
@@ -1002,12 +1014,13 @@ li {
     flex-wrap: wrap;
     align-items: baseline;
     border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     margin-bottom: 15px;
 }
 
 .metadata {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     flex-grow: 1;
     margin-right: 10px;
@@ -1064,11 +1077,21 @@ li {
     /* margin-right: 20px; */
 }
 
+.enigme-metadata .metadata .auteur .icone-auteur {
+    display: inline-block;
+    height: 18px;
+}
+
 .enigme-metadata .metadata .date-ajout {
     display: flex;
     align-items: end;
     gap: 5px;
     color: #888;
+}
+
+.enigme-metadata .metadata .date-ajout .icone-date {
+    display: inline-block;
+    height: 18px;
 }
 
 @media all and (max-width: 500px) {
@@ -1353,7 +1376,7 @@ summary span:hover {
 
 .enigme-metadata .btn-modif {
     text-decoration: none;
-    margin-left: auto;
+    margin-left: 10px;
     color: white;
     background-color: var(--main-darker);
     font-size: 15px;
@@ -2175,8 +2198,10 @@ td.enquete-active span {
 /* Infos sur les enquêtes */
 
 #infos-enquetes {
-    background-color: rgb(251 253 255);
+    background-color: rgb(245 250 255);
     padding: 20px;
+    max-width: 900px;
+    margin: auto;
 }
 
 #zone-titre-infos-enquetes {
