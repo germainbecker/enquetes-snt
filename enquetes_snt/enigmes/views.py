@@ -533,7 +533,7 @@ def eleve(request, code_enquete):
                 return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
         else:
             messages.warning(request, "Une erreur est survenue. Les réponses n'ont pas été envoyées.")
-            return render(request, 'enigmes/enquete_eleve_form.html', context)
+            return render(request, 'enigmes/enquete_eleve.html', context)
     else:
         form = EnqueteEleveForm(enigmes=liste_enigmes)
         context['form'] = form

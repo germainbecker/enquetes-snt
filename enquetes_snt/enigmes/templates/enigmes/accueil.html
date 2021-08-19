@@ -7,9 +7,83 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-  <p>Bonjour {{ user.first_name }} {{ user.last_name }}.</p>
-  {% load static %}
-  <p class="para-couleur"></p>
+  <p>Bonjour {{ user.first_name }} {{ user.last_name }} 😀</p>
+  
+  <div id="presentation-accueil">
+    {% load static %}
+    <div id="presentation-application">
+      <div class="presentation-image">
+        <img src="{% static 'enigmes/img/training-online.svg' %}" alt="icone illustration">      
+      </div>
+      <div>
+        <h2>Présentation de l'application</h2>
+        <div id="presentation-application-texte">
+          <p>L'application <em>enquetes-snt</em> permet aux enseignants de SNT de créer, mutualiser et partager des énigmes à destination de leurs élèves.</p>
+          <p>Concrètement, les enseignants peuvent créer des <strong>énigmes</strong> qui seront ajoutées à la base commune. Chaque enseignant peut ensuite créer ses propres <strong>enquêtes</strong> à partir d'une ou plusieurs énigmes de la base. À l'aide d'un code (ou d'un lien), l'enseignant peut ensuite proposer ces enquêtes à ses élèves et récupérer leurs résultats.</p>
+          <p>Ce site utilise uniquement des cookies indispensables à son fonctionnement.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="informations-application">
+      <h2>Utilisation de l'application</h2>
+      <div id="informations-application-content">
+        <div class="info-application">
+          <img src="{% static 'enigmes/img/solution-thinking.svg' %}" alt="icone illustration">
+          <div>
+            <p>L'idée de départ était de proposer aux élèves des énigmes qui nécessitent une recherche de leur part, afin de valider des connaissances et compétences. Mais on peut également imaginer des <em>énigmes</em> comme des <em>questions rapides</em> plus classiques.</p>
+          </div>
+        </div>
+        <div class="info-application">
+          <img src="{% static 'enigmes/img/creative-idea.svg' %}" alt="icone illustration">
+          <div>
+            <p>Tout est possible ! Libre à vous de vous approprier l'application comme vous le souhaitez, aussi bien dans les énigmes créées que dans l'utilisation avec vos élèves.</p>
+          </div>
+        </div>
+        <div class="info-application">
+          <img src="{% static 'enigmes/img/cross-platform.svg' %}" alt="icone illustration">
+          <div>
+            <p>L'application est normalement optimisée pour smartphones et tablettes, mais il est plus prudent de vérifier la compatibilité et la faisabilité avant de demander à vos élèves d'utiliser leurs smartphones pour résoudre une enquête.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="presentation-application">
+      <div class="presentation-image">
+        <img src="{% static 'enigmes/img/easy-to-use.svg' %}" alt="icone illustration">      
+      </div>
+      <div>
+        <h2>Interface de l'application</h2>
+        <div id="presentation-application-texte">
+          <p>Vous pouvez naviguer entre trois onglets :</p>
+          <ul>
+            <li>L'onglet <strong>Accueil</strong> : celui sur lequel vous trouvez et qui correspond à la page affichée juste après l'identification.</li>
+            <li>L'onglet <strong>Énigmes</strong> : vous y trouverez la liste de toutes les énigmes créées par l'ensemble des enseignants.</li>
+            <li>L'onglet <strong>Espace personnel</strong> : c'est le plus important, il vous permet d'accéder rapidement à la création d'énigmes, d'enquêtes et regroupe l'ensemble des enquêtes que vous avez créées. C'est par cet onglet que vous pourrez accéder aux détails, aux paramètres et aux résultats des différentes enquêtes.</li>
+          </ul>
+          <p>Vous restez connecté à l'application tant que vous ne cliquez pas sur le bouton "Se déconnecter" en haut à droite du menu de navigation ou que vous ne supprimez pas les cookies de l'application.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="mot-auteur-container">
+      <div id="mot-auteur-titre">
+        <img src="{% static 'enigmes/img/talk-bubble.svg' %}" alt="">
+        <h3>Un petit mot de l'auteur</h3>
+      </div>
+      <div id="mot-auteur">
+        <p>J'ai voulu créer une application avant tout pour apprendre le développement Web, domaine que j'ai découvert il y a peu et qui m'intéresse beaucoup par son aspect créatif. Dans un second temps, pour que les choses soient plus concrètes et stimulantes, j'ai souhaité développer une application qui soit utile et l'idée des <em>enquêtes</em> me paraissait intéressante en ce sens. J'ai choisi de le faire avec le framework <a href="https://www.djangoproject.com/" target="_blank">Django</a> pour parfaire mes connaissances dans le langage Python.</p>
+        <p>Je ne suis pas un développeur professionnel, loin de là, et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible, qui n'est pas toujours très important en période scolaire.</p>
+        <p>De même, si vous voyez des améliorations, qu'elles soient d'ordre technique ou ergonomique, n'hésitez pas à m'en faire part.</p>
+        <p id="dernier">En espérant que cette application vous soit utile,</p>
+        <p>Germain Becker</p>
+      </div>
+    </div>
+  </div>
+
+  
+  
 {% else %}
   <p>Pour accéder à cette page, veuillez vous connecter : <a href="{% url 'login' %}">se connecter</a>.</p>
 {% endif %}

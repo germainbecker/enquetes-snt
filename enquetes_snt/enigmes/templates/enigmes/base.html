@@ -12,10 +12,6 @@
     {% endblock %}
     <link rel="stylesheet" type="text/css" href="{% static 'enigmes/css/prism.css' %}" />
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic" rel="stylesheet" type="text/css">
-
     <!-- Loading mathjax macro -->
     <!-- Load mathjax -->
     <script type="text/javascript" async
@@ -25,14 +21,8 @@
   	MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']],
                                 displayMath: [ ['$$','$$'], ["\\[","\\]"] ]}});
   	</script>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
+
   {% block balise_body %}
   <body>
   {% endblock %}
@@ -41,29 +31,6 @@
         <div class="header-container">
         {% endblock %}
           {% block nav %}{% endblock %}
-          <!-- {% if nav_complete %}
-          <nav class="nav">
-              <ul class="menu">
-                {% if user.is_authenticated %}
-                  <li><a href="{% url 'accueil' %}">Accueil</a></li>
-                  <li><a href="{% url 'enigmes' %}">Énigmes</a></li>
-                  <li><a href="{% url 'enigme-create' %}">Créer une énigme</a></li>
-                  <li class="gauche"><a href="{% url 'espace-perso' %}">Espace personnel</a></li>                
-                  <li class="droite username">{{user.get_username}}</li>
-                  <li><a href="{% url 'logout'%}?next=/">Se déconnecter</a></li>
-                {% else %}
-                  <li class="droite"><a href="{% url 'login'%}">Se connecter</a></li>
-                  <li><a href="{% url 'inscription'%}">S'inscrire</a></li>
-                {% endif %}
-              </ul>
-          </nav>
-          {% elif nav_mini %}
-            <nav class="nav">
-              <ul class="menu">
-                <li class="droite"><a href="{% url 'enseignants'%}">Espace enseignants</a></li>
-              </ul>
-            </nav>
-          {% endif %} -->
         </div>
 
         <div class="content-wrapper">
@@ -82,8 +49,8 @@
         </div>
         <div id="footer-transition"></div>
       </div>
+      {% block footer %}
       <footer>
-        
         <div id="footer-content">
             {% load static %}
             <div id="footer-logo">
@@ -115,9 +82,10 @@
               <h2 id="a-propos-titre">À propos</h2>
               <p>Cette plateforme est une application développée en Python avec le framework Django. Elle permet aux enseignants de SNT de créer, mutualiser et partager des énigmes à destination de leurs élèves. Le code source est disponible sur GitHub, où d'autres informations sur le projet sont disponibles. Une cagnotte a été ouverte afin de participer aux frais de fonctionnement de l'application.</p>
             </div>
-        </div>        
-      </div>
+          </div>        
+        </div>
       </footer>
+      {% endblock %}
 
     <div class="js-files"></div>    
       <script src="{% static 'enigmes/js/btn_menu.js' %}"></script>
