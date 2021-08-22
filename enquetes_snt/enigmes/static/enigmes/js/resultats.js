@@ -237,6 +237,8 @@ function majResultats(result) {
     let numEnigmes = result["enigmes"];
     console.log("num des enigmes");
     console.log(numEnigmes);
+    
+    // ajout des lignes avec les nouveaux résultats
     let resultatsEleves = document.querySelector("#resultats-eleves");
     let nbResultatsAffiches = resultatsEleves.childElementCount - 1;
     console.log(nbResultatsAffiches);
@@ -246,6 +248,18 @@ function majResultats(result) {
         nouvResultat.innerHTML = creationLigne(result['resultats'][i], i);
         resultatsEleves.insertBefore(nouvResultat, ligneReussite);
     }
+
+    // ajout des nouveaux pourcentages de réussite
+    var pourcentagesReussite = document.querySelectorAll(".pourcentage");
+    let pourcentages_bonnes_reponses = Object.values(result['pourcentage']); // conversion en un tableau
+    console.log("python renvoie :", pourcentages_bonnes_reponses);
+    console.log(pourcentagesReussite);
+    let nbEnigmes = result['enigmes'].length;
+    console.log("nombre", nbEnigmes);
+    for (let i=0; i<nbEnigmes; i++) {
+        pourcentagesReussite[i].innerHTML = String(pourcentages_bonnes_reponses[i]) + ' %';
+    }
+    
     gestionIdentifants();
     gestionReponses();
     gestionResultats();
