@@ -1,13 +1,16 @@
 {% autoescape off %}
 Bonjour {{ user.first_name }} {{ user.last_name }},
 
-Vous venez de créer un compte sur la plateforme {{ domain }} avec le pseudonyme suivant : {{ user.username }}
-Pour activer votre compte, veuillez cliquez sur le lien suivant :
+Vous venez de créer un compte sur la plateforme http://{{ domain }} avec le pseudonyme suivant : {{ user.username }}
+
+Pour activer votre compte, cliquez sur le lien suivant, ou copiez et collez-le dans un navigateur :
+
 http://{{ domain }}{% url 'account_activation' uidb64=uid token=token %}  
-Si besoin, vous pouvez aussi copier ce lien dans un navigateur.
 
 Si vous n'êtes pas le bon destinataire de cet e-mail, vous pouvez ignorer ce message.
 
 Cordialement,
-L'administrateur de {{ domain }}.
+
+Germain Becker, développeur de l'application.
+
 {% endautoescape %}

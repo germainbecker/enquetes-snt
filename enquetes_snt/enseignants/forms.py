@@ -1,10 +1,17 @@
 from django import forms
+from django.forms.widgets import CheckboxInput
 from .models import User  # modèle personnalisé
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django.forms.utils import ErrorList
 from django.contrib.auth import forms as auth_forms, views as auth_views
+from django.utils.html import format_html
 
 from django.utils.translation import gettext_lazy as _
+
+class CustomCheckboxInput(CheckboxInput):
+    """Personnalisation du champ CheckboxInput"""
+    template_name = "enseignants/custom_checkbox_input.html"
+
 
 class UserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):  # redéfinition de la méthode  __init__ de la classe 
@@ -14,25 +21,30 @@ class UserRegisterForm(UserCreationForm):
         # pour personnaliser la liste d'erreurs (ErrorList)
         kwargs.update({'error_class': ParagraphErrorList})
         super(UserRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['email'].help_text = 'Seule une adresse académique est valide (du type prenom.nom@ac-&lt;academie&gt;.&lt;domaine&gt;).'
-        self.fields['password1'].help_text = 'Le mot de passe doit contenir au moins 8 caractères, ne peut pas être constitué uniquement de chiffres et ne doit pas être trop courant.'
+        self.fields['email'].help_text = format_html('Seule une adresse académique est valide (du type prenom.nom@ac-&lt;academie&gt;.&lt;domaine&gt;).')
+        self.fields['password1'].help_text = format_html('Le mot de passe doit contenir au moins 8 caractères, ne peut pas être constitué uniquement de chiffres et ne doit pas être trop courant.')
         self.fields['password2'].help_text = None
 
     first_name = forms.CharField(label="Prénom", max_length=100)
     last_name = forms.CharField(label="Nom", max_length=100)
     email = forms.EmailField()
-
+    validation_cgu = forms.BooleanField(required=True)
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'validation_cgu')
         help_texts = {
             'username': None,
         }
         error_messages = {
             'username' : {
-                'unique': 'Cette adresse email est déjà utilisée.'
+                'unique': "Ce nom d'utilisateur n'est pas disponible"
             }
+        }
+        widget = {
+            'validation_cgu': CheckboxInput(
+                attrs={'class': 'validation-cgu'}
+            ),
         }
 
 class MySetPasswordForm(SetPasswordForm):

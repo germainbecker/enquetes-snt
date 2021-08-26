@@ -9,13 +9,35 @@
 {% endblock %}
 
 {% block content %}
-    
+    {% load custom_tags %}
     <div class="form-inscription">
         <h2>Créer un compte</h2>
         <p><em>Tous les champs sont obligatoires.</em></p>
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            {% for field in form %}
+                {% if field.field.widget|is_checkbox %}
+                {{ field.errors }}
+                <div id="cgu">
+                    {{ field }}
+                    <small>J'ai lu et j'accepte les <a href="{% url 'cgu' %}" target="_blank">Conditions générales d'utilisation</a>.</small>
+                </div>
+                {% else %}
+                {% autoescape off %}
+                {{ field.errors }}
+                {% endautoescape %}                
+                <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span class="helptext">
+                            {{ field.help_text }}
+                        </span>
+                    {% endif %}
+                    
+                </p>
+                {% endif %}
+            {% endfor %}
             <div class="btn-form">
                 <button class="btn-validation" type="submit">S'inscrire</button>
             </div>
