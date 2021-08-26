@@ -8,7 +8,8 @@ from django.urls import reverse
 from django.http import HttpResponse
 #from .utils import generer_code_enquete_unique
 from django import forms
-from enigmes.validators import FileValidator 
+from enigmes.validators import FileValidator
+from django.core.validators import RegexValidator
 
 from django.utils.translation import gettext_lazy as _
 import random, os
@@ -190,12 +191,41 @@ class Enquete(models.Model):
     class Meta:
         verbose_name = 'enquête'
 
+def reponse_nettoyee(ch: str) -> str :
+    """
+    Renvoie une nouvelle chaine, en minuscules, correspond à la chaine ch mais
+    avec suppression des espaces de fin et début, et des accents.
+    Permet de comparer deux réponses.
+    Ex : 
+    >>> reponse_nettoyee(' Épinal    ')
+    'epinal' 
+    """
+    
+    # suppression des accents
+    import unicodedata
+    s = ''.join(c for c in unicodedata.normalize('NFD', ch)
+                if unicodedata.category(c) != 'Mn')
+    # suppression de espaces de début et fin
+    s = s.strip()
+    # en minuscules
+    return s.lower()
+
 class Resultat(models.Model):
     enquete = models.ForeignKey(Enquete, related_name='enquete', blank=True, on_delete=models.CASCADE)  # si une enquete est supprimée ses résultats le sont aussi
     reponses = models.TextField('réponses', null=True, blank=True)  # du type "{enigme.pk : 'rep', ...}" --> utiliser ast.literal_eval pour évaluer en dictionnaire
-    id_eleve = models.CharField('id_eleve', max_length=100, default='')
+    id_eleve = models.CharField(
+        'id_eleve',
+        max_length=100,
+        default='',
+        validators=[
+            RegexValidator(
+                r'^([a-zA-Z]?)[0-9\-\_]*',
+                "L'identifiant saisi n'est pas valide. Veuillez consultez votre professeur.",
+            )
+        ]
+    )
     date = models.DateTimeField('date', auto_now_add=True)
-
+    
     def dictionnaire_reponses_eleve(self):
         """
         Renvoie un dictionnaire associant à chaque enquete.pk la réponse saisie par l'utilsateur
@@ -222,7 +252,7 @@ class Resultat(models.Model):
         reponses_eleves = self.dictionnaire_reponses_eleve()
         correction_reponses = {num_enigme: None for num_enigme in bonnes_reponses.keys()}
         for num_enigme in bonnes_reponses.keys():
-            if reponses_eleves[num_enigme] == bonnes_reponses[num_enigme]:
+            if reponses_eleves[num_enigme] == bonnes_reponses[num_enigme] or reponse_nettoyee(reponses_eleves[num_enigme]) == reponse_nettoyee(bonnes_reponses[num_enigme]):
                 correction_reponses[num_enigme] = True
             else:
                 correction_reponses[num_enigme] = False

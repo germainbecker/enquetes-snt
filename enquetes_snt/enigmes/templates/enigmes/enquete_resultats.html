@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block content %}
+{% include 'enigmes/modale_images.html' %}
+
 {% load custom_tags %}
 {% load static %}
 <div class="resultats-enquete">
@@ -142,5 +144,6 @@
 
 {% block jsfiles %}
 {% load static %}
+<script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
 <script src="{% static 'enigmes/js/resultats.js' %}"></script>
 {% endblock %}

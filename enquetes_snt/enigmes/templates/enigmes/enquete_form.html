@@ -24,7 +24,7 @@
         <div id="liste-enigmes">
             {% for enigme in enigmes %}
                 {% load markdownify %}
-                <div class="filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur }}">
+                <div class="filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}">
                     <div class="selected-enigme-container">
                         <div class="checkbox-container" id="case-{{ enigme.id }}">
                             <input type="checkbox" name="enigmes" id="enigme-{{ enigme.id }}" class="case-a-cocher" value="{{ enigme.id }}" autocomplete="off">

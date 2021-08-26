@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
@@ -26,6 +27,9 @@ from .forms import (
 from .models import Enigme, Enquete, Resultat
 from django.http import HttpResponse
 import csv
+
+def conditions(request):
+    return render(request, 'enigmes/conditions.html')
 
 def index(request):
     
@@ -498,42 +502,40 @@ def eleve(request, code_enquete):
         liste_enigmes = enquete.liste_enigmes_ordre_initial()
     else:
         liste_enigmes = enquete.liste_enigmes()
-    
     context = {
         "enquete": enquete,
-        "enigmes": liste_enigmes
+        "enigmes": liste_enigmes,
     }
 
     if request.method == 'POST':
-        print(request.POST)
-        form = EnqueteEleveForm(request.POST, enigmes=liste_enigmes)
-        if form.is_valid():
-            donnees = form.cleaned_data
-            print("ici :", donnees)
-            identifiant_eleve = donnees['id_eleve']
-            # recupération des réponses
-            liste_num_enigmes = enquete.liste_numeros_enigmes()  # liste de int
-            # construction du champ "reponses" du modèle
-            dic_reponses = {num: donnees[str(num)] for num in liste_num_enigmes}
-            # enregistrement
-            resultat = Resultat.objects.create(
-                enquete=enquete,
-                id_eleve=identifiant_eleve,
-                reponses=str(dic_reponses) 
-            )
-            # si réponses affichées
-            if enquete.correction or enquete.score:
-                context['reponses'] = dic_reponses
-                context['score'] = resultat.calcul_score()
-                context['correction'] =  resultat.bonnes_mauvaises_reponses()
-                return render(request, 'enigmes/enquete_eleve_reponses.html', context)
-            # sinon redirection vers remerciements
-            
-            else:
-                return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
-        else:
-            messages.warning(request, "Une erreur est survenue. Les réponses n'ont pas été envoyées.")
-            return render(request, 'enigmes/enquete_eleve.html', context)
+        try:
+            form = EnqueteEleveForm(request.POST, enigmes=liste_enigmes)
+            context['form'] = form
+            if form.is_valid():
+                donnees = form.cleaned_data
+                identifiant_eleve = donnees['id_eleve']
+                # recupération des réponses
+                liste_num_enigmes = enquete.liste_numeros_enigmes()  # liste de int
+                # construction du champ "reponses" du modèle
+                dic_reponses = {num: donnees[str(num)] for num in liste_num_enigmes}
+                # enregistrement
+                resultat = Resultat.objects.create(
+                    enquete=enquete,
+                    id_eleve=identifiant_eleve,
+                    reponses=str(dic_reponses) 
+                )
+                # si réponses affichées
+                if enquete.correction or enquete.score:
+                    context['reponses'] = dic_reponses
+                    context['score'] = resultat.calcul_score()
+                    context['correction'] =  resultat.bonnes_mauvaises_reponses()
+                    return render(request, 'enigmes/enquete_eleve_reponses.html', context)
+                # sinon redirection vers remerciements
+                
+                else:
+                    return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
+        except:
+            messages.error(request, "Une erreur interne s'est produite. Les réponses n'ont pas été envoyées.")
     else:
         form = EnqueteEleveForm(enigmes=liste_enigmes)
         context['form'] = form

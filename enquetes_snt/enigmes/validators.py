@@ -4,7 +4,7 @@ from django.utils.deconstruct import deconstructible
 from django.template.defaultfilters import filesizeformat
 from django.core.exceptions import ValidationError
 
-
+# Validation des éventuels fichiers téléversés avec une énigme
 @deconstructible
 class FileValidator(object):
     error_messages = {

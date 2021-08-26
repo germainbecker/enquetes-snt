@@ -1,0 +1,62 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav=None %}
+{% endblock %}
+
+{% block content %}
+
+<div id="cgu">
+    <h1>Conditions générales d'utilisation et confidentialité</h1>
+    
+    <p>En acceptant la création d'un compte sur l'application, vous acceptez toutes les présentes conditions et consentez à la politique de confidentialité de l'application.</p>
+    <p>Dans la suite, on désignera par <em>utilisateur</em> et par <em>vous</em>, toute personne ayant créé un compte sur l'application.</p>
+    
+    <h2>Conditions générales d'utilisation</h2>
+    
+    <h3>1. Personnes autorisées à créer un compte</h3>
+    <p>Seules les personnes possédant une adresse e-mail académique peuvent créer leur compte sur l'application. Le but évident étant d'empêcher toute autre personne, en particulier les élèves, de créer un compte pour avoir accès au contenu de toutes les énigmes et leurs réponses. Cas particuliers : les enseignants ne possédant pas d'adresse e-mail académique peuvent contacter l'administrateur de l'application par voie électronique pour demander leur ajout à la liste des exceptions.</p>
+
+    <h3>2. Responsabilité des utilisateurs</h3>
+    <p>Vous êtes entièrement responsable de toutes les activités qui se produisent avec votre compte. Vous vous engagez à informer le plus rapidement possible l'administrateur de l'application en cas d'utilisation non autorisée de votre compte.</p>
+    <p>Tout le contenu que vous soumettez et rendez disponible aux autres utilisateurs de l'application, doit respecter le droit d'auteur, ne doit pas inciter à la violence, ne doit pas être à caractère pornographique, ne doit pas être généré par une machine. Toute énigme identifiée comme ne respectant pas ces consignes sera supprimée.</p>
+    
+    <h3>3. Licence des contenus des utilisateurs</h3>
+    <p>Tout le contenu publié sur l'application par les utilisateurs est sous licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank">Creative Commons BY-NC-SA 4.0</a></p>
+    
+    <h3>4. Résiliation</h3>
+    <p>En cas de non respect identifié des conditions énoncées ci-dessus, votre compte pourra être supprimé. De vôtre côté, vous pouvez supprimer votre compte et arrêter d'utiliser l'application : pour cela, il suffira de faire votre demande par voie électronique à l'adresse de contact. En cas de suppression d'un compte utilisateur, les énigmes créées par l'utilisateur en question sont néanmoins conservées dans la base de données (sous réserve qu'elles respectent les conditions énoncées dans le paragraphe 1 ci-dessus).</p>
+    <h3>5. Modification des conditions d'utilisation</h3>
+    <p>Les conditions d'utilisation peuvent être modifiées. Dans ce cas, les utilisateurs en seront informés.</p>
+    
+    
+    <h2>Confidentialité</h2>
+    
+    <h3>1. Données personnelles</h3>
+    <p>Conformément au Réglement Général sur la Protection des Données (RGPD), vous trouverez ci-dessous les informations concernant la collecte de données à caractère personnel.</p>
+    <p>En créant un compte sur l'application, vous consentez et acceptez que des informations personnelles puissent être collectées et traitées selon les conditions qui suivent.</p>
+    <p>Les données personnelles collectées sont uniquement utilisées pour assurer le fonctionnement de l'application. Aucune d'elle n'est transmise à des tiers.</p>
+    <p><strong>Les données collectées sur les utilisateurs sont :</strong></p>
+    <ul>
+        <li>Nom et Prénom</li>
+        <li>Nom d'utilisateur</li>
+        <li>Adresse e-mail</li>
+        <li>Mot de passe (hashé)</li>
+    </ul>    
+    <p><strong>La collecte de ces données est réalisée afin</strong></p>
+    <ul>
+        <li>de vous donner accès à l'application et vous permettre de l'utiliser</li>
+        <li>de permettre aux utilisateurs de filtrer les énigmes par Nom et Prénom de l'auteur.</li>
+    </ul>
+    <p>Vous pouvez accéder à vos données personnelles ou demander leur suppression. Pour exercer ce droit, veuillez contacter l'administrateur par voie électronique.</p>
+    <p>Aucune des données personnelles sur les utilisateurs n'est visible par les élèves lorsqu'ils résolvent les enquêtes.</p>
+    
+    <h3>2. Hébergement des données</h3>
+    <p>Les données collectées sont stockées de manière conforme au RGPD sur les serveurs européens de l'entreprise <a href="https://eu.pythonanywhere.com/" target="_blank">PythonAnywhere</a>, ces serveurs étant situés à Francfort (Allemagne) dans un centre de données d'Amazon Web Services. Voir les <a href="https://eu.pythonanywhere.com/terms_v2/" target="_blank">conditions générales</a> et ce <a href="https://blog.pythonanywhere.com/176/">billet</a> de blog sur l'hébergement en Europe de PythonAnywhere.</p>
+    <h3>3. Cookies</h3>
+    <p>Seuls des cookies nécessaires à votre connexion à l'application et à l'utilisation de l'application sont utilisés.</p>
+    <h3>4. Données des élèves</h3>
+    <p>Les élèves sont repérés dans la base de données par l'identifiant qu'ils saisissent lors de la réalisation de leur enquête. Cet identifiant leur est fourni par leur professeur et ne peut comporter que des chiffres (de 0 à 9), les caractères "_" et "-", et éventuellement une lettre en tête (pour identifier une classe par exemple). Ainsi, <strong>aucune donnée personnelle</strong> n'est récoltée sur les élèves.</p>
+</div>
+
+{% endblock %}

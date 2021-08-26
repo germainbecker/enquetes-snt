@@ -178,7 +178,7 @@
             {% for enigme in enigmes %}
                 <div class="enigme-container">
                     
-                    {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True zone_saisie_reponses=True indications_activees=enquete.indications %}
+                    {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True zone_saisie_reponses=True indications_activees=enquete.indications apercu_reponses=True %}
                 
                 </div>
             {% endfor %}

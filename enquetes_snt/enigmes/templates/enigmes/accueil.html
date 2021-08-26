@@ -11,13 +11,14 @@
   
   <div id="presentation-accueil">
     {% load static %}
-    <div id="presentation-application">
-      <div class="presentation-image">
-        <img src="{% static 'enigmes/img/training-online.svg' %}" alt="icone illustration">      
-      </div>
-      <div>
-        <h2>Présentation de l'application</h2>
-        <div id="presentation-application-texte">
+
+    <div class="presentation-application-container">
+      <h2>Présentation de l'application</h2>
+      <div class="presentation-application">
+        <div class="presentation-image">
+          <img src="{% static 'enigmes/img/training-online.svg' %}" alt="icone illustration">      
+        </div>
+        <div class="presentation-application-texte">
           <p>L'application <em>enquetes-snt</em> permet aux enseignants de SNT de créer, mutualiser et partager des énigmes à destination de leurs élèves.</p>
           <p>Concrètement, les enseignants peuvent créer des <strong>énigmes</strong> qui seront ajoutées à la base commune. Chaque enseignant peut ensuite créer ses propres <strong>enquêtes</strong> à partir d'une ou plusieurs énigmes de la base. À l'aide d'un code (ou d'un lien), l'enseignant peut ensuite proposer ces enquêtes à ses élèves et récupérer leurs résultats.</p>
           <p>Ce site utilise uniquement des cookies indispensables à son fonctionnement.</p>
@@ -49,18 +50,18 @@
       </div>
     </div>
 
-    <div id="presentation-application">
-      <div class="presentation-image">
-        <img src="{% static 'enigmes/img/easy-to-use.svg' %}" alt="icone illustration">      
-      </div>
-      <div>
-        <h2>Interface de l'application</h2>
-        <div id="presentation-application-texte">
+    <div class="presentation-application-container">
+      <h2>Interface de l'application</h2>
+      <div class="presentation-application">
+        <div class="presentation-image">
+          <img src="{% static 'enigmes/img/easy-to-use.svg' %}" alt="icone illustration">      
+        </div>
+        <div class="presentation-application-texte">
           <p>Vous pouvez naviguer entre trois onglets :</p>
           <ul>
             <li>L'onglet <strong>Accueil</strong> : celui sur lequel vous trouvez et qui correspond à la page affichée juste après l'identification.</li>
             <li>L'onglet <strong>Énigmes</strong> : vous y trouverez la liste de toutes les énigmes créées par l'ensemble des enseignants.</li>
-            <li>L'onglet <strong>Espace personnel</strong> : c'est le plus important, il vous permet d'accéder rapidement à la création d'énigmes, d'enquêtes et regroupe l'ensemble des enquêtes que vous avez créées. C'est par cet onglet que vous pourrez accéder aux détails, aux paramètres et aux résultats des différentes enquêtes.</li>
+            <li>L'onglet <strong>Espace personnel</strong> : c'est le plus important, il vous permet d'accéder rapidement à la création d'énigmes, d'enquêtes et regroupe l'ensemble des enquêtes que vous avez créées. C'est aussi par cet onglet que vous pourrez accéder aux détails, aux paramètres et aux résultats des différentes enquêtes.</li>
           </ul>
           <p>Vous restez connecté à l'application tant que vous ne cliquez pas sur le bouton "Se déconnecter" en haut à droite du menu de navigation ou que vous ne supprimez pas les cookies de l'application.</p>
         </div>
@@ -81,8 +82,7 @@
       </div>
     </div>
   </div>
-
-  
+ 
   
 {% else %}
   <p>Pour accéder à cette page, veuillez vous connecter : <a href="{% url 'login' %}">se connecter</a>.</p>

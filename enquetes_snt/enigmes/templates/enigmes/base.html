@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>enquetes-snt</title>
     {% load static %}
     <link rel="shortcut icon" href="{%  static 'enigmes/img/favicon.ico' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
     <!-- Loading mathjax macro -->
     <!-- Load mathjax -->
     <script type="text/javascript" async
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
       </script>
       <script type="text/x-mathjax-config">
   	MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']],
@@ -71,7 +71,7 @@
               </div>
               <div class="icones-liens">
                 <img src="{% static 'enigmes/img/email.svg' %}" alt="logo">
-                <p>mon.adresse@enquetes-snt.fr</p>
+                <p>g.<span class="protection">krfr_ue?duemzfr,ze!</span>becker<span class="protection">rfzhzfeJEKE</span>@en<span class="protection">eznefnzrlfgzr^zkzhnf</span>quetes-<span class="protection">fzfgzrif</span>sn<span class="protection">ffrpifgjr</span>t.f<span class="protection">dekLKE_73fr</span>r</p>
               </div>
               <div class="icones-liens">
                 <img src="{% static 'enigmes/img/donation.svg' %}" alt="logo">
@@ -81,8 +81,14 @@
             <div id="footer-a-propos">
               <h2 id="a-propos-titre">À propos</h2>
               <p>Cette plateforme est une application développée en Python avec le framework Django. Elle permet aux enseignants de SNT de créer, mutualiser et partager des énigmes à destination de leurs élèves. Le code source est disponible sur GitHub, où d'autres informations sur le projet sont disponibles. Une cagnotte a été ouverte afin de participer aux frais de fonctionnement de l'application.</p>
+              <div class="cgu">
+                <a href="{% url 'cgu' %}" target="_blank">Conditions générales d'utilisation et confidentialité</a>
+              </div>
             </div>
-          </div>        
+          </div>
+          <!-- <div class="cgu">
+            <a href="{% url 'cgu' %}" target="_blank">Conditions générales d'utilisation et confidentialité</a>
+          </div> -->       
         </div>
       </footer>
       {% endblock %}

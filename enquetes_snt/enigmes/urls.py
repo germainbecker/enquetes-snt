@@ -28,4 +28,5 @@ urlpatterns = [
     path('mon-espace/', views.espace_perso, name='espace-perso'),
     path('mon-espace/mes-enigmes/', views.mes_enigmes, name='mes-enigmes'),
     path('eleve/enquete/<str:code_enquete>/', views.eleve, name='enquete-eleve'),
+    path('conditions/', views.conditions, name='cgu'),
 ]

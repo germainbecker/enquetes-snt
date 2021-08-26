@@ -1,0 +1,13 @@
+{% extends 'enigmes/base.html' %}
+
+{% block balise_body%}
+<body class="couleur">
+{% endblock %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav=None %}
+{% endblock %}
+
+{% block content %}
+<p>Une erreur interne du serveur s'est produite.</p>
+{% endblock %}

@@ -315,6 +315,12 @@ li#logout svg path {
     }
 }
 
+/* CGU */
+
+#cgu p {
+    line-height: 1.3em;
+}
+
 
 /* ##### INDEX.HTML pour élèves ##### */
 
@@ -522,9 +528,8 @@ svg#logo g.snt path {
     align-items: center;
     flex-wrap: wrap;
     gap: 30px;
-    margin-bottom: 50px;
+    margin-bottom: 15px;
 }
-
 .content-container #zone-message-enseignants #message-enseignants {
     max-width: 600px;
     min-width: 300px;
@@ -547,7 +552,7 @@ svg#logo g.snt path {
 
 .content-container .btn-enseignants {
     position: relative;
-    font-size: 1.5em;
+    font-size: 1.3em;
 }
 
 .lien-div::before {
@@ -561,7 +566,7 @@ svg#logo g.snt path {
 
 .content-container .btn-enseignants {
     min-width: 200px;
-    height: 100px;
+    height: 60px;
     border-radius: 10px;
     color: white;
     background-color: var(--main-darker);
@@ -622,13 +627,61 @@ svg#logo g.snt path {
     width: auto;
 }
 
-#presentation-application {
+.presentation-application-container {
+    margin: 20px 0;    
+}
+
+.presentation-application-container * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;    
+}
+
+.presentation-application-container h2 {
+    color: var(--black);
+    padding-bottom: 5px;
+    border-bottom: 5px solid var(--main); 
+}
+
+.presentation-application {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.presentation-application .presentation-application-texte {
+    line-height: 1.4em;
+    text-align: justify;
+}
+
+.presentation-application .presentation-image {
+    width: 100px;
+}
+
+.presentation-application .presentation-image img {
+    width: 100px;
+}
+
+.presentation-application .presentation-application-texte p {
+    margin: 0.5em 0;
+}
+
+.presentation-application .presentation-application-texte ul {
+    margin: 1em 0;
+    padding-left: 40px;
+}
+
+.presentation-application .presentation-application-texte li {
+    line-height: inherit;
+    margin: 0.5em 0;
+}
+
+/* #presentation-application {
     display: flex;
     align-items: center;
     gap: 30px;
     padding: 20px;
-    border-radius: 10px;
-    /* background-color: var(--main-light); */
 }
 
 #presentation-application * {
@@ -669,11 +722,13 @@ svg#logo g.snt path {
 #presentation-application #presentation-application-texte li {
     line-height: inherit;
     margin: 0.5em 0;
-}
+} */
 
 #informations-application {
     background-color: var(--third-light);
     padding: 20px;
+    margin: 20px 0 40px 0;
+    border-radius: 10px;
 }
 
 #informations-application * {
@@ -1611,7 +1666,7 @@ summary span:hover {
     }
 }
 
-.apercu blockquote[class*="apercu-indication"]{
+.apercu blockquote[class*="apercu-indication"] {
     display: flex;
     align-items: center;
     background-color: rgb(220,240,255);
@@ -2659,7 +2714,8 @@ input:checked + .slider:before {
 
 .form-inscription {
     max-width: 400px;
-    margin: auto auto;
+    margin: auto;
+    margin-bottom: 50px;
     padding: 10px 20px;
     border: 1px solid var(--main);
     border-radius: 10px;
@@ -2689,6 +2745,10 @@ input:checked + .slider:before {
 .form-creation p input,
 .description-container p input {
     line-height: 20px;
+}
+
+.form-inscription #cgu {
+    margin: 20px 0;
 }
 
 #id_theme {
@@ -2753,6 +2813,7 @@ input:checked + .slider:before {
     color: rgb(36 123 0);
     display: block;
 }
+
 
 .form-creation {
     color: #222;
@@ -2918,6 +2979,22 @@ input:checked + .slider:before {
 }
 
 /* --- Formulaire réponses élèves --- */
+
+
+#erreur-identifiant *{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#erreur-identifiant {
+    padding: 10px 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+    color: #8a3b3b;
+    background-color: #fce3e3;
+    border-color: #faebcc;
+}
 
 .form-reponses-enquete .zone-id {
     background-color: var(--main-darker);
@@ -3127,8 +3204,6 @@ input:checked + .slider:before {
 .btn-apercu #btn-apercu:hover {
     background-color: var(--second);
 }
-
-
 
 /* messages d'alertes */
 
@@ -3363,4 +3438,22 @@ footer
 
 #a-propos-titre img {
     width: 30px;
+}
+
+.protection {
+    display: none;
+}
+
+.cgu {
+    font-size: 0.9em;
+    padding: 10px 0;
+}
+
+#footer-content .cgu a {
+    text-decoration: underline;
+    color: rgb(220 220 220);
+}
+
+#footer-content .cgu a:hover {
+    color: white;
 }

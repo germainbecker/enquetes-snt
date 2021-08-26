@@ -33,15 +33,24 @@
     {% csrf_token %}
     <!-- pour empêcher une validation du formulaire par l'appui sur entrée -->
     <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-    <div class="zone-id">
-        <label for="id_eleve">Identifiant :</label>
-        <input type="text" name="id_eleve" required>
+    
+    {% if form.id_eleve.errors %}
+    <div id="erreur-identifiant">
+        {% autoescape off %}
+        {{ form.id_eleve.errors }}  <!-- message erreur saisi identifiant -->
+        {% endautoescape %}
     </div>
+    {% endif %}
+    <div class="zone-id">
+        {{ form.id_eleve.label_tag }}
+        {{ form.id_eleve }}
+    </div>
+    
     <div id="liste-enigmes">
         {% for enigme in enigmes %}
         <div class="enigme-container">
-            
-            {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True affiche_reponses=False zone_saisie_reponses=True indications_activees=enquete.indications %}
+
+            {% include 'enigmes/enigme.html' with field=form|get:forloop.counter0 enigme=enigme pour_eleves=True affiche_reponses=False zone_saisie_reponses=True indications_activees=enquete.indications %}
 
         </div>
     {% endfor %}
