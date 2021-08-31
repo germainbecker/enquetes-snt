@@ -240,7 +240,7 @@ Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent 
 >
 >Je ne suis pas un développeur professionnel, loin de là, et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible, qui n'est pas toujours très important en période scolaire.
 >
->De même, si vous voyez des améliorations, qu'elles soient d'ordre pédagogique, technique ou ergonomique, n'hésitez pas à m'en faire part.
+>De même, si vous voyez des améliorations, qu'elles soient d'ordre pédagogique, technique ou ergonomique, n'hésitez pas à m'en faire part (vous trouverez une adresse de contact en bas des pages de l'application).
 >
 >En espérant que cette application vous soit utile,
 >
