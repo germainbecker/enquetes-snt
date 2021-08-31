@@ -16,15 +16,18 @@ Ce document est une présentation de l'application.
 
 **Table des matières**
 
+[TOC]
+
 * [Création d'un compte enseignant](#cr%C3%A9ation-dun-compte-enseignant)
 * [Énigmes](#%C3%A9nigmes)
-    * [Énigmes](#%C3%A9nigmes)
     * [Qu'est-ce qu'une *énigme* ?](#quest-ce-quune-%C3%A9nigme)
     * [Ajout d'une énigme](#ajout-dune-%C3%A9nigme)
 * [Enquêtes](#enqu%C3%AAtes)
     * [Qu'est-ce qu'une enquête ?](#quest-ce-quune-enqu%C3%AAte)
     * [Création d'une enquête](#cr%C3%A9ation-dune-enqu%C3%AAte)
-    * [Tableau de bord, détails et résultats d'une enquête](#tableau-de-bord-d%C3%A9tails-et-r%C3%A9sultats-dune-enqu%C3%AAte)
+    * [Tableau de bord](#tableau-de-bord)
+    * [Détails d'une enquête](#d%C3%A9tails-dune-enqu%C3%AAte)
+    * []
 * [](#)
 * [](#)
 * [](#)
@@ -52,6 +55,22 @@ Pour accéder à l'application, un enseignant devra créer un compte à la premi
 Chaque enseignant sera ensuite identifié grâce au couple (adresse e-mail, mot de passe).
 
 > Les formats acceptés d'adresse e-mail sont du type _prenom.nom@ac-&lt;academie&gt;.&lt;domaine&gt;_. Pour les cas particuliers, vous pouvez me contacter.
+
+Pour créer un compte, il est nécessaire de valider et accepter les conditions générales d'utilisation et la politique de confidentialité de l'application, disponibles à l'adresse [https://www.enquetes-snt.fr/conditions/](https://www.enquetes-snt.fr/conditions/)
+
+**Quelques mots sur la confidentialité** 
+
+L'application respecte le Réglement Général sur la Protection des Données (RGPD).
+
+Seules des données nécessaires au fonctionnement de l'application sont collectées sur les utilisateurs (les enseignants qui se créent un compte) : nom, prénom, nom d'utilisateur, adresse e-mail, mot de passe. 
+
+Les données collectées sont stockées de manière sécurisée et conforme au RGPD sur les serveurs européens de l'entreprise [PythonAnywhere](https://eu.pythonanywhere.com/), ces serveurs étant situés à Francfort (Allemagne) dans un centre de données d'Amazon Web Services.
+
+Seuls des cookies nécessaires à la connexion des utilisateurs et à l'utilisation de l'application sont utilisés.
+
+**Aucune donnée personnelle n'est collectée sur les élèves.**
+
+>Vous trouverez davantage de détails en allant voir la politique de confidentialité dont le lien est donné un peu plus haut.
 
 ## Énigmes
 
@@ -114,9 +133,14 @@ Très rapidement, une énigme est composée de 6 champs :
 5. Image d'illustration (optionnel) : pour téléverser une image pour accompagner l'énigme
 6. Fichier en pièce jointe (optionnel) : pour téléverser une pièce jointe à l'énigme qui pourra être téléchargée par les élèves
 
-Sachez que les énoncés et indications peuvent être rédigées en **Markdown** ou en **HTML**.
+Sachez que les énoncés et indications peuvent être rédigées en **Markdown** ou en **HTML**. Une zone vous permet de visualiser en direct le rendu de votre énigme.
 
-> Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement).
+<figure>
+  <img src="img/previsualisation_enigme.png" alt="Filtrer les énigmes" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
+  <figcaption style="text-align:center; margin: 20px 0"><em>Création d'une énigme</em></figcaption>
+</figure>
+
+> Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
 
 ## Enquêtes
 
@@ -176,13 +200,70 @@ La page de résultats d'une enquête permet de voir dans un tableau la réussite
   <figcaption style="text-align:center; margin: 10px 0"><em>Résultats d'une enquête</em></figcaption>
 </figure>
 
-### Côté élève
+## Côté élève
+
+### Accès à une enquête
 
 Lors de la création d'une enquête, un code de 8 caractères sera généré ainsi qu'un lien. Les élèves n'auront qu'à saisir ce code sur la page d'accueil pour accéder à l'enquête, ou suivre le lien.
 
+### Résolution de l'enquête
+
 Pour différencier vos différents élèves, un **identifiant** leur sera demandé. C'est à vous de définir les identifiants de vos élèves (un numéro par élève par exemple). Ces identifiants seront stockés dans la base de donnnées et permettront d'associer un résultat à chaque élève pour chaque enquête.
 
+**⚠️ Attention**
+
+**C'est à vous de définir les identifiants de vos élèves. Un identifiant ne peut pas être vide et doit nécessairement être de la forme :**
+
+* **une suite de caractères parmi les chiffres de 0 à 9 ainsi que les caractères "-" (tiret) et "_" (underscore).**
+* **éventuellement précédée d'une seule et unique lettre (optionnel, mais permet éventuellement de différencier les classes)**
+
+Par exemple, les identifiants suivants sont valides :
+
+* 2569845
+* B25
+* E-12_01
+
+Mais les trois qui suivent ne le sont pas :
+
+* 12/30 (caractère "/" non valide)
+* 17B (lettre pas en première position)
+* A_25J (un deuxième lettre interdite)
+
+>De cette façon **aucune donnée personnelle** sur les élèves n'est récoltée. Les identifiants seront stockés dans la base de données et permettront d'associer un résultat à chaque élève pour chaque enquête.
+
+L'élève saisi ensuite ses réponses aux différentes énigmes de l'enquête et peux valider en bas de page une fois qu'il a terminé. Des champs de réponse peuvent rester vide si toutefois il ne trouve pas les réponses.
+
+### Score et correction
+
+Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent se présenter :
+
+* il est redirigé vers une page de remerciements si l'enquête est paramétrée de façon à ne pas diffuser le score et la correction
+* il voit son score si l'enquête est paramétrée de façon à diffuser le score
+* il voit également (en plus du score) la correction pour chaque énigme si l'enquête est paramétrée de façon à diffuser la correction
+
+>Dans le cas où les énigmes de l'enquête sont diffusées dans un ordre aléatoire (paramètrage possible de l'enquête), la correction présente les énigmes dans un ordre identique pour tous (et donc ne correspond pas nécessairement à l'ordre dans lequel chaque élève a résolu l'enquête).
 
 ## Mot de l'auteur
 
+>J'ai voulu créer une application avant tout pour apprendre le développement Web, domaine que j'ai découvert il y a peu et qui m'intéresse beaucoup par son aspect créatif. Dans un second temps, pour que les choses soient plus concrètes et stimulantes, j'ai souhaité développer une application qui soit utile et l'idée des enquêtes me paraissait intéressante en ce sens. J'ai choisi de le faire avec le framework Django pour parfaire mes connaissances dans le langage Python.
+>Je ne suis pas un développeur professionnel, loin de là, et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible, qui n'est pas toujours très important en période scolaire.
+>De même, si vous voyez des améliorations, qu'elles soient d'ordre pédagogique, technique ou ergonomique, n'hésitez pas à m'en faire part.
+>En espérant que cette application vous soit utile,
+>Germain Becker
+
+
+## Participer à la cagnotte
+
+Cagnotte : [https://www.onparticipe.fr/cagnottes/bNagoLGz](https://www.onparticipe.fr/cagnottes/bNagoLGz)
+
+Si l'application vous a été utile et que vous le souhaitez, vous pouvez contribuer à la cagnotte et ainsi participer aux frais engagés pour son fonctionnement. 
+
+Ces frais annuels s'élèvent à 77,99 € TTC et correspondent à : 
+
+* l'achat du nom de domaine (+ messagerie) : 5,99 TTC
+* l'hébergement sur la plateforme eu.pythonanywhere.com : 72 € TTC (6 € par mois). 
+
+En vous remerciant par avance.
+
+## Hébergement de l'application
 
