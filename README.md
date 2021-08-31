@@ -41,7 +41,7 @@ Ce document est une présentation de l'application.
 
 ---
 
-## Création d'un compte enseignant
+# Création d'un compte enseignant
 
 La page d'accueil [enquetes-snt.fr](https://www.enquetes-snt.fr) est à destination des élèves. On y trouve en haut à droite un lien pour accéder à l'espace enseignant où les enseignants peuvent s'identifier.
 
@@ -72,9 +72,9 @@ Seuls des cookies nécessaires à la connexion des utilisateurs et à l'utilisat
 
 >Vous trouverez davantage de détails en allant voir la politique de confidentialité dont le lien est donné un peu plus haut.
 
-## Énigmes
+# Énigmes
 
-### Qu'est-ce qu'une *énigme* ?
+## Qu'est-ce qu'une *énigme* ?
 
 À l'origine, l'idée était de proposer aux élèves des énigmes nécessitant un travail de recherche de leur part (d'où les termes _énigme_ et _enquête_), afin de valider leurs connaissances et compétences. 
 
@@ -116,7 +116,7 @@ Chaque énigme devra être associée à l'un des thèmes suivants :
 * Un traitement est néanmoins prévu pour nettoyer les réponses afin de comparer celles saisies par les élèves à celle attendue : passage en minuscules, suppression des accents et des espaces inutiles en début et fin. Ainsi, si la réponse attendue (saisie par l'auteur de l'énigme) est la chaîne de caractères `"Orléans"` et qu'un élève saisit `"orleans "`, sa réponse sera jugée correcte. En revanche, s'il répond `"Orléan"`, elle sera incorrecte.
 * les énigmes ne peuvent pas être des questions de type Vrai/Faux, QCM, associations, texte à trous, etc.
 
-### Ajout d'une énigme
+## Ajout d'une énigme
 
 Le lien suivant, que vous trouverez également sur la page de création d'une énigme, donne des explications détaillées sur la création d'une énigme : [https://www.enquetes-snt.fr/enigme/creation/exemple/](https://www.enquetes-snt.fr/enigme/creation/exemple/).
 
@@ -137,13 +137,13 @@ Sachez que les énoncés et indications peuvent être rédigées en **Markdown**
 
 > Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
 
-## Enquêtes
+# Enquêtes
 
-### Qu'est-ce qu'une *enquête* ?
+## Qu'est-ce qu'une *enquête* ?
 
 Une enquête est formée d'au moins une énigme de la base. On peut donc créer des enquêtes plus ou moins longues.
 
-### Création d'une enquête
+## Création d'une enquête
 
 Il y a deux façons de créer une enquête :
 
@@ -165,7 +165,7 @@ Ces quatre paramètres peuvent être modifiés après la création de l'enquête
 
 Les enquêtes ne sont pas partagées avec les autres utilisateurs.
 
-### Tableau de bord
+## Tableau de bord
 
 Un tableau de bord permet à chaque enseignant de visualiser en un coup d'oeil toutes les enquêtes qu'il a créées. Ce tableau permet d'accéder au détail de chaque enquête, d'activer ou désactiver une enquête, de connaître le code à communiquer à ses élèves, d'accéder aux résultats des enquêtes, de supprimer une enquête.
 
@@ -173,7 +173,7 @@ Un tableau de bord permet à chaque enseignant de visualiser en un coup d'oeil t
 |:--:| 
 | *Tableau de bord* |
 
-### Détails d'une enquête
+## Détails d'une enquête
 
 La page de détail d'une enquête recense toutes les informations de l'enquête, c'est aussi sur cette page que l'on peut modifier les paramètres de l'enquête, que l'on peut accéder aux résultats des élèves ou les télécharger (au format CSV). On peut également visualiser l'enquête telle qu'elle sera vue par les élèves.
 
@@ -183,7 +183,7 @@ La page de détail d'une enquête recense toutes les informations de l'enquête,
 
 > Il est possible de supprimer une enquête via le tableau de bord ou la page de détails de l'enquête, mais toutes les données de l'enquête seront perdues. ⚠️ Assurez-vous donc d'avoir récupéré les résultats avant la suppression !
 
-### Résultats d'une enquête
+## Résultats d'une enquête
 
 La page de résultats d'une enquête permet de voir dans un tableau la réussite des élèves pour l'enquête, énigme par énigme. Il est possible de masquer/afficher les identifiants des élèves, leurs réponses, leurs résultats. Ceci a pour but de pouvoir visualiser en temps réel les résultats, tout en préservant si on le souhaite l'identité des élèves et leurs réponses. Cette page permet également de procéder directement à la correction de l'enquête puisque sous les résultats on retrouve les énigmes et leurs réponses.
 
@@ -191,13 +191,13 @@ La page de résultats d'une enquête permet de voir dans un tableau la réussite
 |:--:| 
 | *Résultats d'une enquête* |
 
-## Côté élève
+# Côté élève
 
-### Accès à une enquête
+## Accès à une enquête
 
 Lors de la création d'une enquête, un code de 8 caractères sera généré ainsi qu'un lien. Les élèves n'auront qu'à saisir ce code sur la page d'accueil pour accéder à l'enquête, ou suivre le lien.
 
-### Résolution de l'enquête
+## Résolution de l'enquête
 
 Pour différencier vos différents élèves, un **identifiant** leur sera demandé. C'est à vous de définir les identifiants de vos élèves (un numéro par élève par exemple). Ces identifiants seront stockés dans la base de donnnées et permettront d'associer un résultat à chaque élève pour chaque enquête.
 
@@ -224,7 +224,7 @@ Mais les trois qui suivent ne le sont pas :
 
 L'élève saisi ensuite ses réponses aux différentes énigmes de l'enquête et peux valider en bas de page une fois qu'il a terminé. Des champs de réponse peuvent rester vide si toutefois il ne trouve pas les réponses.
 
-### Score et correction
+## Score et correction
 
 Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent se présenter :
 
@@ -234,7 +234,7 @@ Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent 
 
 >Dans le cas où les énigmes de l'enquête sont diffusées dans un ordre aléatoire (paramètrage possible de l'enquête), la correction présente les énigmes dans un ordre identique pour tous (et donc ne correspond pas nécessairement à l'ordre dans lequel chaque élève a résolu l'enquête).
 
-## Mot de l'auteur
+# Mot de l'auteur
 
 >J'ai voulu créer une application avant tout pour apprendre le développement Web, domaine que j'ai découvert il y a peu et qui m'intéresse beaucoup par son aspect créatif. Dans un second temps, pour que les choses soient plus concrètes et stimulantes, j'ai souhaité développer une application qui soit utile et l'idée des enquêtes me paraissait intéressante en ce sens. J'ai choisi de le faire avec le framework Django pour parfaire mes connaissances dans le langage Python.
 >
@@ -247,7 +247,7 @@ Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent 
 >Germain Becker
 
 
-## Participer à la cagnotte
+# Participer à la cagnotte
 
 Cagnotte : [https://www.onparticipe.fr/cagnottes/bNagoLGz](https://www.onparticipe.fr/cagnottes/bNagoLGz)
 
