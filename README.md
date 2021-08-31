@@ -1,10 +1,16 @@
 # enquetes-snt
 
-![logo](https://www.enquetes-snt.fr/static/enigmes/img/enquetesSNT-white.svg)
+![page d'accueil](img/accueil.png)
 
-Le projet **enquetes-snt** permet aux enseignants de SNT (Sciences Numériques et Technologie) de créer, mutualiser et partager des énigmes à destination de leurs élèves.
+L'application **enquetes-snt** permet aux enseignants de SNT (Sciences Numériques et Technologie) de créer, mutualiser et partager des énigmes à destination de leurs élèves.
 
 Il s'agit d'une application Django développée par Germain Becker, enseignant de Mathématiques, NSI et SNT. Celle-ci est disponible à l'adresse : [enquetes-snt.fr](https://www.enquetes-snt.fr)
+
+![CC](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)
+
+Cette application est diffusée sous licence [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+
+---
 
 Concrètement, chaque enseignant peut se créer un compte sur la plateforme et peut ensuite :
 
@@ -16,8 +22,6 @@ Ce document est une présentation de l'application.
 
 **Table des matières**
 
-[TOC]
-
 * [Création d'un compte enseignant](#cr%C3%A9ation-dun-compte-enseignant)
 * [Énigmes](#%C3%A9nigmes)
     * [Qu'est-ce qu'une *énigme* ?](#quest-ce-quune-%C3%A9nigme)
@@ -27,19 +31,15 @@ Ce document est une présentation de l'application.
     * [Création d'une enquête](#cr%C3%A9ation-dune-enqu%C3%AAte)
     * [Tableau de bord](#tableau-de-bord)
     * [Détails d'une enquête](#d%C3%A9tails-dune-enqu%C3%AAte)
-    * []
-* [](#)
-* [](#)
-* [](#)
-* [](#)
-* [](#)
-* [](#)
+    * [Résultats d'une enquête](#r%C3%A9sultats-dune-enqu%C3%AAte)
+* [Côté elève](#c%C3%B4t%C3%A9-%C3%A9l%C3%A8ve)
+  * [Accès à une enquête](#acc%C3%A8s-%C3%A0-une-enqu%C3%AAte)
+  * [Résolution de l'enquête](#r%C3%A9solution-de-lenqu%C3%AAte)
+  * [Score et correction](#score-et-correction)
+* [Un mot de l'auteur](#mot-de-lauteur)
+* [Participer à la cagnotte](#participer-%C3%A0-la-cagnotte)
 
-
-<figure>
-  <img src="img/accueil.png" alt="une énigme" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
-  <figcaption style="text-align:center; margin: 10px 0"><em>Page d'accueil</em></figcaption>
-</figure>
+---
 
 ## Création d'un compte enseignant
 
@@ -78,21 +78,15 @@ Seuls des cookies nécessaires à la connexion des utilisateurs et à l'utilisat
 
 À l'origine, l'idée était de proposer aux élèves des énigmes nécessitant un travail de recherche de leur part (d'où les termes _énigme_ et _enquête_), afin de valider leurs connaissances et compétences. 
 
-<figure>
-  <img src="img/enigme_ex1.png" alt="une énigme" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
-  <figcaption style="text-align:center; margin: 10px 0"><em>Une énigme</em></figcaption>
-</figure>
-
-| ![space-1.jpg](img/enigme_ex1.png) | 
+| ![une énigme](img/enigme_ex1.png) | 
 |:--:| 
 | *Une énigme* |
 
 Mais tout est possible ! On peut également imaginer des énigmes comme des questions rapides plus classiques.
 
-<figure>
-  <img src="img/enigme_ex2.png" alt="une autre énigme" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
-  <figcaption style="text-align:center; margin: 10px 0"><em>Une autre énigme</em></figcaption>
-</figure>
+| ![une autre énigme](img/enigme_ex2.png) | 
+|:--:| 
+| *Une autre énigme* |
 
 Libre à vous de vous approprier l'application comme vous le souhaitez, aussi bien dans les énigmes créées que dans l'utilisation avec vos élèves.
 
@@ -112,10 +106,9 @@ Chaque énigme devra être associée à l'un des thèmes suivants :
 > Si une énigme s'appuie sur plusieurs de ces thèmes, il faut choisir l'un d'entre eux, le plus cohérent/évident.
 > Il est possible de filtrer les énigmes par thème et/ou par auteur.
 
-<figure>
-  <img src="img/enigmes.png" alt="Filtrer les énigmes" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
-  <figcaption style="text-align:center; margin: 20px 0"><em>Filtrer les énigmes</em></figcaption>
-</figure>
+| ![Filtrer les énigmes](img/enigmes.png) | 
+|:--:| 
+| *Filtrer les énigmes* |
 
 **⚠️ Remarques importantes sur les énigmes**
 
@@ -138,10 +131,9 @@ Très rapidement, une énigme est composée de 6 champs :
 
 Sachez que les énoncés et indications peuvent être rédigées en **Markdown** ou en **HTML**. Une zone vous permet de visualiser en direct le rendu de votre énigme.
 
-<figure>
-  <img src="img/previsualisation_enigme.png" alt="Filtrer les énigmes" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
-  <figcaption style="text-align:center; margin: 20px 0"><em>Création d'une énigme</em></figcaption>
-</figure>
+| ![Création d'une énigme](img/previsualisation_enigme.png) | 
+|:--:| 
+| *Création d'une énigme* |
 
 > Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
 
@@ -177,19 +169,17 @@ Les enquêtes ne sont pas partagées avec les autres utilisateurs.
 
 Un tableau de bord permet à chaque enseignant de visualiser en un coup d'oeil toutes les enquêtes qu'il a créées. Ce tableau permet d'accéder au détail de chaque enquête, d'activer ou désactiver une enquête, de connaître le code à communiquer à ses élèves, d'accéder aux résultats des enquêtes, de supprimer une enquête.
 
-<figure>
-  <img src="img/tableau_bord.png" alt="Tableau de bord" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;""/>
-  <figcaption style="text-align:center; margin: 10px 0"><em>Tableau de bord</em></figcaption>
-</figure>
+| ![Tableau de bord](img/tableau_bord.png) | 
+|:--:| 
+| *Tableau de bord* |
 
 ### Détails d'une enquête
 
 La page de détail d'une enquête recense toutes les informations de l'enquête, c'est aussi sur cette page que l'on peut modifier les paramètres de l'enquête, que l'on peut accéder aux résultats des élèves ou les télécharger (au format CSV). On peut également visualiser l'enquête telle qu'elle sera vue par les élèves.
 
-<figure>
-  <img src="img/details_enquete.png" alt="Détails d'une enquête" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
-  <figcaption style="text-align:center; margin: 10px 0"><em>Détails d'une enquête</em></figcaption>
-</figure>
+| ![Détails d'une enquête](img/details_enquete.png) | 
+|:--:| 
+| *Détails d'une enquête* |
 
 > Il est possible de supprimer une enquête via le tableau de bord ou la page de détails de l'enquête, mais toutes les données de l'enquête seront perdues. ⚠️ Assurez-vous donc d'avoir récupéré les résultats avant la suppression !
 
@@ -197,11 +187,9 @@ La page de détail d'une enquête recense toutes les informations de l'enquête,
 
 La page de résultats d'une enquête permet de voir dans un tableau la réussite des élèves pour l'enquête, énigme par énigme. Il est possible de masquer/afficher les identifiants des élèves, leurs réponses, leurs résultats. Ceci a pour but de pouvoir visualiser en temps réel les résultats, tout en préservant si on le souhaite l'identité des élèves et leurs réponses. Cette page permet également de procéder directement à la correction de l'enquête puisque sous les résultats on retrouve les énigmes et leurs réponses.
 
-
-<figure>
-  <img src="img/resultats_enquete.png" alt="Résultats d'une enquête" style="display:block;margin:auto;border:2px solid #ddd; padding: 10px; border-radius: 10px;"/>
-  <figcaption style="text-align:center; margin: 10px 0"><em>Résultats d'une enquête</em></figcaption>
-</figure>
+| ![Résultats d'une enquête](img/resultats_enquete.png) | 
+|:--:| 
+| *Résultats d'une enquête* |
 
 ## Côté élève
 
@@ -249,9 +237,13 @@ Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent 
 ## Mot de l'auteur
 
 >J'ai voulu créer une application avant tout pour apprendre le développement Web, domaine que j'ai découvert il y a peu et qui m'intéresse beaucoup par son aspect créatif. Dans un second temps, pour que les choses soient plus concrètes et stimulantes, j'ai souhaité développer une application qui soit utile et l'idée des enquêtes me paraissait intéressante en ce sens. J'ai choisi de le faire avec le framework Django pour parfaire mes connaissances dans le langage Python.
+>
 >Je ne suis pas un développeur professionnel, loin de là, et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible, qui n'est pas toujours très important en période scolaire.
+>
 >De même, si vous voyez des améliorations, qu'elles soient d'ordre pédagogique, technique ou ergonomique, n'hésitez pas à m'en faire part.
+>
 >En espérant que cette application vous soit utile,
+>
 >Germain Becker
 
 
@@ -267,6 +259,4 @@ Ces frais annuels s'élèvent à 77,99 € TTC et correspondent à :
 * l'hébergement sur la plateforme eu.pythonanywhere.com : 72 € TTC (6 € par mois). 
 
 En vous remerciant par avance.
-
-## Hébergement de l'application
 
