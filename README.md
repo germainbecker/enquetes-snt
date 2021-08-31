@@ -83,6 +83,9 @@ Seuls des cookies nécessaires à la connexion des utilisateurs et à l'utilisat
   <figcaption style="text-align:center; margin: 10px 0"><em>Une énigme</em></figcaption>
 </figure>
 
+| ![space-1.jpg](img/enigme_ex1.png) | 
+|:--:| 
+| *Une énigme* |
 
 Mais tout est possible ! On peut également imaginer des énigmes comme des questions rapides plus classiques.
 
