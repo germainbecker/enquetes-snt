@@ -9,27 +9,17 @@ var THEMES = {  // ne doit pas être modifié !!!!
     'PY': "/static/enigmes/img/python-logo.svg"
 }
 
-function MathJaxReload() {
-    // recharger mathjax
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
-}
+function conversion() {
 
-function apercuEnonce() {
+    /* Thème choisi */
+    let theme = document.querySelector('#id_theme').value;
+
     /* Énoncé */
     let enonceMD = document.getElementById('id_enonce').value;
     let enonceHTML = marked(enonceMD);  // conversion en HTML
     let enonceCleanHTML = DOMPurify.sanitize(enonceHTML);
     document.querySelector(".apercu-enonce").innerHTML = enonceCleanHTML;
-
-    gestionImages();
-    gestionLiens();
-    gestionTableaux();
-
-    // recharger JS
-    Prism.highlightAll(async=true);
-}
-
-function apercuIndication() {
+    
     /* Indication */
     let indicationMD = document.getElementById('id_indication').value;
     if (!(indicationMD == "")) {
@@ -41,47 +31,25 @@ function apercuIndication() {
         document.querySelector(".apercu-indication").style.display = "none";
     }
 
+    apercuFichiers(theme);
     gestionImages();
     gestionLiens();
     gestionTableaux();
-
-    // recharger JS
-    Prism.highlightAll(async=true);
-}
-
-function apercuReponse() {
+    
     /* Réponse */
     let reponseMD = document.getElementById("id_reponse").value;
 
     if (!(reponseMD == "")) {
         let reponseHTML = marked(reponseMD);  // conversion en HTML
         let reponseCleanHTML = DOMPurify.sanitize(reponseHTML);
-        let tmp = document.createElement("DIV");
-        tmp.innerHTML = reponseCleanHTML;
-        document.querySelector(".reponse").innerHTML = tmp.textContent;
+        document.querySelector(".reponse").innerHTML = reponseCleanHTML;
         document.querySelector(".enigme-reponse").style.display = "initial";
     } else {
         document.querySelector(".enigme-reponse").style.display = "none";
     }
 
-    // recharger JS
-    Prism.highlightAll(async=true);
-}
-
-function conversion() {
-    /* Thème choisi */
-    let theme = document.querySelector('#id_theme').value;
-    console.log(theme);
-    apercuImage(theme);
-    apercuEnonce();
-    apercuIndication(); 
-    apercuFichier();
-    apercuReponse();
-    gestionImages();
-    gestionLiens();
-    gestionTableaux();
-    
-    MathJaxReload(); 
+    // recharger mathjax
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 
 
     // recharger JS
     Prism.highlightAll(async=true);
@@ -98,150 +66,6 @@ document.querySelector('#image').style.display = "none";
 document.querySelector('.piece-jointe').style.display = "none";
 
 document.querySelector('.enigme-reponse').style.display = "none";
-
-document.querySelector('#id_theme').addEventListener("change", function() {
-    apercuImage(this.value);
-});
-document.querySelector('#id_enonce').addEventListener("keyup", apercuEnonce);
-document.querySelector('#id_enonce').addEventListener("focusout", MathJaxReload);
-document.querySelector('#id_reponse').addEventListener("keyup", apercuReponse);
-document.querySelector('#id_indication').addEventListener("keyup", apercuIndication);
-document.querySelector('#id_indication').addEventListener("focusout", MathJaxReload);
-document.querySelector('#id_image').addEventListener("change", function() {
-    apercuImage(this.value);
-});
-document.querySelector('#id_fichier').addEventListener("change", apercuFichier);
-
-function apercuImage(theme) {
-    // voir https://developer.mozilla.org/fr/docs/Web/API/FileReader/readAsDataURL
-    
-    // Aperçu image en fonction du thème choisi
-    var apercuImage = document.querySelector("#image");
-    var fichierImage = document.getElementById("id_image");
-    var imageTheme = document.querySelector("#image-theme");
-    var imageActuelle = document.getElementById("lien-image");
-    var checkBoxImageActuelle = document.getElementById("image-clear_id");
-    
-    if (!(checkBoxImageActuelle)) {  // en cas d'une image non présente
-        if (!(theme == "NC")) {
-            if (fichierImage.files.length == 0){
-                imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-                imageTheme.data = THEMES[theme];
-            } else {
-                imageTheme.style.display = "none";
-                imageTheme.data = "none";
-            }
-        } else {
-            imageTheme.style.display = "none";
-            imageTheme.data = "none";
-        }
-    } else {  // modification en cas d'une image déjà présente
-        if (!(theme == "NC")) {
-            if (fichierImage.files.length == 0 && Boolean(imageActuelle) && checkBoxImageActuelle.checked){
-                imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-                imageTheme.data = THEMES[theme];
-            } else {
-                imageTheme.style.display = "none";
-                imageTheme.data = "none";
-            }
-        } else {
-            imageTheme.style.display = "none";
-            imageTheme.data = "none";
-        }
-    }
-
-    var fichierImageReader = new FileReader();
-    fichierImageReader.addEventListener("load", function () {
-        if (!(fichierImage.files.length == 0)) {
-            apercuImage.src = fichierImageReader.result;
-        } else {
-            apercuImage.src = '';
-            console.log('ici');
-        }
-      }, false);
-    
-    if (fichierImage.files.length == 1 && fichierImage.files[0]) {  // si une nouvelle image est sélectionnée
-        if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {
-            fichierImageReader.readAsDataURL(fichierImage.files[0]);
-            apercuImage.style.display = "block";
-        }
-    } else {
-        var imageActuelle = document.getElementById("lien-image");
-        var checkBoxImageActuelle = document.getElementById("image-clear_id");
-        if (imageActuelle && checkBoxImageActuelle.checked == false) {  // si l'image actuelle existe et n'est pas à supprimer
-            var urlImage = imageActuelle.href;  // on l'utilise pour l'apercu
-            apercuImage.src = urlImage;
-            apercuImage.style.display = "block"; 
-        } else {
-            apercuImage.style.display = "none";
-        }
-    }
-
-    /* // Aperçu fichier joint
-    var apercuPj = document.querySelector('.piece-jointe');
-    var lienPj = document.querySelector("#nom-fichier");
-    var hrefPJ = document.querySelector('#fichier');
-    var fichierPj = document.getElementById("id_fichier");
-    var fichierPjReader = new FileReader();
-    fichierPjReader.addEventListener("load", function () {
-        hrefPJ.href = fichierPjReader.result;
-      }, false);
-    
-    if (fichierPj.files.length == 1 && fichierPj.files[0]) {
-        if (/\.(csv|xls|xlsx|ods|py|html|css|txt|jpg|jpeg|png|json)$/i.test(fichierPj.files[0].name)) {
-            fichierPjReader.readAsDataURL(fichierPj.files[0]);
-            apercuPj.style.display = "flex";
-            lienPj.innerHTML = fichierPj.files[0].name;
-            hrefPJ.download = fichierPj.files[0].name;
-        }
-    } else {
-        var fichierActuel = document.getElementById("lien-fichier");
-        var checkBoxFichierActuel = document.getElementById("fichier-clear_id");
-        if (fichierActuel && checkBoxFichierActuel.checked == false) {  // si le fichier actuel existe et n'est pas à supprimer
-            // on l'utilise pour l'apercu
-            lienPj.href = fichierActuel.href;
-            lienPj.innerHTML = fichierActuel.innerHTML;
-            apercuPj.style.display = "flex"; 
-        } else {
-            apercuPj.style.display = "none";
-        }
-
-    } */
-}
-
-function apercuFichier() {
-
-    // Aperçu fichier joint
-    var apercuPj = document.querySelector('.piece-jointe');
-    var lienPj = document.querySelector("#nom-fichier");
-    var hrefPJ = document.querySelector('#fichier');
-    var fichierPj = document.getElementById("id_fichier");
-    var fichierPjReader = new FileReader();
-    fichierPjReader.addEventListener("load", function () {
-        hrefPJ.href = fichierPjReader.result;
-      }, false);
-    
-    if (fichierPj.files.length == 1 && fichierPj.files[0]) {
-        if (/\.(csv|xls|xlsx|ods|py|html|css|txt|jpg|jpeg|png|json)$/i.test(fichierPj.files[0].name)) {
-            fichierPjReader.readAsDataURL(fichierPj.files[0]);
-            apercuPj.style.display = "flex";
-            lienPj.innerHTML = fichierPj.files[0].name;
-            hrefPJ.download = fichierPj.files[0].name;
-        }
-    } else {
-        var fichierActuel = document.getElementById("lien-fichier");
-        var checkBoxFichierActuel = document.getElementById("fichier-clear_id");
-        if (fichierActuel && checkBoxFichierActuel.checked == false) {  // si le fichier actuel existe et n'est pas à supprimer
-            // on l'utilise pour l'apercu
-            lienPj.href = fichierActuel.href;
-            lienPj.innerHTML = fichierActuel.innerHTML;
-            apercuPj.style.display = "flex"; 
-        } else {
-            apercuPj.style.display = "none";
-        }
-
-    }
-}
 
 function apercuFichiers(theme) {
     // voir https://developer.mozilla.org/fr/docs/Web/API/FileReader/readAsDataURL
@@ -283,12 +107,7 @@ function apercuFichiers(theme) {
 
     var fichierImageReader = new FileReader();
     fichierImageReader.addEventListener("load", function () {
-        if (!(fichierImage.files.length == 0)) {
-            apercuImage.src = fichierImageReader.result;
-        } else {
-            apercuImage.src = '';
-            console.log('ici');
-        }
+        apercuImage.src = fichierImageReader.result;
       }, false);
     
     if (fichierImage.files.length == 1 && fichierImage.files[0]) {  // si une nouvelle image est sélectionnée
@@ -391,8 +210,6 @@ function gestionTableaux() {
 document.getElementById("id_image").addEventListener("change", validationImage);
 
 function validationImage(){
-    console.log(this.files);
-    
     let btnResetImage = document.querySelector('#reset-image');
 
     const extensionsAcceptees =  ['jpeg','jpg','png'],
@@ -421,8 +238,6 @@ function validationImage(){
             return true;
         }
     } else {
-        this.value = "";
-        console.log(this);
         btnResetImage.style.display = "none";
         return false;
     }
@@ -438,7 +253,7 @@ function validationPieceJointe(){
     let btnResetFichier = document.querySelector('#reset-fichier');
     const extensionsAcceptees =  ['csv', 'xls', 'ods', 'xlsx' ,'py', 'html', 'css', 'txt', 'jpeg', 'jpg', 'png', 'json'],
             tailleMax = 1024 * 1000; // 1 Mio
-    
+
     // si un fichier a été choisi
     if (this.files.length == 1 && this.files[0]) {
         
@@ -474,25 +289,11 @@ btnResetImage.addEventListener('click', resetImage);
 
 function resetImage() {
     var fichierImage = document.getElementById("id_image");
-    fichierImage.value = null;
+    fichierImage.value = '';
     btnResetImage.style.display = "none";
-    
-    // actualisation apercu
-    let theme = document.querySelector('#id_theme').value;
-    apercuImage(theme);
 }
 
-// Suppression de l'image sélectionné dans le cas d'une modification d'une énigme
 
-if (document.getElementById("image-clear_id")) {
-    var checkBoxImageActuelle = document.getElementById("image-clear_id");
-    checkBoxImageActuelle.addEventListener("click", () => {
-        // actualisation apercu
-        let theme = document.querySelector('#id_theme').value;
-        apercuImage(theme);
-    });
-    
-}
 
 // Suppression du fichier sélectionné
 
@@ -501,12 +302,8 @@ btnResestFichier.addEventListener("click", resetFichier);
 
 function resetFichier() {
     var fichier = document.getElementById("id_fichier");
-    fichier.value = null;
+    fichier.value = '';
     btnResestFichier.style.display = "none";
-    
-    // actualisation apercu
-    let theme = document.querySelector('#id_theme').value;
-    apercuFichier(theme);
 }
 
 // VALIDATION FORMULAIRE (le thème ne doit pas être NC)
@@ -530,16 +327,3 @@ document.querySelector("form").addEventListener("submit", function(event) {
         return true;
     }
 });
-
-
-/* Pour afficher l'aperçu directement */
-let theme = document.querySelector('#id_theme').value;
-console.log(theme);
-apercuImage(theme);
-apercuEnonce();
-apercuIndication(); 
-apercuFichier();
-apercuReponse();
-gestionImages();
-gestionLiens();
-gestionTableaux();

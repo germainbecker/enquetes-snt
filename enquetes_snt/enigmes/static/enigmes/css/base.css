@@ -295,6 +295,13 @@ li#logout svg path {
     margin-bottom: 100px;
 }
 
+.content-wrapper-large {
+    box-sizing: border-box;
+    padding: 25px;
+    width: 100%;
+    margin-bottom: 100px;
+}
+
 @media all and (max-width: 1050px) {
     .nav {
         width: auto;
@@ -966,7 +973,7 @@ svg#logo g.snt path {
 
 li {
     margin: 0.5em 0;
-    line-height: 1.2em;
+    line-height: 1.4em;
 }
 
 @media all and (max-width: 768px) {
@@ -1304,10 +1311,14 @@ li {
 /* Dimension des images des énigmes */
 
 #liste-enigmes img:not(.dim-fixe),
-.enigme img:not(.dim-fixe),
-.apercu img:not(.dim-fixe) {
+.enigme img:not(.dim-fixe) {
     max-width: var(--dim-max);
     max-height: var(--dim-max);
+}
+
+.apercu img:not(.dim-fixe) {
+    max-width: min(var(--dim-max), 100%);
+    max-height: min(var(--dim-max), 500px);
 }
 
 img.agrandir {
@@ -1653,10 +1664,10 @@ summary span:hover {
     margin-top: 20px;
 }
 
-@media all and (max-width: 768px) {
+@media all and (min-width: 501px) {
     .apercu blockquote {
         padding: 10px;
-        margin: 30px 5%;
+        margin: 30px 10%;
     }
 }
 
@@ -2712,6 +2723,105 @@ input:checked + .slider:before {
 
 /* ###### FORMULAIRES ###### */
 
+/* TESTS */ 
+
+.explications {
+    max-width: 1000px;
+    margin: auto; 
+}
+
+.delimitation {
+    width: 100%;
+    height: 10px;
+    background-color: var(--main);
+    margin: 20px 0;
+}
+
+.form-creation {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.form-creation form {
+    flex: 1; /* pour que chaque élément ait la même largeur */
+    width: 0;
+}
+
+.enigme-creation-container p {
+    line-height: 1.4em;
+}
+
+.zone-apercu-container {
+    flex: 1; /* pour que chaque élément ait la même largeur */
+    width: 0;
+}
+
+@media all and (max-width: 768px) {
+    .form-creation {
+        flex-direction: column;
+    }
+    .form-creation form {
+        width: 100%;
+    }
+    .zone-apercu-container {
+        width: auto;
+    }
+}
+
+.titre-btn-actualiser {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 5px;
+    gap: 10px;
+}
+
+.titre-btn-actualiser h2 {
+    color: var(--black);
+    margin-left: 20px;
+}
+
+.titre-btn-actualiser .btn-apercu {
+    margin-left: auto;
+    width: 100px;
+}
+
+.titre-btn-actualiser .btn-apercu #btn-apercu {
+    padding: 8px 10px;
+}
+
+
+.zone-apercu {
+    min-height: 500px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #d0d0d0;
+    background-color: white;
+}
+
+
+.zone-apercu .enigme-container {
+    min-height: 500px;
+    border: none;
+    box-shadow: none;
+}
+
+.zone-apercu .enigme-reponse p {
+    display: block;
+}
+
+
+.zone-apercu .enigme-reponse .reponse {
+    font-weight: bold;
+}
+
+
+/* FIN TESTS */
+
+
+
 .form-inscription {
     max-width: 400px;
     margin: auto;
@@ -3199,6 +3309,7 @@ input:checked + .slider:before {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
 }
 
 .btn-apercu #btn-apercu:hover {

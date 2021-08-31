@@ -1,4 +1,4 @@
-{% extends 'enigmes/base_large.html' %}
+{% extends 'enigmes/base.html' %}
 
 {% block nav %}
 {% include 'enigmes/nav.html' with nav="nav_complete" %}
@@ -19,7 +19,7 @@
             <p>Vous trouverez des explications en suivant ce lien : <a href="{% url 'enigme-example-create' %}" target="_blank">explications et exemples</a>.</p>
         </div>
         
-        <p>Complétez les champs suivants afin de créer une nouvelle énigme. La zone d'aperçu vous permet de visualiser en direct l'énigme que vous créez.</p>
+        <p>Complétez les champs suivants afin de créer une nouvelle énigme.</p>
         
         <div class="form-creation">
             <form method="POST" enctype='multipart/form-data'>
@@ -37,19 +37,12 @@
                         {% endif %}
                     </p>
                     
-                {% endfor %}               
-                <div class="btn-form">
-                    <button class="btn-validation" type="submit">Ajouter l'énigme dans la base</button>
-                </div>
-            </form>
-            <div class="zone-apercu-container">
-                <div class="titre-btn-actualiser">
-                    <h2>Aperçu de l'énigne</h2>
-                    <div class="btn-apercu">
-                        <div id="btn-apercu">Actualiser</div>
-                    </div>
-                </div>                
+                {% endfor %}
+                
                 <div class="zone-apercu">
+                    <div class="btn-apercu">
+                        <div id="btn-apercu">Aperçu de l'énigme</div>
+                    </div>
                     <div class="enigme-container">
                         <div class="apercu-container">
                             <div class="apercu">
@@ -80,9 +73,11 @@
                             </div>   
                         </div>
                     </div>
-                </div> 
-            </div>
-            
+                </div>                
+                <div class="btn-form">
+                    <button class="btn-validation" type="submit">Ajouter l'énigme dans la base</button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -90,16 +85,16 @@
 
 {% block jsfiles %}
 {% load static %}
+<!-- Style zone d'apercu -->
+<script src="{% static 'enigmes/js/enigme_form.js' %}"></script>
+
 <!-- Conversion markdown en HTML -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <!-- DOMPurify : purificateur de HTML -->    
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.9/purify.min.js"></script>
 
-<script src="{% static 'enigmes/js/prism.js' %}"></script>
-
-<!-- Style zone d'apercu -->
-<script src="{% static 'enigmes/js/enigme_form.js' %}"></script>
-
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
+
+<script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

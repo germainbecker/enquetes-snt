@@ -86,7 +86,7 @@ ou d'un autre langage, comme HTML :
 
 Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wiki/Markdown#Quelques_exemples).
 
-On peut aussi écrire tout cela directement en HTML.
+<p>On peut aussi écrire tout cela directement en <strong>HTML</strong>.</p>
 '''
         indication = '''Les indications sont facultatives (il faut alors laisser ce champ vide). On peut les écrire en **Markdown** ou en **HTML**.'''
         initial = {

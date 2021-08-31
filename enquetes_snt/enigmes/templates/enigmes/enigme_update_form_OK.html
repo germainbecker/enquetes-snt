@@ -1,4 +1,4 @@
-{% extends 'enigmes/base_large.html' %}
+{% extends 'enigmes/base.html' %}
 
 {% block nav %}
 {% include 'enigmes/nav.html' with nav="nav_complete" %}
@@ -13,22 +13,12 @@
             <form method="POST" enctype='multipart/form-data'>
                 {% csrf_token %}
                 {{ form.as_p }}
-   
-                <div class="btn-form">
-                    <button class="btn-validation" type="submit">Enregistrer les modifications</button>
-                    <a class="btn-suppression" href="{{ request.META.HTTP_REFERER|escape }}">
-                        Annuler
-                    </a>
-                </div>
-            </form>
-            <div class="zone-apercu-container">
-                <div class="titre-btn-actualiser">
-                    <h2>Aperçu de l'énigne</h2>
-                    <div class="btn-apercu">
-                        <div id="btn-apercu">Actualiser</div>
-                    </div>
-                </div> 
+                
+                
                 <div class="zone-apercu">
+                    <div class="btn-apercu">
+                        <div id="btn-apercu">Aperçu de l'énigme</div>
+                    </div>
                     <div class="enigme-container">
                         <div class="apercu-container">
                             <div class="apercu">
@@ -60,10 +50,15 @@
                         </div>
                     </div>
                 </div>
-            </div>
+    
+                <div class="btn-form">
+                    <button class="btn-validation" type="submit">Enregistrer les modifications</button>
+                    <a class="btn-suppression" href="{{ request.META.HTTP_REFERER|escape }}">
+                        Annuler
+                    </a>
+                </div>
+            </form>
         </div>
-        
-        
     </div>
     
 {% endblock %}
