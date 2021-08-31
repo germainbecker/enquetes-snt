@@ -184,7 +184,18 @@
         
         <p>Pour chaque enquête, un <strong>code unique</strong> à 8 caractères sera généré. C'est ce code qu'il faut communiquer à vos élèves et qu'ils doivent saisir sur la <a href="/">page d'accueil</a> de l'application pour démarrer l'enquête. Vous pourrez aussi leur communiquer une URL directe vers l'enquête.</p>
         
-        <p>Pour différencier vos différents élèves, un <strong>identifiant</strong> leur sera demandé. C'est à vous de définir les identifiants de vos élèves (un numéro par élève par exemple). Ces identifiants seront stockés dans la base de donnnées et permettront d'associer un résultat à chaque élève pour chaque enquête.</p>
+        <p>Pour différencier vos différents élèves, un <strong>identifiant</strong> leur sera demandé.</p> 
+        <strong>
+            <p><span style="font-size: 1.4em;">⚠️</span> C'est à vous de définir les identifiants de vos élèves. Un identifiant ne peut pas être vide et doit nécessairement être de la forme :</p>
+            <ul>
+                <li>une suite de caractères parmi les chiffres de 0 à 9 ainsi que les caractères "-" (tiret) et "_" (underscore). </li>
+                <li>éventuellement <em>précédée</em> d'une seule et unique lettre (optionnel, mais permet éventuellement de différencier les classes)</li>
+            </ul>
+        </strong>
+        
+        <p>Par exemple, les identifiants <em>2569845</em>, <em>B25</em> et <em>E-12_01</em> sont valides, mais <em>12/30</em> (caractère "/" non valide), <em>17B</em> (lettre pas en première position) et <em>A_25J</em> (un deuxième lettre interdite) ne le sont pas.</p>
+                
+        <p>Ces identifiants sont ainsi vierges de données personnelles sur les élèves. Ils seront stockés dans la base de donnnées et permettront d'associer un résultat à chaque élève pour chaque enquête.</strong></p>
     
         <p>Le tableau de bord de cette page recense les différentes enquêtes que vous avez créées. Vous pouvez accéder au détail de chacune d'elle en cliquant sur le lien de sa description.</p>
     
