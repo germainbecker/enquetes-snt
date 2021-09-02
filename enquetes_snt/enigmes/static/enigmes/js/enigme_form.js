@@ -390,6 +390,7 @@ document.getElementById("id_image").addEventListener("change", validationImage);
 function validationImage(){
 
     let btnResetImage = document.querySelector('#reset-image');
+    let theme = document.querySelector('#id_theme').value;
 
     const extensionsAcceptees =  ['jpeg','jpg','png'],
             tailleMax = 1024*300; // 300 Kio
@@ -404,21 +405,25 @@ function validationImage(){
         const extensionFichier = nomFichier.split(".").pop();
 
         // vérification de l'extension et de la taille de l'image
-        if(!extensionsAcceptees.includes(extensionFichier)){
+        if (!extensionsAcceptees.includes(extensionFichier)){
             alert("Extension non acceptée. Seules les images aux formats .jpg ou .png sont acceptées.");
-            this.value = null;
+            this.value = null;            
+            apercuImage(theme);
             return false;
-        }else if(tailleFichier > tailleMax){
+        } else if (tailleFichier > tailleMax){
             alert("Fichier trop volumineux. Assurez-vous que l'image ait une taille inférieure à 300 Kio.")
             this.value = null;
+            apercuImage(theme);
             return false;
         } else {            
             btnResetImage.style.display = "flex";
+            apercuImage(theme);
             return true;
         }
     } else {
         this.value = "";
         btnResetImage.style.display = "none";
+        apercuImage(theme);
         return false;
     }
     
@@ -447,17 +452,21 @@ function validationPieceJointe(){
         if (!extensionsAcceptees.includes(extensionFichier)){
             alert("Extension non acceptée. Seuls les fichiers aux formats .csv, .ods, .xls, .xlsx, .py, .html, .css, .jpg, .png et .json sont acceptés.");
             this.value = null;
+
             return false;
         } else if (tailleFichier > tailleMax){
             alert("Fichier trop volumineux. Assurez-vous que le fichier joint ait une taille inférieure à 1 Mio.")
-            this.value = null;
+            this.value = '';
+            apercuFichier();
             return false;
         } else {
             btnResetFichier.style.display = "flex";
+            apercuFichier();
             return true;
         }
     } else {
         btnResetFichier.style.display = "none";
+        apercuFichier();
         return true;
     }  
 }
@@ -514,8 +523,6 @@ if (document.getElementById("fichier-clear_id")) {
     });
     
 }
-
-
 
 
 // VALIDATION FORMULAIRE (le thème ne doit pas être NC)
