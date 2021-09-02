@@ -504,6 +504,20 @@ function resetFichier() {
     apercuFichier(theme);
 }
 
+// Suppression du fichier sélectionné dans le cas d'une modification d'une énigme
+
+if (document.getElementById("fichier-clear_id")) {
+    var checkBoxFichierActuel = document.getElementById("fichier-clear_id");
+    checkBoxFichierActuel.addEventListener("click", () => {
+        // actualisation apercu
+        apercuFichier();
+    });
+    
+}
+
+
+
+
 // VALIDATION FORMULAIRE (le thème ne doit pas être NC)
 
 document.querySelector("form").addEventListener("submit", function(event) {
