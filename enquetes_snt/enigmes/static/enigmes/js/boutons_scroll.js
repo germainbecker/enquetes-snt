@@ -13,7 +13,6 @@ const btn_bas = document.querySelector('#btn-scroll-bas');
 btn_bas.addEventListener('click', () => {
     let container = document.querySelector('.content-container');
     let footer = document.querySelector('footer');
-    console.log(footer.offsetHeight );
     window.scrollTo({
         top: document.body.scrollHeight - footer.offsetHeight - window.innerHeight - 20,
         left: 0,

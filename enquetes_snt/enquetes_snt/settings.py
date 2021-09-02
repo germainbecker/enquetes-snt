@@ -24,7 +24,6 @@ environ.Env.read_env(env_file=str(BASE_DIR / "enquetes_snt" / ".env"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -36,7 +35,6 @@ else:
     DEBUG = True
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-
 
 # Application definition
 
@@ -117,15 +115,6 @@ DATABASES = {
     }
 }
 
-# BDD SQLite
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#} 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -183,7 +172,7 @@ LOGIN_URL = '/enseignants/login/'
 # Redirige à la page d'accueil après un login (plutôt que /accounts/profile/ par défaut)
 LOGIN_REDIRECT_URL = '/enseignants'  # renvoie à /accueil
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Affiche tous les emails dans la console
+# Gestion des emails envoyés
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = env("EMAIL_HOST")
@@ -194,6 +183,7 @@ EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
 EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 
+# Markdown
 MARKDOWNIFY = {
     "default": {
         "MARKDOWN_EXTENSIONS": [

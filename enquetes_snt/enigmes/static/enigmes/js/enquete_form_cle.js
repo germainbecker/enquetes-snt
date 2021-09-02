@@ -11,7 +11,6 @@ CbCorrection.addEventListener('change', () => {
 })
 
 CbScore.addEventListener('click', () => {
-    console.log(CbCorrection.checked)
     // si correction activée alors il faut activer par défaut le score
     if (CbCorrection.checked) {
         CbScore.checked = true;

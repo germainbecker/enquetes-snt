@@ -16,8 +16,6 @@ class CustomCheckboxInput(CheckboxInput):
 class UserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):  # redéfinition de la méthode  __init__ de la classe 
         
-        
-
         # pour personnaliser la liste d'erreurs (ErrorList)
         kwargs.update({'error_class': ParagraphErrorList})
         super(UserRegisterForm, self).__init__(*args, **kwargs)

@@ -1,17 +1,14 @@
 from django.db import models
 from django.db.models.fields import DateTimeField
 from django.utils import timezone
-#from django.contrib.auth.models import User
-#from enseignants.models import User  -> remplacé par ligne ci-dessous
 from django.conf import settings
 from django.urls import reverse
 from django.http import HttpResponse
-#from .utils import generer_code_enquete_unique
 from django import forms
 from enigmes.validators import FileValidator
 from django.core.validators import RegexValidator
-
 from django.utils.translation import gettext_lazy as _
+
 import random, os
 import ast
 import pytz
@@ -55,7 +52,7 @@ class Enigme(models.Model):
     indication = models.TextField('indication', blank=True, null=True)
 
     def repertoire_auteur(instance, nom_fichier):
-        # le fichier sera uploadé dans MEDIA_ROOT/user_<id>/<nom_fichier>
+        # le fichier sera uploadé dans MEDIA_ROOT/auteur_<id>/<nom_fichier>
         return 'auteur_{0}/{1}'.format(instance.auteur.id, nom_fichier)
     
     image = models.ImageField(
@@ -111,10 +108,10 @@ class Enquete(models.Model):
     date_creation = models.DateTimeField('date de création', auto_now_add=True)
     active = models.BooleanField('active', default=True)
     indications = models.BooleanField('indications', default=True)  # indications affichées par défaut
-    score =  models.BooleanField('score', default=True)  # score affichés après l'enquête
+    score =  models.BooleanField('score', default=True)  # score affichés après l'enquête par défaut
     correction = models.BooleanField('correction', default=False)  # reponses non affichées après l'enquête par défaut
     ordre_aleatoire = models.BooleanField('ordre aléatoire des énigmes', default=False)  # pas d'ordre aléatoire des énigmes par défaut
-    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)  # si un utilisateur supprime son compte, ses énigmes sont supprimées
+    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)  # si un utilisateur supprime son compte, ses enquêtes sont supprimées
     enigmes = models.ManyToManyField(Enigme, related_name='enigmes', blank=True)
     cle = models.CharField('clé', max_length=200, default='')
     code = models.CharField(

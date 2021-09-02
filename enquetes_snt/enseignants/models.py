@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    # custom User pour rendre l'adresse mail unique
+    '''custom User pour rendre l'adresse mail unique'''
     email = models.EmailField(
         verbose_name="email",
         max_length=60,

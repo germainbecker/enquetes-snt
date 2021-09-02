@@ -28,13 +28,11 @@ function changeCouleur(item) {
 
 function initialisationCouleur() {
     let cases = document.querySelectorAll('.case-a-cocher');
-    //console.log(cases);
     cases.forEach(elt => {
         let num = elt.id.split("-")[1];
         let id_case = "case-" + num;
         let conteneurCase = document.getElementById(id_case);
         if (elt.checked) {
-            console.log(num);
             conteneurCase.style.backgroundColor = "var(--main)";
         }
     })
@@ -78,7 +76,6 @@ CbCorrection.addEventListener('change', () => {
 })
 
 CbScore.addEventListener('click', () => {
-    console.log(CbCorrection.checked)
     // si correction activée alors il faut activer par défaut le score
     if (CbCorrection.checked) {
         CbScore.checked = true;
@@ -94,7 +91,6 @@ CbScore.addEventListener('click', () => {
 // Vérification formulaire avant envoi (au moins une énigme sélectionnée)
 
 document.getElementById("btn-creer-enquete").addEventListener("click", function(event) {
-    console.log(document.getElementById("form"));
     let zoneErreur = document.querySelector('#message-erreur');
     var donnees_formulaire = new FormData(document.getElementById("form"));
     if (!donnees_formulaire.has("enigmes")) {

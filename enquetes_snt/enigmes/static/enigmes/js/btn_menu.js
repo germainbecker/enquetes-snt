@@ -7,7 +7,6 @@ function changeIcone() {
     let iconeCroix = document.querySelector('#croix');
 
     if (btnMenu.checked) {
-        console.log("coché");
         iconeBurger.style.display = "none";
         iconeCroix.style.display = "block";
     } else {

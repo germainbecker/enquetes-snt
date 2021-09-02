@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-#from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
@@ -120,19 +119,3 @@ def activation(request, uidb64, token):
     else:
         messages.warning(request, "Le lien d'activation n'est pas valide.")
         return render(request, 'enseignants/enseignants.html')
-
-
-""" def inscription(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST, error_class=ParagraphErrorList)
-        if form.is_valid():
-            form.save()
-            nom_enseignant = form.cleaned_data.get('username')
-            messages.success(request, f'Compté créé pour {nom_enseignant} !')
-            return redirect('enseignants')
-    else:
-        form = UserRegisterForm()
-    context = {
-        'form' : form
-    }
-    return render(request, 'enseignants/inscription.html', context) """

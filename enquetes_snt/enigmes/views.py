@@ -289,7 +289,6 @@ def creation_enquete_manuelle(request):
     }
 
     if request.method == 'POST':
-        print("post request :", request.POST)
         # création d'une instance de formulaire et remplissage avec les données saisies
         form = EnqueteCreateForm(request.POST)
         context['form'] = form
@@ -541,59 +540,6 @@ def eleve(request, code_enquete):
         context['form'] = form
     return render(request, 'enigmes/enquete_eleve.html', context)
 
-
-""" def eleve(request, code_enquete):
-    try:
-        enquete = Enquete.objects.get(code=code_enquete)
-    except Enquete.DoesNotExist:
-        enquete = None
-    if enquete is None:
-        messages.warning(request, "Ce code est incorrect")
-        return redirect('index')
-    
-    # Si l'enquête n'est pas active
-    if enquete.active == False:
-        messages.warning(request, "L'enquête n'est pas activée par le professeur.")
-        return redirect('index')
-    
-
-    if not enquete.ordre_aleatoire:
-        liste_enigmes = enquete.liste_enigmes_ordre_initial()
-    else:
-        liste_enigmes = enquete.liste_enigmes()
-    
-    context = {
-        "enquete": enquete,
-        "enigmes": liste_enigmes
-    }
-
-    # si le formulaire est validé
-    if request.method == 'POST':
-        donnees = request.POST
-        identifiant_eleve = donnees['id_eleve']
-        # recupération des réponses
-        liste_num_enigmes = enquete.liste_numeros_enigmes()  # liste de int
-        # construction du champ "reponses" du modèle
-        dic_reponses = {num: donnees[str(num)] for num in liste_num_enigmes}
-        # enregistrement
-        resultat = Resultat.objects.create(
-            enquete=enquete,
-            id_eleve=identifiant_eleve,
-            reponses=str(dic_reponses) 
-        )
-        # si réponses affichées
-        if enquete.correction or enquete.score:
-            context['reponses'] = dic_reponses
-            context['score'] = resultat.calcul_score()
-            context['correction'] =  resultat.bonnes_mauvaises_reponses()
-            return render(request, 'enigmes/enquete_eleve_reponses.html', context)
-        # sinon redirection vers remerciements
-        
-        else:
-            return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
-
-    return render(request, 'enigmes/enquete_eleve.html', context)    """
-
 @login_required
 def resultats_enquete(request, enquete_id):
     enquete = get_object_or_404(Enquete, pk=enquete_id)
@@ -603,28 +549,14 @@ def resultats_enquete(request, enquete_id):
     liste_complete = [resultat.dico_complet() for resultat in liste_resultats]
     
     nb_bonnes_reponses = {num_enigmes: 0 for num_enigmes in liste_num_enigmes}
-    print(nb_bonnes_reponses)
     for dico_resultat in liste_complete:
         for enigme in dico_resultat["reponses"]:
-            print(enigme)
             if dico_resultat["reponses"][enigme]["correct"]:
                 nb_bonnes_reponses[enigme] = nb_bonnes_reponses[enigme] + 1
     if len(liste_resultats) != 0:
         pourcentage_bonnes_reponses = {num_enigmes: round(nb_bonnes_reponses[num_enigmes]/len(liste_resultats)*100) for num_enigmes in nb_bonnes_reponses}
-        print(pourcentage_bonnes_reponses)
     else:
         pourcentage_bonnes_reponses = {num_enigmes: 0 for num_enigmes in nb_bonnes_reponses}
-
-    """ liste_reponses = [resultat.dictionnaire_reponses_eleve() for resultat in liste_resultats] 
-    liste_scores = [resultat.calcul_score() for resultat in liste_resultats]
-    liste_complete = [
-        {
-            "id": liste_resultats[i].id_eleve,
-            "score": liste_scores[i],
-            "reponses": {}
-        }
-        for i in range(len(liste_resultats))
-    ]  """
     
     context = {
             "enquete": enquete,
@@ -636,16 +568,14 @@ def resultats_enquete(request, enquete_id):
         }
     # gestion du fetch pour actualiser les résultats
     if request.method == 'POST':
-        print("requete POST : ", request.POST)
         if "maj" in request.POST:
             response = {
                 "resultats": liste_complete,
                 "pourcentage": pourcentage_bonnes_reponses,
                 "enigmes": liste_num_enigmes
             }
-            print(response)
             return JsonResponse(response)
         else:
-            return render(request, 'enigmes/enquete_resultats.html', context) # A MODIFIER
-    return render(request, 'enigmes/enquete_resultats.html', context) # A MODIFIER  
+            return render(request, 'enigmes/enquete_resultats.html', context)
+    return render(request, 'enigmes/enquete_resultats.html', context)  
         

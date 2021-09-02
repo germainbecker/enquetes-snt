@@ -144,7 +144,6 @@
                 <line x1="10" y1="10" x2="90" y2="80"></line>
                 <line x1="10" y1="80" x2="90" y2="10"></line>
             </svg>
-            <!-- <span id="croix">&times;</span> -->
         </label>
         <input type="checkbox" id="btn-hamburger">
         
@@ -153,7 +152,6 @@
             {% if user.is_authenticated %}
             <li><a class="{% if page == 'accueil' %}active{% endif %}" href="{% url 'accueil' %}">Accueil</a></li>
             <li><a class="{% if page == 'enigmes' %}active{% endif %}" href="{% url 'enigmes' %}">Énigmes</a></li>
-            <!-- <li><a href="{% url 'enigme-create' %}">Créer une énigme</a></li> -->
             <li class="gauche"><a class="{% if page == 'espace_perso' %}active{% endif %}" href="{% url 'espace-perso' %}">Espace personnel</a></li>                
             <li class="droite username">
                 {% load static %}

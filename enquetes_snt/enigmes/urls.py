@@ -24,7 +24,6 @@ urlpatterns = [
     path('enquete/creation/', views.creation_enquete, name='enquete-create'),
     path('enquete/creation/liste/', views.creation_enquete_liste, name='enquete-liste-create'),
     path('enquete/creation/manuelle/', views.creation_enquete_manuelle, name='enquete-manuelle-create'),
-    #path('enquete/creation/manuelle/', EnqueteCreateView.as_view(template_name="enigmes/enquete_form_classe.html"), name='enquete-create'),
     path('mon-espace/', views.espace_perso, name='espace-perso'),
     path('mon-espace/mes-enigmes/', views.mes_enigmes, name='mes-enigmes'),
     path('eleve/enquete/<str:code_enquete>/', views.eleve, name='enquete-eleve'),

@@ -71,7 +71,6 @@ function apercuReponse() {
 function conversion() {
     /* Thème choisi */
     let theme = document.querySelector('#id_theme').value;
-    console.log(theme);
     apercuImage(theme);
     apercuEnonce();
     apercuIndication(); 
@@ -156,7 +155,6 @@ function apercuImage(theme) {
             apercuImage.src = fichierImageReader.result;
         } else {
             apercuImage.src = '';
-            console.log('ici');
         }
       }, false);
     
@@ -287,7 +285,6 @@ function apercuFichiers(theme) {
             apercuImage.src = fichierImageReader.result;
         } else {
             apercuImage.src = '';
-            console.log('ici');
         }
       }, false);
     
@@ -391,8 +388,7 @@ function gestionTableaux() {
 document.getElementById("id_image").addEventListener("change", validationImage);
 
 function validationImage(){
-    console.log(this.files);
-    
+
     let btnResetImage = document.querySelector('#reset-image');
 
     const extensionsAcceptees =  ['jpeg','jpg','png'],
@@ -422,7 +418,6 @@ function validationImage(){
         }
     } else {
         this.value = "";
-        console.log(this);
         btnResetImage.style.display = "none";
         return false;
     }
@@ -534,7 +529,6 @@ document.querySelector("form").addEventListener("submit", function(event) {
 
 /* Pour afficher l'aperçu directement */
 let theme = document.querySelector('#id_theme').value;
-console.log(theme);
 apercuImage(theme);
 apercuEnonce();
 apercuIndication(); 
