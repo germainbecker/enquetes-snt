@@ -5,6 +5,7 @@ from django.forms import widgets
 from django.utils.html import format_html
 from django.core.validators import RegexValidator
 from django.forms.widgets import ClearableFileInput, Textarea
+from django.core.exceptions import ValidationError
 
 from enigmes.models import Enquete, Enigme
 from enseignants.forms import ParagraphErrorList
@@ -32,7 +33,7 @@ class EnigmeCreateForm(ModelForm):
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'fichier')
+        fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'credits_image', 'fichier')
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
@@ -44,12 +45,20 @@ class EnigmeCreateForm(ModelForm):
                 attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
             ),
             'image': CustomClearableFileInput(),
+            'credits_image': Textarea(
+                attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
+            ),
             'fichier': CustomClearableFileInput(),
         }
         help_texts = {
             'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
             'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
         }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        print(cleaned_data)
+
 
 class EnigmeExampleCreateForm(ModelForm):
     
@@ -98,7 +107,7 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'fichier')
+        fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'credits_image', 'fichier')
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
@@ -110,6 +119,9 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
                 attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
             ),
             'image': CustomClearableFileInput(),
+            'credits_image': Textarea(
+                attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
+            ),
             'fichier': CustomClearableFileInput(),
         }
         help_texts = {
@@ -123,18 +135,41 @@ class EnigmeUpdateForm(ModelForm):
         # pour personnaliser la liste d'erreurs (ErrorList)
         kwargs.update({'error_class': ParagraphErrorList})
         super(EnigmeUpdateForm, self).__init__(*args, **kwargs)
+        if self.data:
+            data = self.data.copy()
+            credits_image = self.data.get("credits_image")
+            image = self.data.get("image")
+            if credits_image != '' and (image == None or image == False):
+                data['credits_image'] = ''
+                self.data = data
+            
     
     class Meta:
         model = Enigme
-        fields = ['theme', 'enonce', 'reponse', 'indication', 'image', 'fichier']
+        fields = ['theme', 'enonce', 'reponse', 'indication', 'image', 'credits_image', 'fichier']
         widgets = {
             'image': CustomClearableFileInput(),
+            'credits_image': Textarea(
+                attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
+            ),
             'fichier': CustomClearableFileInput(),
         }
         help_texts = {
             'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
             'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
         }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        print(cleaned_data)
+        credits_image = cleaned_data.get("credits_image")
+        image = cleaned_data.get("image")
+        if credits_image != '' and (image == None or image == False):
+            raise ValidationError(
+                "Il n'est pas possible de définir les crédits si aucune image n'est sélectionnée."
+            )
+
+
 
 class CodeEnqueteForm(Form):
     code = CharField(label='Code à saisir', max_length=10)

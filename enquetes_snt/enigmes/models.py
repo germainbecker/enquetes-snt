@@ -69,6 +69,8 @@ class Enigme(models.Model):
                 ))]
     )
 
+    credits_image = models.TextField("Crédits/Licence de l'image", blank=True, null=True)
+
     fichier = models.FileField(
         "Fichier en pièce jointe",
         blank=True,

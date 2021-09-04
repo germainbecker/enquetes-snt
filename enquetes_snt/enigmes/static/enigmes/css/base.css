@@ -983,7 +983,8 @@ li {
     .enigme-creation-container #id_theme,
     .enigme-creation-container #id_enonce,
     .enigme-creation-container #id_reponse,
-    .enigme-creation-container #id_indication {
+    .enigme-creation-container #id_indication,
+    .enigme-creation-container #id_credits_image {
         font-size: 13px;
     }
 }
@@ -1335,7 +1336,7 @@ img.agrandir {
 
 .enigme-image img {
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .image-responsive {
@@ -1347,6 +1348,22 @@ img.agrandir {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.apercu-credits-image * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.apercu-credits-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    color: #888;
+    font-size: 0.8em;
 }
 
 /* Modale */
@@ -1641,7 +1658,7 @@ summary span:hover {
 
 .apercu-image img {
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .image-responsive {
@@ -1653,6 +1670,22 @@ summary span:hover {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.apercu .apercu-credits-image * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.apercu .apercu-credits-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    color: #888;
+    font-size: 0.8em;
 }
 
 .apercu blockquote {
@@ -2877,7 +2910,16 @@ input:checked + .slider:before {
     margin: 0;
 }
 
+/* .btn-form {
+    text-align: center;
+    margin: 20px 0;
+} */
+
 .btn-form {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
     text-align: center;
     margin: 20px 0;
 }

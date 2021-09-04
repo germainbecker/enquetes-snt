@@ -30,6 +30,14 @@
     <div class="enigme-image">
         {% if enigme.image %}
             <img class="centre image-responsive agrandir" src="{{ enigme.image.url }}" alt="illustration énigme">
+            {% if enigme.credits_image %}
+                <div class="apercu-credits-image">
+                    <span>Crédits / Licence :</span>
+                    <div class="credits-image">
+                        {{ enigme.credits_image|markdownify }}
+                    </div>
+                </div>
+            {% endif %}
         {% else %}
             {% include 'enigmes/img-theme.html' with theme=enigme.theme %}
         {% endif %}

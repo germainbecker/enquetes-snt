@@ -94,6 +94,8 @@ document.querySelector('#btn-apercu').addEventListener("click", conversion);
 
 document.querySelector('#image').style.display = "none";
 
+document.querySelector('.apercu-credits-image').style.display = "none";
+
 document.querySelector('.piece-jointe').style.display = "none";
 
 document.querySelector('.enigme-reponse').style.display = "none";
@@ -106,8 +108,12 @@ document.querySelector('#id_enonce').addEventListener("focusout", MathJaxReload)
 document.querySelector('#id_reponse').addEventListener("keyup", apercuReponse);
 document.querySelector('#id_indication').addEventListener("keyup", apercuIndication);
 document.querySelector('#id_indication').addEventListener("focusout", MathJaxReload);
-document.querySelector('#id_image').addEventListener("change", function() {
+document.querySelector('#id_image').addEventListener("load", function() {
     apercuImage(this.value);
+});
+document.querySelector('#id_credits_image').addEventListener("keyup", function() {
+    let theme = document.querySelector('#id_theme').value;
+    apercuImage(theme);
 });
 document.querySelector('#id_fichier').addEventListener("change", apercuFichier);
 
@@ -120,8 +126,148 @@ function apercuImage(theme) {
     var imageTheme = document.querySelector("#image-theme");
     var imageActuelle = document.getElementById("lien-image");
     var checkBoxImageActuelle = document.getElementById("image-clear_id");
+    var creditsImageMD = document.getElementById('id_credits_image').value;
+    var apercuCreditsImage = document.querySelector('.apercu-credits-image');
     
-    if (!(checkBoxImageActuelle)) {  // en cas d'une image non présente
+    var fichierImageReader = new FileReader();
+    fichierImageReader.addEventListener("load", function () {
+        if (!(fichierImage.files.length == 0)) {
+            apercuImage.src = fichierImageReader.result;
+        } else {
+            apercuImage.src = '';
+        }
+      }, false);
+
+
+    if (!(checkBoxImageActuelle)) {  // en cas d'une image non présente au départ
+        
+        console.log("a");
+        if (fichierImage.files.length == 1 && fichierImage.files[0]) {  // si une nouvelle image est sélectionnée
+            if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {  // et que son format est accepté
+                // on lit son contenu
+                fichierImageReader.readAsDataURL(fichierImage.files[0]);  
+                // on l'affiche dans l'aperçu
+                apercuImage.style.display = "block";
+                // on n'affiche pas l'image du thème
+                imageTheme.style.display = "none";
+                imageTheme.data = "none";
+                // on autorise la saisie des crédits
+                autoriseSaisieCredits();
+                // si des crédits sont absents
+                if (creditsImageMD == "") {
+                    // on n'affichage pas les crédits dans l'aperçu
+                    apercuCreditsImage.style.display = "none";
+                }
+                else {
+                    // sinon on les affiche
+                    apercuCreditsImage.style.display = "flex";
+                    let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                    let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                    console.log(creditsImageCleanHTML);
+                    let tmp = document.createElement("DIV");
+                    tmp.innerHTML = creditsImageCleanHTML;
+                    document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                    console.log("ici");
+                }
+            }
+        }
+        else {  // si pas de nouvelle image sélectionnée
+            // on n'affiche rien
+            apercuImage.style.display = "none";
+            apercuCreditsImage.style.display = "none";
+            // on bloque la saisie de crédits
+            bloqueSaisieCredits();
+            
+            if (!(theme == "NC")) {  // si le thème est défini (!= NC)
+                    imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+                    imageTheme.data = THEMES[theme];
+            } else {  // sinon
+                    // on n'affiche pas l'image du thème
+                    imageTheme.style.display = "none";
+                    imageTheme.data = "none";
+            }
+        }
+    } else {  // si une image est présente au départ !
+        
+        if (fichierImage.files.length == 1 && fichierImage.files[0]) { // si une nouvelle image est sélectionnée
+            if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {  // si son format est OK
+                // on lit son contenu
+                fichierImageReader.readAsDataURL(fichierImage.files[0]);
+                // on l'affiche dans l'aperçu
+                apercuImage.style.display = "block";
+                // on n'affiche pas l'image du thème
+                imageTheme.style.display = "none";
+                imageTheme.data = "none";
+                // on autorise la saisie des crédits
+                autoriseSaisieCredits();
+                // si des crédits sont absents
+                if (creditsImageMD == "") {
+                    // on n'affichage pas les crédits dans l'aperçu
+                    apercuCreditsImage.style.display = "none";
+                } else {
+                    // sinon on les affiche
+                    apercuCreditsImage.style.display = "flex";
+                    let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                    let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                    console.log(creditsImageCleanHTML);
+                    let tmp = document.createElement("DIV");
+                    tmp.innerHTML = creditsImageCleanHTML;
+                    document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                    console.log("ici");
+                }
+            }
+        } else {  // si pas de nouvelle image sélectionnée, on regarde si la checkbox est cochée ou pas
+            if (!(checkBoxImageActuelle.checked)){  // si l'image n'est pas à supprimer
+                // on récupère son URL
+                var urlImage = imageActuelle.href;
+                // on l'utilise pour l'apercu
+                apercuImage.src = urlImage;
+                apercuImage.style.display = "block";
+                // on n'affiche pas l'image du thème
+                imageTheme.style.display = "none";
+                imageTheme.data = "none";
+                // on autorise la modif des crédits
+                autoriseSaisieCredits();
+                // si des crédits sont absents
+                if (creditsImageMD == "") {
+                    // on n'affichage pas les crédits dans l'aperçu
+                    apercuCreditsImage.style.display = "none";
+                } else {
+                    // sinon on les affiche
+                    apercuCreditsImage.style.display = "flex";
+                    let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                    let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                    console.log(creditsImageCleanHTML);
+                    let tmp = document.createElement("DIV");
+                    tmp.innerHTML = creditsImageCleanHTML;
+                    document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                    console.log("ici");
+                }
+            } else {  // si l'image actuelle est à supprimer
+                // on n'affiche rien
+                apercuImage.style.display = "none";
+                apercuCreditsImage.style.display = "none";
+                // on bloque la saisie de crédits
+                bloqueSaisieCredits();
+                if (!(theme == "NC")) {  // si le thème est défini (!= NC)
+                    imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+                    imageTheme.data = THEMES[theme];
+                } else {  // sinon
+                    // on n'affiche pas l'image du thème
+                    imageTheme.style.display = "none";
+                    imageTheme.data = "none";
+                }
+            }
+
+        }
+    }
+        
+    
+
+
+    /* if (!(checkBoxImageActuelle)) {  // en cas d'une image non présente
+        bloqueSaisieCredits();
+        console.log("a");
         if (!(theme == "NC")) {
             if (fichierImage.files.length == 0){
                 imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
@@ -135,8 +281,9 @@ function apercuImage(theme) {
             imageTheme.data = "none";
         }
     } else {  // modification en cas d'une image déjà présente
+        autoriseSaisieCredits();
         if (!(theme == "NC")) {
-            if (fichierImage.files.length == 0 && Boolean(imageActuelle) && checkBoxImageActuelle.checked){
+            if (fichierImage.files.length == 0 && Boolean(imageActuelle) && checkBoxImageActuelle.checked){                
                 imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
                 imageTheme.data = THEMES[theme];
             } else {
@@ -159,52 +306,63 @@ function apercuImage(theme) {
       }, false);
     
     if (fichierImage.files.length == 1 && fichierImage.files[0]) {  // si une nouvelle image est sélectionnée
+        autoriseSaisieCredits();
+        console.log("b");
         if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {
             fichierImageReader.readAsDataURL(fichierImage.files[0]);
             apercuImage.style.display = "block";
+            if (creditsImageMD == "") {
+                apercuCreditsImage.style.display = "none";
+            }
+            else {
+                apercuCreditsImage.style.display = "flex";
+                let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                console.log(creditsImageCleanHTML);
+                let tmp = document.createElement("DIV");
+                tmp.innerHTML = creditsImageCleanHTML;
+                document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                console.log("ici");
+
+             
+            }
         }
     } else {
+        if (checkBoxImageActuelle) {
+            if (checkBoxImageActuelle.checked){  // si pas de nouvelle image et que l'image actuelle est à supprimer
+                bloqueSaisieCredits();
+            }
+        }
         var imageActuelle = document.getElementById("lien-image");
         var checkBoxImageActuelle = document.getElementById("image-clear_id");
         if (imageActuelle && checkBoxImageActuelle.checked == false) {  // si l'image actuelle existe et n'est pas à supprimer
             var urlImage = imageActuelle.href;  // on l'utilise pour l'apercu
             apercuImage.src = urlImage;
-            apercuImage.style.display = "block"; 
+            apercuImage.style.display = "block";
+            if (creditsImageMD == "") {
+                apercuCreditsImage.style.display = "none";
+            }
+            else {
+                apercuCreditsImage.style.display = "flex";
+                let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+            }
         } else {
             apercuImage.style.display = "none";
+            apercuCreditsImage.style.display = "none";
         }
-    }
-
-    /* // Aperçu fichier joint
-    var apercuPj = document.querySelector('.piece-jointe');
-    var lienPj = document.querySelector("#nom-fichier");
-    var hrefPJ = document.querySelector('#fichier');
-    var fichierPj = document.getElementById("id_fichier");
-    var fichierPjReader = new FileReader();
-    fichierPjReader.addEventListener("load", function () {
-        hrefPJ.href = fichierPjReader.result;
-      }, false);
-    
-    if (fichierPj.files.length == 1 && fichierPj.files[0]) {
-        if (/\.(csv|xls|xlsx|ods|py|html|css|txt|jpg|jpeg|png|json)$/i.test(fichierPj.files[0].name)) {
-            fichierPjReader.readAsDataURL(fichierPj.files[0]);
-            apercuPj.style.display = "flex";
-            lienPj.innerHTML = fichierPj.files[0].name;
-            hrefPJ.download = fichierPj.files[0].name;
-        }
-    } else {
-        var fichierActuel = document.getElementById("lien-fichier");
-        var checkBoxFichierActuel = document.getElementById("fichier-clear_id");
-        if (fichierActuel && checkBoxFichierActuel.checked == false) {  // si le fichier actuel existe et n'est pas à supprimer
-            // on l'utilise pour l'apercu
-            lienPj.href = fichierActuel.href;
-            lienPj.innerHTML = fichierActuel.innerHTML;
-            apercuPj.style.display = "flex"; 
-        } else {
-            apercuPj.style.display = "none";
-        }
-
     } */
+}
+
+function bloqueSaisieCredits() {
+    document.getElementById('id_credits_image').disabled = true;
+    console.log("bloque");
+}
+
+function autoriseSaisieCredits() {
+    document.getElementById('id_credits_image').disabled = false;
+    console.log("ok");
 }
 
 function apercuFichier() {
@@ -241,101 +399,6 @@ function apercuFichier() {
     }
 }
 
-function apercuFichiers(theme) {
-    // voir https://developer.mozilla.org/fr/docs/Web/API/FileReader/readAsDataURL
-    
-    // Aperçu image en fonction du thème choisi
-    var apercuImage = document.querySelector("#image");
-    var fichierImage = document.getElementById("id_image");
-    var imageTheme = document.querySelector("#image-theme");
-    var imageActuelle = document.getElementById("lien-image");
-    var checkBoxImageActuelle = document.getElementById("image-clear_id");
-    
-    if (!(checkBoxImageActuelle)) {  // en cas d'une image non présente
-        if (!(theme == "NC")) {
-            if (fichierImage.files.length == 0){
-                imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-                imageTheme.data = THEMES[theme];
-            } else {
-                imageTheme.style.display = "none";
-                imageTheme.data = "none";
-            }
-        } else {
-            imageTheme.style.display = "none";
-            imageTheme.data = "none";
-        }
-    } else {  // modification en cas d'une image déjà présente
-        if (!(theme == "NC")) {
-            if (fichierImage.files.length == 0 && Boolean(imageActuelle) && checkBoxImageActuelle.checked){
-                imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-                imageTheme.data = THEMES[theme];
-            } else {
-                imageTheme.style.display = "none";
-                imageTheme.data = "none";
-            }
-        } else {
-            imageTheme.style.display = "none";
-            imageTheme.data = "none";
-        }
-    }
-
-    var fichierImageReader = new FileReader();
-    fichierImageReader.addEventListener("load", function () {
-        if (!(fichierImage.files.length == 0)) {
-            apercuImage.src = fichierImageReader.result;
-        } else {
-            apercuImage.src = '';
-        }
-      }, false);
-    
-    if (fichierImage.files.length == 1 && fichierImage.files[0]) {  // si une nouvelle image est sélectionnée
-        if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {
-            fichierImageReader.readAsDataURL(fichierImage.files[0]);
-            apercuImage.style.display = "block";
-        }
-    } else {
-        var imageActuelle = document.getElementById("lien-image");
-        var checkBoxImageActuelle = document.getElementById("image-clear_id");
-        if (imageActuelle && checkBoxImageActuelle.checked == false) {  // si l'image actuelle existe et n'est pas à supprimer
-            var urlImage = imageActuelle.href;  // on l'utilise pour l'apercu
-            apercuImage.src = urlImage;
-            apercuImage.style.display = "block"; 
-        } else {
-            apercuImage.style.display = "none";
-        }
-    }
-
-    // Aperçu fichier joint
-    var apercuPj = document.querySelector('.piece-jointe');
-    var lienPj = document.querySelector("#nom-fichier");
-    var hrefPJ = document.querySelector('#fichier');
-    var fichierPj = document.getElementById("id_fichier");
-    var fichierPjReader = new FileReader();
-    fichierPjReader.addEventListener("load", function () {
-        hrefPJ.href = fichierPjReader.result;
-      }, false);
-    
-    if (fichierPj.files.length == 1 && fichierPj.files[0]) {
-        if (/\.(csv|xls|xlsx|ods|py|html|css|txt|jpg|jpeg|png|json)$/i.test(fichierPj.files[0].name)) {
-            fichierPjReader.readAsDataURL(fichierPj.files[0]);
-            apercuPj.style.display = "flex";
-            lienPj.innerHTML = fichierPj.files[0].name;
-            hrefPJ.download = fichierPj.files[0].name;
-        }
-    } else {
-        var fichierActuel = document.getElementById("lien-fichier");
-        var checkBoxFichierActuel = document.getElementById("fichier-clear_id");
-        if (fichierActuel && checkBoxFichierActuel.checked == false) {  // si le fichier actuel existe et n'est pas à supprimer
-            // on l'utilise pour l'apercu
-            lienPj.href = fichierActuel.href;
-            lienPj.innerHTML = fichierActuel.innerHTML;
-            apercuPj.style.display = "flex"; 
-        } else {
-            apercuPj.style.display = "none";
-        }
-
-    }
-}
 
 var enigmeContainer = document.querySelector(".apercu");
 
@@ -523,6 +586,12 @@ if (document.getElementById("fichier-clear_id")) {
     });
     
 }
+
+
+// Gestion saisie crédits image d'illustration
+
+
+
 
 
 // VALIDATION FORMULAIRE (le thème ne doit pas être NC)
