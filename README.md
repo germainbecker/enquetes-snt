@@ -218,7 +218,7 @@ Mais les trois qui suivent ne le sont pas :
 
 * 12/30 (caractère "/" non valide)
 * 17B (lettre pas en première position)
-* A_25J (un deuxième lettre interdite)
+* A_25J (une deuxième lettre interdite)
 
 >De cette façon **aucune donnée personnelle** sur les élèves n'est récoltée. Les identifiants seront stockés dans la base de données et permettront d'associer un résultat à chaque élève pour chaque enquête.
 
