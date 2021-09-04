@@ -120,7 +120,7 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
             ),
             'image': CustomClearableFileInput(),
             'credits_image': Textarea(
-                attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
+                attrs={'placeholder': "Indiquez ici la licence, l'auteur, et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
             ),
             'fichier': CustomClearableFileInput(),
         }
