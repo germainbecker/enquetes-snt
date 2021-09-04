@@ -253,7 +253,7 @@ Cagnotte : [https://www.onparticipe.fr/cagnottes/bNagoLGz](https://www.onpartici
 
 Si l'application vous a été utile et que vous le souhaitez, vous pouvez contribuer à la cagnotte et ainsi participer aux frais engagés pour son fonctionnement. 
 
-En tout transparence, ces frais annuels s'élèvent à 77,99 € TTC et correspondent à : 
+En toute transparence, ces frais annuels s'élèvent à 77,99 € TTC et correspondent à : 
 
 * l'achat du nom de domaine (+ messagerie) via OVH Cloud : 5,99 TTC
 * l'hébergement sur la plateforme eu.pythonanywhere.com : 72 € TTC (6 € par mois). 
