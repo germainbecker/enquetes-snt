@@ -60,6 +60,12 @@ class ParagraphErrorList(ErrorList):
         return '<div class="errorlist">%s</div>' % ''.join(['<p class="small error">%s</p>' % e for e in self])
 
 class MyAuthenticationForm(auth_forms.AuthenticationForm):
+    def __init__(self, *args, **kwargs):  # redéfinition de la méthode  __init__ de la classe 
+    
+        # pour personnaliser la liste d'erreurs (ErrorList)
+        kwargs.update({'error_class': ParagraphErrorList})
+        super(MyAuthenticationForm, self).__init__(*args, **kwargs)
+    
     error_messages = {
         'invalid_login': _(
             "Please enter a correct %(username)s and password. Note that both "
