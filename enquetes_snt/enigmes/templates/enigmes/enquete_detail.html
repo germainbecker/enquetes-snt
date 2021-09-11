@@ -29,8 +29,8 @@
                     <li><span class="info">DESCRIPTION</span> : {{enquete.description}}</li>
                     <li><span class="info">DATE DE CRÉATION</span> : {{enquete.date_creation}}</li>
                     <li><span class="info">ÉNIGMES</span> : {{ num_enigmes|join:', ' }}</li>
-                    <li><span class="info">CODE ÉLÈVE</span> : {{enquete.code}}</li>
-                    <li><span class="info">LIEN ÉLÈVE</span> : <span class="lien-url-enquete" data-lien="{% url 'enquete-eleve' code_enquete=enquete.code %}">
+                    <li><span class="info">CODE ENQUÊTE</span> : {{enquete.code}}</li>
+                    <li><span class="info">LIEN ENQUÊTE</span> : <span class="lien-url-enquete" data-lien="{% url 'enquete-eleve' code_enquete=enquete.code %}">
                         Copier
                         <img src="{% static 'enigmes/img/copy-link-white.svg' %}" alt="icone copier" height="20px">
                     </span></li>
