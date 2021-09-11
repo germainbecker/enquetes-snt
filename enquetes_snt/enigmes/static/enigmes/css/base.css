@@ -1276,7 +1276,6 @@ li {
 
 .enigme-metadata .metadata .auteur {
     display: flex;
-    align-items: end;
     gap: 5px;
     /* background-color: var(--main); */
     color: var(--main-darker);
@@ -1294,7 +1293,6 @@ li {
 
 .enigme-metadata .metadata .date-ajout {
     display: flex;
-    align-items: end;
     gap: 5px;
     color: #888;
 }
