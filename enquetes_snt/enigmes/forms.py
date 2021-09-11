@@ -33,7 +33,7 @@ class EnigmeCreateForm(ModelForm):
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'credits_image', 'fichier')
+        fields = ('theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
@@ -51,6 +51,7 @@ class EnigmeCreateForm(ModelForm):
             'fichier': CustomClearableFileInput(),
         }
         help_texts = {
+            'url_image': "Copiez l'URL de l'image désirée (à privilégier). Vous pouvez également téléverser une image d'illustration ci-dessous.",
             'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
             'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
         }
@@ -58,6 +59,14 @@ class EnigmeCreateForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         print(cleaned_data)
+        credits_image = cleaned_data.get("credits_image")
+        image = cleaned_data.get("image")
+        url_image = cleaned_data.get("url_image")
+        no_image = (url_image == '' and (image == None or image == False))
+        if credits_image != '' and no_image:
+            raise ValidationError(
+                "Il n'est pas possible de définir les crédits si aucune image n'est sélectionnée."
+            )
 
 
 class EnigmeExampleCreateForm(ModelForm):
@@ -139,14 +148,16 @@ class EnigmeUpdateForm(ModelForm):
             data = self.data.copy()
             credits_image = self.data.get("credits_image")
             image = self.data.get("image")
-            if credits_image != '' and (image == None or image == False):
+            url_image = self.data.get("url_image")
+            no_image = (url_image == '' and (image == None or image == False))
+            if credits_image != '' and no_image:
                 data['credits_image'] = ''
                 self.data = data
             
     
     class Meta:
         model = Enigme
-        fields = ['theme', 'enonce', 'reponse', 'indication', 'image', 'credits_image', 'fichier']
+        fields = ['theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier']
         widgets = {
             'image': CustomClearableFileInput(),
             'credits_image': Textarea(
@@ -162,13 +173,35 @@ class EnigmeUpdateForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         print(cleaned_data)
-        credits_image = cleaned_data.get("credits_image")
         image = cleaned_data.get("image")
-        if credits_image != '' and (image == None or image == False):
+        url_image = cleaned_data.get("url_image")
+        
+        # on s'assure de ne pas enregistrer des crédits si aucune image (url ou fichier) n'est choisie
+        credits_image = cleaned_data.get("credits_image")
+        no_image = (url_image == '' and (image == None or image == False))
+        if credits_image != '' and no_image:
             raise ValidationError(
                 "Il n'est pas possible de définir les crédits si aucune image n'est sélectionnée."
             )
+        return cleaned_data
 
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if instance.url_image is not None:  # si une url est définie
+            instance.image = None  # on s'assure qu'aucun image téléversée n'est associée à l'énigme
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
+    
+"""     def form_valid(self, form):
+        updated_enigme = form.save(commit=False)
+        print('avant', updated_enigme)
+        if updated_enigme.url_image is not None:
+            updated_enigme.image = None
+        updated_enigme.save()
+        print('après', updated_enigme)
+        form.save_m2m() """
 
 
 class CodeEnqueteForm(Form):

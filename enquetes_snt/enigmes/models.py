@@ -56,7 +56,7 @@ class Enigme(models.Model):
         return 'auteur_{0}/{1}'.format(instance.auteur.id, nom_fichier)
     
     image = models.ImageField(
-        "Image d'illustration",
+        "Téléverser une image d'illustration",
         blank=True,
         max_length=100,
         upload_to=repertoire_auteur,
@@ -68,6 +68,8 @@ class Enigme(models.Model):
                     'image/png',
                 ))]
     )
+
+    url_image = models.URLField("URL de l'image d'illustration", blank=True, null=True)
 
     credits_image = models.TextField("Crédits/Licence de l'image", blank=True, null=True)
 

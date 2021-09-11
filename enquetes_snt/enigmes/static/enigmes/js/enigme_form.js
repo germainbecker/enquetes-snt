@@ -108,14 +108,35 @@ document.querySelector('#id_enonce').addEventListener("focusout", MathJaxReload)
 document.querySelector('#id_reponse').addEventListener("keyup", apercuReponse);
 document.querySelector('#id_indication').addEventListener("keyup", apercuIndication);
 document.querySelector('#id_indication').addEventListener("focusout", MathJaxReload);
+document.querySelector('#id_url_image').addEventListener("keyup", function() {
+    let theme = document.querySelector('#id_theme').value;
+    apercuImage(theme);
+});
 document.querySelector('#id_image').addEventListener("load", function() {
-    apercuImage(this.value);
+    let theme = document.querySelector('#id_theme').value;
+    apercuImage(theme);
 });
 document.querySelector('#id_credits_image').addEventListener("keyup", function() {
     let theme = document.querySelector('#id_theme').value;
     apercuImage(theme);
 });
+
+
+
 document.querySelector('#id_fichier').addEventListener("change", apercuFichier);
+
+function isValidHttpUrl(string) {
+    let url;
+    
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;  
+    }
+  
+    return url.protocol === "http:" || url.protocol === "https:";
+}
+
 
 function apercuImage(theme) {
     // voir https://developer.mozilla.org/fr/docs/Web/API/FileReader/readAsDataURL
@@ -128,6 +149,8 @@ function apercuImage(theme) {
     var checkBoxImageActuelle = document.getElementById("image-clear_id");
     var creditsImageMD = document.getElementById('id_credits_image').value;
     var apercuCreditsImage = document.querySelector('.apercu-credits-image');
+    var urlImage = document.getElementById('id_url_image').value;
+    console.log("url", urlImage);
     
     var fichierImageReader = new FileReader();
     fichierImageReader.addEventListener("load", function () {
@@ -139,127 +162,213 @@ function apercuImage(theme) {
       }, false);
 
 
-    if (!(checkBoxImageActuelle)) {  // en cas d'une image non présente au départ
+    if (!(checkBoxImageActuelle) && urlImage === "") {  // en cas d'une image non présente au départ
         
         console.log("a");
-        if (fichierImage.files.length == 1 && fichierImage.files[0]) {  // si une nouvelle image est sélectionnée
-            if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {  // et que son format est accepté
-                // on lit son contenu
-                fichierImageReader.readAsDataURL(fichierImage.files[0]);  
-                // on l'affiche dans l'aperçu
-                apercuImage.style.display = "block";
-                // on n'affiche pas l'image du thème
-                imageTheme.style.display = "none";
-                imageTheme.data = "none";
-                // on autorise la saisie des crédits
-                autoriseSaisieCredits();
-                // si des crédits sont absents
-                if (creditsImageMD == "") {
-                    // on n'affichage pas les crédits dans l'aperçu
-                    apercuCreditsImage.style.display = "none";
-                }
-                else {
-                    // sinon on les affiche
-                    apercuCreditsImage.style.display = "flex";
-                    let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
-                    let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
-                    console.log(creditsImageCleanHTML);
-                    let tmp = document.createElement("DIV");
-                    tmp.innerHTML = creditsImageCleanHTML;
-                    document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
-                    console.log("ici");
-                }
+        if (isValidHttpUrl(urlImage)) {  // si l'url saisie est valide
+            // on désactive le téléversement d'une image
+            document.getElementById('id_image').disabled = true;
+            // on met à jour la source de l'image dans l'apercu
+            apercuImage.src = urlImage;
+            // on l'affiche dans l'aperçu
+            apercuImage.style.display = "block";
+            // on n'affiche pas l'image du thème
+            imageTheme.style.display = "none";
+            imageTheme.data = "none";
+            // on autorise la saisie des crédits
+            autoriseSaisieCredits();
+            // si des crédits sont absents
+            if (creditsImageMD == "") {
+                // on n'affichage pas les crédits dans l'aperçu
+                apercuCreditsImage.style.display = "none";
             }
-        }
-        else {  // si pas de nouvelle image sélectionnée
-            // on n'affiche rien
-            apercuImage.style.display = "none";
-            apercuCreditsImage.style.display = "none";
-            // on bloque la saisie de crédits
-            bloqueSaisieCredits();
-            
-            if (!(theme == "NC")) {  // si le thème est défini (!= NC)
-                    imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-                    imageTheme.data = THEMES[theme];
-            } else {  // sinon
+            else {
+                // sinon on les affiche
+                apercuCreditsImage.style.display = "flex";
+                let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                console.log(creditsImageCleanHTML);
+                let tmp = document.createElement("DIV");
+                tmp.innerHTML = creditsImageCleanHTML;
+                document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                console.log("ici");
+            }
+        } else {
+            // on active le téléversement d'une image
+            document.getElementById('id_image').disabled = false;
+            if (fichierImage.files.length == 1 && fichierImage.files[0]) {  // si une nouvelle image est sélectionnée
+                if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {  // et que son format est accepté                   
+                    // on désactive l'ajout d'url
+                    document.getElementById('id_url_image').disabled = true;
+                    // on lit son contenu
+                    fichierImageReader.readAsDataURL(fichierImage.files[0]);  
+                    // on l'affiche dans l'aperçu
+                    apercuImage.style.display = "block";
                     // on n'affiche pas l'image du thème
                     imageTheme.style.display = "none";
                     imageTheme.data = "none";
-            }
-        }
-    } else {  // si une image est présente au départ !
-        
-        if (fichierImage.files.length == 1 && fichierImage.files[0]) { // si une nouvelle image est sélectionnée
-            if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {  // si son format est OK
-                // on lit son contenu
-                fichierImageReader.readAsDataURL(fichierImage.files[0]);
-                // on l'affiche dans l'aperçu
-                apercuImage.style.display = "block";
-                // on n'affiche pas l'image du thème
-                imageTheme.style.display = "none";
-                imageTheme.data = "none";
-                // on autorise la saisie des crédits
-                autoriseSaisieCredits();
-                // si des crédits sont absents
-                if (creditsImageMD == "") {
-                    // on n'affichage pas les crédits dans l'aperçu
-                    apercuCreditsImage.style.display = "none";
-                } else {
-                    // sinon on les affiche
-                    apercuCreditsImage.style.display = "flex";
-                    let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
-                    let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
-                    console.log(creditsImageCleanHTML);
-                    let tmp = document.createElement("DIV");
-                    tmp.innerHTML = creditsImageCleanHTML;
-                    document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
-                    console.log("ici");
+                    // on autorise la saisie des crédits
+                    autoriseSaisieCredits();
+                    // si des crédits sont absents
+                    if (creditsImageMD == "") {
+                        // on n'affichage pas les crédits dans l'aperçu
+                        apercuCreditsImage.style.display = "none";
+                    }
+                    else {
+                        // sinon on les affiche
+                        apercuCreditsImage.style.display = "flex";
+                        let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                        let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                        console.log(creditsImageCleanHTML);
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = creditsImageCleanHTML;
+                        document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                        console.log("ici");
+                    }
                 }
             }
-        } else {  // si pas de nouvelle image sélectionnée, on regarde si la checkbox est cochée ou pas
-            if (!(checkBoxImageActuelle.checked)){  // si l'image n'est pas à supprimer
-                // on récupère son URL
-                var urlImage = imageActuelle.href;
-                // on l'utilise pour l'apercu
-                apercuImage.src = urlImage;
-                apercuImage.style.display = "block";
-                // on n'affiche pas l'image du thème
-                imageTheme.style.display = "none";
-                imageTheme.data = "none";
-                // on autorise la modif des crédits
-                autoriseSaisieCredits();
-                // si des crédits sont absents
-                if (creditsImageMD == "") {
-                    // on n'affichage pas les crédits dans l'aperçu
-                    apercuCreditsImage.style.display = "none";
-                } else {
-                    // sinon on les affiche
-                    apercuCreditsImage.style.display = "flex";
-                    let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
-                    let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
-                    console.log(creditsImageCleanHTML);
-                    let tmp = document.createElement("DIV");
-                    tmp.innerHTML = creditsImageCleanHTML;
-                    document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
-                    console.log("ici");
-                }
-            } else {  // si l'image actuelle est à supprimer
+            else {  // si pas de nouvelle image sélectionnée
                 // on n'affiche rien
                 apercuImage.style.display = "none";
                 apercuCreditsImage.style.display = "none";
                 // on bloque la saisie de crédits
                 bloqueSaisieCredits();
+                
                 if (!(theme == "NC")) {  // si le thème est défini (!= NC)
-                    imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
-                    imageTheme.data = THEMES[theme];
+                        imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+                        imageTheme.data = THEMES[theme];
                 } else {  // sinon
+                        // on n'affiche pas l'image du thème
+                        imageTheme.style.display = "none";
+                        imageTheme.data = "none";
+                }
+            }
+        }
+
+        
+    } else {  // si une image est présente au départ !
+        if (!(urlImage === '')) {   // si une url est définie
+            // on désactive la suppression de l'image actuelle et le téléversement d'une nouvelle image
+            document.getElementById('id_image').disabled = true;
+            if (document.getElementById('image-clear_id')) {
+                document.getElementById('image-clear_id').disabled = true;
+            }
+            // on met à jour la source de l'image dans l'apercu
+            apercuImage.src = urlImage;
+            // on l'affiche dans l'aperçu
+            apercuImage.style.display = "block";
+            // on n'affiche pas l'image du thème
+            imageTheme.style.display = "none";
+            imageTheme.data = "none";
+            // on autorise la saisie des crédits
+            autoriseSaisieCredits();
+            // si des crédits sont absents
+            if (creditsImageMD == "") {
+                // on n'affichage pas les crédits dans l'aperçu
+                apercuCreditsImage.style.display = "none";
+            } else {
+                // sinon on les affiche
+                apercuCreditsImage.style.display = "flex";
+                let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                console.log(creditsImageCleanHTML);
+                let tmp = document.createElement("DIV");
+                tmp.innerHTML = creditsImageCleanHTML;
+                document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                console.log("ici");
+            }
+        } else {  // sinon, si pas d'url définie
+            
+            // on active la suppression de l'image actuelle et le téléversement d'une nouvelle image
+            document.getElementById('id_image').disabled = false;
+            document.getElementById('image-clear_id').disabled = false;
+            
+            if (fichierImage.files.length == 1 && fichierImage.files[0]) { // si une nouvelle image est sélectionnée
+                if (/\.(jpe?g|png)$/i.test(fichierImage.files[0].name)) {  // si son format est OK
+                    // on désactive l'ajout d'url
+                    document.getElementById('id_url_image').disabled = true;
+                    // on désactive la case à cocher de suppression
+                    document.getElementById('image-clear_id').disabled = true;
+                    
+                    // on lit son contenu
+                    fichierImageReader.readAsDataURL(fichierImage.files[0]);
+                    // on l'affiche dans l'aperçu
+                    apercuImage.style.display = "block";
                     // on n'affiche pas l'image du thème
                     imageTheme.style.display = "none";
                     imageTheme.data = "none";
+                    // on autorise la saisie des crédits
+                    autoriseSaisieCredits();
+                    // si des crédits sont absents
+                    if (creditsImageMD == "") {
+                        // on n'affichage pas les crédits dans l'aperçu
+                        apercuCreditsImage.style.display = "none";
+                    } else {
+                        // sinon on les affiche
+                        apercuCreditsImage.style.display = "flex";
+                        let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                        let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                        console.log(creditsImageCleanHTML);
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = creditsImageCleanHTML;
+                        document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                        console.log("ici");
+                    }
                 }
-            }
+            } else {  // si pas de nouvelle image sélectionnée, on regarde si la checkbox est cochée ou pas
+                if (!(checkBoxImageActuelle.checked)){  // si l'image n'est pas à supprimer
+                    // on désactive l'ajout d'url
+                    document.getElementById('id_url_image').disabled = true;
+                    // on récupère son URL
+                    var urlImage = imageActuelle.href;
+                    // on l'utilise pour l'apercu
+                    apercuImage.src = urlImage;
+                    apercuImage.style.display = "block";
+                    // on n'affiche pas l'image du thème
+                    imageTheme.style.display = "none";
+                    imageTheme.data = "none";
+                    // on autorise la modif des crédits
+                    autoriseSaisieCredits();
+                    // si des crédits sont absents
+                    if (creditsImageMD == "") {
+                        // on n'affichage pas les crédits dans l'aperçu
+                        apercuCreditsImage.style.display = "none";
+                    } else {
+                        // sinon on les affiche
+                        apercuCreditsImage.style.display = "flex";
+                        let creditsImageHTML = marked(creditsImageMD);  // conversion en HTML
+                        let creditsImageCleanHTML = DOMPurify.sanitize(creditsImageHTML);
+                        console.log(creditsImageCleanHTML);
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = creditsImageCleanHTML;
+                        document.querySelector(".credits-image").innerHTML = creditsImageCleanHTML;
+                        console.log("ici");
+                    }
+                } else {  // si l'image actuelle est à supprimer
+                    // on active l'ajout d'url
+                    document.getElementById('id_url_image').disabled = false;
+                    // on desactive l'ajout d'une image
+                    document.querySelector('#id_image').disabled = true;
 
+                    // on n'affiche rien
+                    apercuImage.style.display = "none";
+                    apercuCreditsImage.style.display = "none";
+                    // on bloque la saisie de crédits
+                    bloqueSaisieCredits();
+                    if (!(theme == "NC")) {  // si le thème est défini (!= NC)
+                        imageTheme.style.display = "block";  // on affiche l'image du thème par défaut
+                        imageTheme.data = THEMES[theme];
+                    } else {  // sinon
+                        // on n'affiche pas l'image du thème
+                        imageTheme.style.display = "none";
+                        imageTheme.data = "none";
+                    }
+                }
+    
+            }
         }
+
+        
     }
 }
 
@@ -452,6 +561,9 @@ function resetImage() {
     fichierImage.value = null;
     btnResetImage.style.display = "none";
     
+    // on active l'ajout d'url
+    document.getElementById('id_url_image').disabled = false;
+
     // actualisation apercu
     let theme = document.querySelector('#id_theme').value;
     apercuImage(theme);
