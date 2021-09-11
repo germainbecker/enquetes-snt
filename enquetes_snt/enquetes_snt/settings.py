@@ -190,6 +190,9 @@ MARKDOWNIFY = {
             'markdown.extensions.fenced_code',
             'markdown.extensions.attr_list',
             'markdown.extensions.tables',
+            'markdown.extensions.nl2br',
+            'markdown.extensions.sane_lists',
+            'mdx_breakless_lists',  # début de liste sans saut de ligne
         ],
         "WHITELIST_TAGS": [
             'a',
