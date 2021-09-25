@@ -198,13 +198,11 @@ body.index {
 
 #menu li.username {
     padding: 5px;
-    color: var(--main);
-    background-color: white;
     border-radius: 5px;
     margin-right: 10px;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 4px;
 }
 
 #menu li.username img {
@@ -684,52 +682,13 @@ svg#logo g.snt path {
     margin: 0.5em 0;
 }
 
-/* #presentation-application {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    padding: 20px;
+
+@media all and (max-width: 600px) {
+    .presentation-application {
+        flex-direction: column;
+    }
 }
 
-#presentation-application * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;    
-}
-
-#presentation-application #presentation-application-texte {
-    margin: 10px 0;
-    line-height: 1.4em;
-    text-align: justify;
-}
-
-#presentation-application .presentation-image {
-    width: 100px;
-}
-
-#presentation-application .presentation-image img {
-    width: 100px;
-}
-
-#presentation-application h2 {
-    color: var(--black);
-    padding-bottom: 5px;
-    border-bottom: 5px solid var(--main);
-}
-
-#presentation-application #presentation-application-texte p {
-    margin: 0.5em 0;
-}
-
-#presentation-application #presentation-application-texte ul {
-    margin: 1em 0;
-    padding-left: 40px;
-}
-
-#presentation-application #presentation-application-texte li {
-    line-height: inherit;
-    margin: 0.5em 0;
-} */
 
 #informations-application {
     background-color: var(--third-light);
@@ -1802,6 +1761,10 @@ summary span:hover {
     visibility: hidden;
 }
 
+.message-erreur {
+    display: none;
+}
+
 .errors-container {
     background-color: rgba(249, 78, 84, 0.2);
     border-radius: 3px;
@@ -1864,7 +1827,7 @@ summary span:hover {
 
 .infos-enquete {
     /* min-width: 320px; */
-    max-width: 400px;
+    max-width: 370px;
     background-color: var(--main-darker);
     color: white;
     box-shadow: 0 0 10px var(--main-darker);
@@ -1894,17 +1857,24 @@ summary span:hover {
     font-size: 0.9em;
 }
 
+.infos-enquete li.info-image {
+    display: flex;
+    align-items: center;
+    gap : 10px;
+    margin: 5px 0;
+}
+
 .infos-enquete .lien-url-enquete:hover {
     cursor: pointer;
 }
 
-.infos-enquete span.oui-non {
+/* .infos-enquete span.oui-non {
     color: var(--main-darker);
     background-color: white;
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 10px;
-}
+} */
 
 .infos-enquete .btn-suppression-enquete {
     margin-top: 20px;
@@ -1970,14 +1940,6 @@ summary span:hover {
     cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
 .param-enquete {
     /* min-width: 280px; */
     background-color: var(--third-light);
@@ -2028,14 +1990,48 @@ summary span:hover {
 }
 
 .param-enquete span.oui-non {
+    color: var(--second);
+    font-weight: bold;
+}
+
+.param-enquete span.oui-non-active {
     color: white;
     background-color: var(--second);
+    font-weight: bold;
     padding: 5px 10px;
     border-radius: 10px;
 }
 
 .param-enquete li {
-    margin: 20px 0 0 0;
+    margin: 0;
+}
+
+.param-enquete li#active-desactive {
+    margin-bottom: 10px;
+}
+
+.param-enquete .form-modifier {
+    display: flex;
+    justify-content: center;
+}
+
+.param-enquete .btn-modifier {
+    margin-top: 15px;
+    padding: 7px 10px;
+    color: white;
+    background-color: var(--second);
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.param-enquete .btn-modifier:hover {
+    cursor: pointer;
+    background-color: var(--third-semi-light);
 }
 
 .bilan-enquete {    
@@ -2325,6 +2321,9 @@ summary span:hover {
 #tableau-de-bord {
     border-collapse: collapse;
     margin-bottom: 30px;
+    font-size: 0.9em;
+    display: block;
+    overflow-x: auto;
 }
 
 #tableau-de-bord td, #tableau-de-bord th {
@@ -2392,33 +2391,136 @@ td.enquete-active span {
 
 #tableau-de-bord span.lien-url-enquete {
     display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-#tableau-de-bord span.lien-url-enquete img {
-    margin-left: 10px;
-}
+
 
 #tableau-de-bord span.lien-url-enquete:hover {
     cursor: pointer;
 }
 
-.btn-suppression {
-    text-align: center;
+.lien-partage:hover {
+    cursor: pointer;
 }
 
-.btn-corbeille {
+.btn-corbeille, .btn-duplique, .btn-modifie {
     border: none;
     background: none;
+    padding: 0;
 }
 
-.btn-corbeille:hover {
+.btn-corbeille:hover,
+.btn-duplique:hover,
+.btn-modifie:hover {
     cursor: pointer;
 }
 
 /* modale tableau de bord pour copie presse papier */
 
+.modal-lien * {
+    box-sizing: border-box;
+    margin: 0;
+    left: 0;
+}
+
+
+.modal-lien {
+    display: none;
+    z-index: 1;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(200, 200, 200, 0.5);
+}
+
+.modal-lien.show {
+    display: block;
+}
+
 .modal-lien-content {
+    width: 400px;
+    height: 250px;
+    padding: 15px;
+    background-color: white;
+    border: 5px solid var(--main);
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+@media all and (max-width: 450px) {
+    .modal-lien-content {
+        width: 90%;
+    }
+}
+
+.modal-lien-content .zone-titre {
+    color: var(--main-darker);
+}
+
+.modal-lien-content .zone-texte {
+    margin: 20px 0;
+    font-size: 0.9em;
+}
+
+.modal-lien-content .zone-lien {
+    width: 100%;
+    display: flex;
+    gap: 15px;
+}
+
+.modal-lien-content .zone-lien #input-lien,
+.modal-lien-content .zone-lien #input-lien-partage {
+    width: 100%;
+    border: 2px solid var(--main);
+    border-radius: 5px;
+}
+
+.modal-lien-content .zone-lien .icone-copie-lien {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main);
+    padding: 7px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-lien-content .zone-lien .icone-copie-lien:hover {
+    background-color: var(--main-darker);
+}
+
+.modal-lien-content .message-lien-copie {
+    display: none;
+    margin-top: 20px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--main-darker);
+}
+
+.modal-lien-content .message-lien-copie.show {
+    display: block;
+}
+
+.modal-lien-content.show {
+    display: initial;
+}
+
+.close-lien{
+    color: var(--black);
+    font-size: 2em;
+    text-align: right;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+#lien-csv {
     display: none;
     position: fixed;
     padding: 0;
@@ -2428,11 +2530,11 @@ td.enquete-active span {
     border-radius: 5px;
 }
 
-.modal-lien-content.show {
+#lien-csv.show {
     display: initial;
 }
 
-.modal-lien-content p {
+#lien-csv p {
     text-align: center;
     background-color: var(--main-darker);
     padding: 10px 15px;
@@ -2443,12 +2545,13 @@ td.enquete-active span {
 
 #infos-enquetes {
     background-color: rgb(245 250 255);
-    padding: 20px;
+    padding: 5px 20px;
     max-width: 900px;
+    border-radius: 10px;
     margin: auto;
 }
 
-#zone-titre-infos-enquetes {
+/* #zone-titre-infos-enquetes {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -2469,6 +2572,32 @@ td.enquete-active span {
     margin:0;
     color: var(--main-darker);
 }
+ */
+#autres-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+}
+
+.lien-resultats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.lien-resultats button.telecharger-csv {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* Informations enquête */
+
+img.image-inline {
+    display: inline-block;
+}
 
 /* Résultats enquête */
 
@@ -2486,6 +2615,14 @@ td.enquete-active span {
     color: white;
     border-radius: 5px;
     text-align: center;
+}
+
+@media all and (max-width: 400px){
+    .resultats-enquete {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
 }
 
 .parametres-resultats {
@@ -2648,6 +2785,43 @@ input:checked + .slider:before {
     }
 }
 
+/* téléchargement des résultats au format CSV */
+
+#boutons-resultats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+#telechargement-csv button {
+    display: flex;
+    align-items: center;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-darker);
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#telechargement-csv svg {
+    width: 25px;
+    margin-left: 10px;
+}
+
+#telechargement-csv svg path {
+    fill: white;
+}
+
+@media all and (max-width: 400px){
+    #boutons-resultats {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
 /* tableau de résultats */
 
 #tableau {
@@ -2656,6 +2830,7 @@ input:checked + .slider:before {
     border-spacing: 5px;
     font-size: 0.9em;
     margin-bottom: 40px;
+    overflow-x: scroll;
 }
 
 .zone-eleve-score {
@@ -2841,6 +3016,10 @@ input:checked + .slider:before {
     box-shadow: none;
 }
 
+.zone-apercu .apercu-image {
+    margin-bottom: 20px;
+}
+
 .zone-apercu .enigme-reponse p {
     display: block;
 }
@@ -2936,6 +3115,16 @@ input:checked + .slider:before {
 
 .btn-form .btn-validation:hover {
     background-color: var(--second);
+}
+
+#btn-apercu-enquete {
+    border: 0;
+    background-color: var(--main-darker);
+    color: white;
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 .btn-form a {

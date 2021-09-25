@@ -1,0 +1,17 @@
+<!-- Modale (source : https://youtu.be/2R525oEOl2s) -->
+<div id="modale-lien" class="modal-lien">
+    <span class="close-lien">&times;</span>
+    <div class="modal-lien-content">
+        {% if lien == 'lien-enquete' %}
+            <p>Voici le lien de l'enquête à communiquer aux élèves :</p>
+        {% else %}
+            <p>Voici le lien pour partager l'enquête aux collègues :</p>
+        {% endif %}
+        <div id="zone-lien">
+            <input type="text" id="input-lien" readonly>
+            <div id="icone-copie-lien">
+                
+            </div>
+        </div>
+    </div>
+  </div>

@@ -6,38 +6,17 @@
 
 {% block content %}
 <div class="form-enquete-tri">
-    <h1>{{ titre }}</h1>
+    <h1>Modification de l'enquête de code {{ code }}</h1>
 </div>
 
-<p class="para-enonce">Sélectionner les énigmes à ajouter à votre enquête puis valider en bas de page.</p>
-<p class="para-enonce">N'hésitez pas à filtrer les énigmes pour aller plus vite.</p>
-
-{% include 'enigmes/filtre.html' %}
-{% include 'enigmes/modale_images.html' %}
+<p class="para-enonce">Vous pouvez modifier les paramètres et le choix des énigmes de l'enquête directement ci-dessous.</p>
 
 {% load static %}
 {% load custom_tags %}
 <div class="form-creation-enquete">
-    <form method="POST" id="form">
+    <form method="POST" id="form" action="">
         {% csrf_token %}
-
-        <div id="liste-enigmes">
-            {% for enigme in enigmes %}
-                {% load markdownify %}
-                <div class="filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}">
-                    <div class="selected-enigme-container">
-                        <div class="checkbox-container" id="case-{{ enigme.id }}">
-                            <input type="checkbox" name="enigmes" id="enigme-{{ enigme.id }}" class="case-a-cocher" value="{{ enigme.id }}" autocomplete="off">
-                        </div>
-                        <div class="enigme-container">
-                            {% include 'enigmes/enigme.html' with enigme=enigme %}
-                        </div>
-                    </div>
-                </div>
-                                
-            {% endfor %}
-        </div>
-
+        
         <div class="input-container">
             <p class="label">
                 <label for="description" class="label">{{ form.description.label }}</label>
@@ -83,12 +62,41 @@
         
         <div id="cle-enquete">
             <p id="cle-enquete-contenu">Vous n'avez sélectionné aucune énigme.</p>
-            <p id="message-erreur">Vous devez sélectionner au moins une énigme pour créer une enquête.</p>
+            <p class="message-erreur">Vous devez sélectionner au moins une énigme pour créer une enquête.</p>
         </div>
 
         <div class="btn-form">
-            <button id="btn-creer-enquete" class="btn-validation" type="submit">Créer l'enquête</button>
+            <button id="btn-creer-enquete" class="btn-validation" type="submit">Enregistrer les modifications</button>
         </div>
+
+
+        {% include 'enigmes/filtre.html' %}
+        {% include 'enigmes/modale_images.html' %}
+
+        <div id="liste-enigmes" data-cle="{{ cle_initiale }}">
+            {% for enigme in enigmes %}
+                {% load markdownify %}
+                <div class="filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}">
+                    <div class="selected-enigme-container">
+                        <div class="checkbox-container" id="case_{{ enigme.id }}">
+                            <input type="checkbox" name="enigmes" id="id_enigme_{{ enigme.id }}" class="case-a-cocher" value="{{ enigme.id }}" autocomplete="off" {% if enigme in enigmes_selectionnees %}checked{% endif %}>
+                        </div>
+                        <div class="enigme-container">
+                            {% include 'enigmes/enigme.html' with enigme=enigme %}
+                        </div>
+                    </div>
+                </div>
+                                
+            {% endfor %}
+        </div>
+
+        <div id="copie-cle-enquete"></div>
+
+        <div class="btn-form">
+            <button id="btn-creer-enquete" class="btn-validation" type="submit">Enregistrer les modifications</button>
+        </div>
+
+        
     </form>
 </div>
 
@@ -100,7 +108,7 @@
 
 {% block jsfiles %}
 {% load static %}
-<script src="{% static 'enigmes/js/enquete_form.js' %}"></script>
+<script src="{% static 'enigmes/js/enquete_modify_form.js' %}"></script>
 <script src="{% static 'enigmes/js/filtre.js' %}"></script>
 <script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
 <script src="{% static 'enigmes/js/prism.js' %}"></script>

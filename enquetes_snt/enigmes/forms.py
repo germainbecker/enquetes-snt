@@ -4,7 +4,7 @@ from django.forms import Form, ModelForm, ModelMultipleChoiceField, TextInput, C
 from django.forms import widgets
 from django.utils.html import format_html
 from django.core.validators import RegexValidator
-from django.forms.widgets import ClearableFileInput, Textarea
+from django.forms.widgets import ClearableFileInput, HiddenInput, Textarea
 from django.core.exceptions import ValidationError
 
 from enigmes.models import Enquete, Enigme
@@ -51,14 +51,13 @@ class EnigmeCreateForm(ModelForm):
             'fichier': CustomClearableFileInput(),
         }
         help_texts = {
-            'url_image': "Copiez l'URL de l'image désirée (à privilégier). Vous pouvez également téléverser une image d'illustration ci-dessous.",
+            'url_image': "Copiez l'URL de l'image désirée (à privilégier). L'autre solution est de téléverser une image d'illustration ci-dessous.",
             'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
             'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
         }
     
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
         credits_image = cleaned_data.get("credits_image")
         image = cleaned_data.get("image")
         url_image = cleaned_data.get("url_image")
@@ -116,7 +115,7 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'indication', 'image', 'credits_image', 'fichier')
+        fields = ('theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
@@ -129,11 +128,12 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
             ),
             'image': CustomClearableFileInput(),
             'credits_image': Textarea(
-                attrs={'placeholder': "Indiquez ici la licence, l'auteur, et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
+                attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
             ),
             'fichier': CustomClearableFileInput(),
         }
         help_texts = {
+            'url_image': "Copiez l'URL de l'image désirée (à privilégier). L'autre solution est de téléverser une image d'illustration ci-dessous.",
             'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
             'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
         }
@@ -172,7 +172,6 @@ class EnigmeUpdateForm(ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
         image = cleaned_data.get("image")
         url_image = cleaned_data.get("url_image")
         
@@ -188,21 +187,11 @@ class EnigmeUpdateForm(ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         if instance.url_image is not None:  # si une url est définie
-            instance.image = None  # on s'assure qu'aucun image téléversée n'est associée à l'énigme
+            instance.image = None  # on s'assure qu'aucune image téléversée n'est associée à l'énigme
         if commit:
-            instance.save()
-            self.save_m2m()
+            instance.save()  # on sauvegarde en bdd l'instance
+            self.save_m2m()  # on sauvegarde en bdd les relations many2many
         return instance
-    
-"""     def form_valid(self, form):
-        updated_enigme = form.save(commit=False)
-        print('avant', updated_enigme)
-        if updated_enigme.url_image is not None:
-            updated_enigme.image = None
-        updated_enigme.save()
-        print('après', updated_enigme)
-        form.save_m2m() """
-
 
 class CodeEnqueteForm(Form):
     code = CharField(label='Code à saisir', max_length=10)
@@ -267,18 +256,11 @@ class EnqueteCreateListForm(ModelForm):
             )
         }
 
-class EnqueteCreateForm(ModelForm):
-    
+class EnqueteUpdateListForm(ModelForm):
     class Meta:
         model = Enquete
-        fields = ['enigmes', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire']
+        fields = ['cle', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire']
         help_texts = {
-            'cle': format_html(
-                "Saisissez la liste des énigmes souhaitées. Indiquez les numéros des énigmes en les séparant par des point-virgules. <br>Par exemple, <em>7;5;8;2</em> va générer une enquête avec les énigmes n° 7, 5, 8 et 2."
-            ),
-            'description': format_html(
-                "Renseignez une description pour l'enquête (à destination du professeur uniquement)."
-            ),
             'indications': format_html(
                 "Cochez la case pour que les indications (si elles existent) soient affichées pour les élèves."
             ),
@@ -299,6 +281,123 @@ class EnqueteCreateForm(ModelForm):
             'description': TextInput(
                 attrs={'placeholder': '100 caractères max.'}
             )
+        }
+
+class EnqueteShareForm(ModelForm):
+    class Meta:
+        model = Enquete
+        fields = ['description', 'indications', 'correction', 'score', 'ordre_aleatoire']
+        
+        help_texts = {
+            'description': format_html(
+                "Renseignez une description pour l'enquête (à destination du professeur uniquement)."
+            ),
+            'indications': format_html(
+                "Cochez la case pour que les indications (si elles existent) soient affichées pour les élèves."
+            ),
+            'correction': format_html(
+                "Cochez la case pour que la correction soit proposée aux élèves après leur enquête."
+            ),
+            'score': format_html(
+                "Cochez la case pour que le score des élèves soit affiché après leur enquête. Si la correction est activée (juste au-dessus), le score est automatiquement affiché."
+            ),
+            'ordre_aleatoire': format_html(
+                "Cochez la case pour que les énigmes de l'enquête soient proposées dans un ordre aléatoire aux élèves."
+            )
+        }
+        widgets = {
+            'description': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),       
+        }
+
+    
+
+class EnqueteShareListForm(ModelForm):
+    class Meta:
+        model = Enquete
+        fields = ['cle', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire']
+        help_texts = {
+            'description': format_html(
+                "Renseignez une description pour l'enquête (à destination du professeur uniquement)."
+            ),
+            'indications': format_html(
+                "Cochez la case pour que les indications (si elles existent) soient affichées pour les élèves."
+            ),
+            'correction': format_html(
+                "Cochez la case pour que la correction soit proposée aux élèves après leur enquête."
+            ),
+            'score': format_html(
+                "Cochez la case pour que le score des élèves soit affiché après leur enquête. Si la correction est activée (juste au-dessus), le score est automatiquement affiché."
+            ),
+            'ordre_aleatoire': format_html(
+                "Cochez la case pour que les énigmes de l'enquête soient proposées dans un ordre aléatoire aux élèves."
+            )
+        }
+        widgets = {
+            'description': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            )
+        }
+
+class EnqueteCreateForm(ModelForm):
+    
+    class Meta:
+        model = Enquete
+        fields = ['enigmes', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire', 'cle']
+        help_texts = {
+            'description': format_html(
+                "Renseignez une description pour l'enquête (à destination du professeur uniquement)."
+            ),
+            'indications': format_html(
+                "Cochez la case pour que les indications (si elles existent) soient affichées pour les élèves."
+            ),
+            'correction': format_html(
+                "Cochez la case pour que la correction soit proposée aux élèves après leur enquête."
+            ),
+            'score': format_html(
+                "Cochez la case pour que le score des élèves soit affiché après leur enquête. Si la correction est activée (juste au-dessus), le score est automatiquement affiché."
+            ),
+            'ordre_aleatoire': format_html(
+                "Cochez la case pour que les énigmes de l'enquête soient proposées dans un ordre aléatoire aux élèves."
+            )
+        }
+        widgets = {
+            'description': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'cle': HiddenInput(),
+        }
+    
+    enigmes = ModelMultipleChoiceField(
+        queryset=Enigme.objects.all(),
+        widget=CheckboxSelectMultiple
+    )
+
+class EnqueteUpdateForm(ModelForm):
+    
+    class Meta:
+        model = Enquete
+        fields = ['enigmes', 'description', 'indications', 'correction', 'score', 'ordre_aleatoire', 'cle']
+        help_texts = {
+            'description': format_html(
+                "Renseignez une description pour l'enquête (à destination du professeur uniquement)."
+            ),
+            'indications': format_html(
+                "Cochez la case pour que les indications (si elles existent) soient affichées pour les élèves."
+            ),
+            'correction': format_html(
+                "Cochez la case pour que la correction soit proposée aux élèves après leur enquête."
+            ),
+            'score': format_html(
+                "Cochez la case pour que le score des élèves soit affiché après leur enquête. Si la correction est activée (juste au-dessus), le score est automatiquement affiché."
+            ),
+            'ordre_aleatoire': format_html(
+                "Cochez la case pour que les énigmes de l'enquête soient proposées dans un ordre aléatoire aux élèves."
+            )
+        }
+        widgets = {
+            'cle': HiddenInput(),
         }
     
     enigmes = ModelMultipleChoiceField(

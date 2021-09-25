@@ -38,7 +38,8 @@
     
     <div class="zone-container">
         <span class="titre-zone">Mes enquêtes</span>
-        <p>Pour créer une enquête, il suffit de sélectionner une ou plusieurs énigmes qui formeront l'enquête. Pour cela, il existe deux possibilités : <strong>par sélection manuelle</strong> en parcourant toutes les énigmes, ou <strong>par numéros d'énigmes</strong> en indiquant directement les numéros des énigmes. <br>Plus d'informations en <a href="#infos-enquetes">bas de page</a> sur les enquêtes et leur création.</p>
+        <p>Pour créer une enquête, il suffit de sélectionner une ou plusieurs énigmes qui formeront l'enquête. Pour cela, il existe deux possibilités : <strong>par sélection manuelle</strong> en parcourant toutes les énigmes, ou <strong>par numéros d'énigmes</strong> en indiquant directement les numéros des énigmes.</p>
+        <p><span style="font-size: 1.4em;">⚠️</span> Avant de créer votre première enquête, veuillez lire <a href="{% url 'enquete-informations' %}">cette page</a> qui contient toutes les informations utiles pour la création, pour les identifiants des élèves, etc.</p>
         <div class="zone-creation">
             <div class="creation-enquete">
                 <a class="lien-div" href="{% url 'enquete-manuelle-create' %}"></a>
@@ -63,7 +64,7 @@
        
     <div class="detail-enquetes">
         <h2>Tableau de bord de vos enquêtes</h2>
-        <p>Vous pouvez accéder au détail d'une enquête en cliquant sur sa description. Vous pourrez notamment y trouver les paramètres de l'enquête (et les modifier si besoin), la liste des énigmes composant l'enquête, un lien pour voir le détail des résultats, un autre pour exporter les résultats dans un fichier CSV, etc.</p>
+        <p>Vous pouvez accéder au détail d'une enquête en cliquant sur sa description. Vous pourrez notamment y trouver toutes les informations sur l'enquête (énigmes, paramètres, etc.) et les modifier si besoin.</p>
         {% if enquetes_perso.count == 0 %}
         <p><em>Aucune enquête pour le moment</em></p>
         {% else %}
@@ -75,16 +76,16 @@
                     <th>Clé de l'enquête</th>
                     <th>Actif</th>
                     <th>Action</th>
-                    <th>Code enquête</th>
-                    <th>Lien enquête</th>
+                    <th>Code</th>
+                    <th>Lien</th>
                     <th>Résultats</th>
-                    <th>Suppression</th>
+                    <th>Autres actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for enquete in enquetes_perso %}
                 <tr>
-                    <td>{{ enquete.date_creation }}</td>
+                    <td>{{ enquete.date_creation|date:"d/m/y H:i" }}</td>
                     {% if enquete.description != '' %}
                         <td>
                             <a href="{% url 'enquete-detail' enquete_id=enquete.pk %}">{{ enquete.description }}</a>
@@ -124,24 +125,50 @@
                     {% endif %}
                     <td class="lien-enquete">
                         <span class="lien-url-enquete" data-lien="{%url 'enquete-eleve' code_enquete=enquete.code %}">
-                            Copier
-                            <img src="{% static 'enigmes/img/copy-link.svg' %}" alt="icone copier" width="20px">
+                            <img src="{% static 'enigmes/img/hyperlink.svg' %}" alt="icone copier" width="20px" title="Copier le lien élève">
                         </span>
                     </td>
-                    <td class="lien-resultats">
-                        <a href="{% url 'enquete-resultats' enquete_id=enquete.pk  %}">
-                            <img class="centre img-lien" src="{% static 'enigmes/img/results.svg' %}" alt="lien" width="25px">
-                        </a>
+                    <td>
+                        <div class="lien-resultats">
+                            <a href="{% url 'enquete-resultats' enquete_id=enquete.pk  %}">
+                                <img class="centre img-lien" src="{% static 'enigmes/img/results.svg' %}" alt="lien" title="Voir les résultats" width="25px">
+                            </a>
+                            <form class="btn-csv" action="" method="POST">
+                                {% csrf_token %}
+                                <button class="telecharger-csv" type="submit" value="{{enquete.pk}}" name="telecharger-csv" title="Télécharger les résultats">
+                                    {% load static %}
+                                    <img class="centre" src="{% static 'enigmes/img/csv-file.svg' %}" alt="icone csv" width="25px">
+                                </button>
+                            </form>
+                        </div>
                     </td>
                     <td>
-                        <form class="btn-suppression" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-corbeille" type="submit" value="{{enquete.pk}}" name="supprimer">
-                                {% load static %}
-                                <img class="centre img-corbeille" src="{% static 'enigmes/img/corbeille-ligne.svg' %}" alt="corbeille" width="20px">
-                            </button>
-                        </form>
+                        <div id="autres-actions">
+                            <form class="btn-modifier" action="" method="POST">
+                                {% csrf_token %}
+                                <button class="btn-modifie" type="submit" value="{{enquete.pk}}" name="modifier" title="Modifier l'enquête">
+                                    {% load static %}
+                                    <img class="centre" src="{% static 'enigmes/img/edit-pen.svg' %}" alt="icone modification" width="20px">
+                                </button>
+                            </form>
+                            <div class="lien-partage">
+                                <span class="lien-url-enquete partage" data-lien="{%url 'partage-enquete' code_enquete=enquete.code %}">
+                                    <img src="{% static 'enigmes/img/share.svg' %}" alt="icone partage" width="20px" title="Partager l'enquête">
+                                </span>
+                            </div>
+                            <form class="btn-dupliquer" action="" method="POST">
+                                {% csrf_token %}
+                                <button class="btn-duplique" type="submit" value="{{enquete.pk}}" name="dupliquer" title="Dupliquer l'enquête">
+                                    {% load static %}
+                                    <img class="centre img-corbeille" src="{% static 'enigmes/img/copy-link.svg' %}" alt="icone duplication" width="20px">
+                                </button>
+                            </form>
+                            <a href="{%url 'enquete-delete' enquete_id=enquete.pk %}">
+                                <img class="centre img-lien" src="{% static 'enigmes/img/corbeille-ligne.svg' %}" alt="lien" title="Supprimer l'enquête" width="20px">
+                            </a>
+                        </div>
                     </td>
+                    
                 </tr>        
             {% endfor %}
             </tbody>
@@ -149,54 +176,14 @@
         {% endif %}
     </div>
     
-    <div class="modal-lien" id="modale-lien">
-        <div class="modal-lien-content">
+    <div class="modal-lien-copie-csv" id="modale-lien-copie-csv">
+        <div id="lien-csv">
             <p class="texte-modale"></p>
         </div>
     </div>
+
+    {% include 'enigmes/modales_copie_liens.html' %}
     
-    <div id="infos-enquetes">
-        <div id="zone-titre-infos-enquetes">
-            <svg class="icone" id="info" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><title>more-info</title><path d="M61.44,0A61.46,61.46,0,1,1,18,18,61.25,61.25,0,0,1,61.44,0ZM59.12,36a8,8,0,0,1,.61-3.16,7.82,7.82,0,0,1,1.8-2.63,8.33,8.33,0,0,1,2.62-1.79,8.08,8.08,0,0,1,6.11,0,8.06,8.06,0,0,1,2.58,1.79,7.83,7.83,0,0,1,1.77,2.63A8.38,8.38,0,0,1,75.2,36a8.15,8.15,0,0,1-.59,3.1,8.23,8.23,0,0,1-1.76,2.65,8.15,8.15,0,0,1-2.59,1.82,7.72,7.72,0,0,1-3.05.6,8,8,0,0,1-3.12-.6,7.84,7.84,0,0,1-2.61-1.8,8.07,8.07,0,0,1-1.77-2.64A8.3,8.3,0,0,1,59.12,36Zm3.09,47.8-.17.63-.12.49-.05.34,0,.27a2,2,0,0,0,.09.64v0a1.09,1.09,0,0,0,.23.41.86.86,0,0,0,.35.23,1.55,1.55,0,0,0,.55.09,2.74,2.74,0,0,0,1.46-.63,14.6,14.6,0,0,0,2.15-2.06,36,36,0,0,0,2.57-3.3c.89-1.26,1.82-2.71,2.79-4.33a.37.37,0,0,1,.5-.13l3.28,2.44a.36.36,0,0,1,.09.5,56.84,56.84,0,0,1-4.58,6.87,30.35,30.35,0,0,1-4.73,4.89l0,0a18.55,18.55,0,0,1-4.92,2.92,14.15,14.15,0,0,1-5.19,1,13.63,13.63,0,0,1-4.07-.55,7.92,7.92,0,0,1-3-1.66,7.1,7.1,0,0,1-1.86-2.72,9.92,9.92,0,0,1-.61-3.62c0-.45,0-.92.08-1.42s.14-1,.25-1.58v0c.1-.54.25-1.15.43-1.82s.41-1.43.67-2.26L54.1,61.61l.47-1.67c.12-.47.22-.88.3-1.24a8.43,8.43,0,0,0,.15-.9,5.75,5.75,0,0,0,.06-.77,2.9,2.9,0,0,0-.2-1.09v0a2.49,2.49,0,0,0-.57-.81,2.68,2.68,0,0,0-.94-.55,4.15,4.15,0,0,0-1.28-.19H47.45a.37.37,0,0,1-.37-.36l0-.13,1.22-4.43a.37.37,0,0,1,.36-.27l23.67-.75a.38.38,0,0,1,.38.36l0,.12L62.21,83.78ZM97,25.88a50.31,50.31,0,1,0,14.72,35.56A50.16,50.16,0,0,0,97,25.88Z"/></svg>
-            <h3 id="titre-infos-enquetes">Quelques informations sur les enquêtes</h3>
-        </div>
-    
-        <p>Une enquête créée est par défaut <em>active</em>, c'est-à-dire qu'elle est disponible pour les élèves. Vous pouvez <em>désactiver</em> une enquête, elle ne sera alors plus accessible pour les élèves</p>
-    
-        <p>Au moment de la création d'une enquête, vous devrez :</p>
-        <ul>
-            <li>renseigner <strong>une description de l'enquête</strong> (à destination uniquement de l'enseignant). Cette description peut contenir le nom de la classe ou du groupe concerné, le(s) thème(s) de l'enquête, etc. Cette description permettra de mieux vous y retrouver.</li>
-            <li>choisir si les élèves auront accès aux <strong>indications</strong> (si celles-ci existent pour les énigmes choisies)</li>
-            <li>choisir si une <strong>correction</strong> est proposée aux élèves à la fin de leur enquête</li>
-            <li>choisir si le <strong>score</strong> de l'élève lui est communiqué à la fin de son enquête (en cas de correction activée, le score est automatiquement affiché)</li>
-            <li>choisir si les énigmes de l'enquête sont proposées dans un <strong>ordre aléatoire</strong> aux élèves</li>
-        </ul>
-        
-        <p>Ces quatre derniers choix pourront être modifiés après la création de l'enquête, mais il faudra d'abord <em>désactiver</em> l'enquête, puis la réactiver pour qu'elle soit à nouveau accessible aux élèves.</p>
-        
-        <p>Les enquêtes ne sont pas partagées avec les autres utilisateurs.</p>
-        
-        <p>Pour chaque enquête, un <strong>code unique</strong> à 8 caractères sera généré. C'est ce code qu'il faut communiquer à vos élèves et qu'ils doivent saisir sur la <a href="/">page d'accueil</a> de l'application pour démarrer l'enquête. Vous pourrez aussi leur communiquer une URL directe vers l'enquête.</p>
-        
-        <p>Pour différencier vos différents élèves, un <strong>identifiant</strong> leur sera demandé.</p> 
-        <strong>
-            <p><span style="font-size: 1.4em;">⚠️</span> C'est à vous de définir les identifiants de vos élèves. Un identifiant ne peut pas être vide et doit nécessairement être de la forme :</p>
-            <ul>
-                <li>une suite de caractères parmi les chiffres de 0 à 9 ainsi que les caractères "-" (tiret) et "_" (underscore). </li>
-                <li>éventuellement <em>précédée</em> d'une seule et unique lettre (optionnel, mais permet éventuellement de différencier les classes)</li>
-            </ul>
-        </strong>
-        
-        <p>Par exemple, les identifiants <em>2569845</em>, <em>B25</em> et <em>E-12_01</em> sont valides, mais <em>12/30</em> (caractère "/" non valide), <em>17B</em> (lettre pas en première position) et <em>A_25J</em> (un deuxième lettre interdite) ne le sont pas.</p>
-                
-        <p>Ces identifiants sont ainsi vierges de données personnelles sur les élèves. Ils seront stockés dans la base de donnnées et permettront d'associer un résultat à chaque élève pour chaque enquête.</strong></p>
-    
-        <p>Le tableau de bord de cette page recense les différentes enquêtes que vous avez créées. Vous pouvez accéder au détail de chacune d'elle en cliquant sur le lien de sa description.</p>
-    
-        <p>Vous pouvez accéder aux résultats et réponses de vos élèves en cliquant sur le lien correspondant dans le tableau de bord ou dans les détails de l'enquête. Il est possible d'exporter ces résultats dans un fichier CSV.</p>
-        
-        <p>Vous pouvez également supprimer une enquête via le tableau de bord ou la page de détails de l'enquête, mais toutes les données de l'enquête seront perdues. Assurez-vous donc d'avoir récupéré les résultats avant la suppression</p>
-    </div>
 </div>
 
 {% endblock %}

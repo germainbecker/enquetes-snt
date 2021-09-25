@@ -127,7 +127,13 @@ class Enquete(models.Model):
     )
         
     def liste_enigmes_ordre_initial(self):
-        return list(self.enigmes.all())
+        '''on se base sur la clé pour avoir l'ordre'''
+        liste_num_enigmes = self.cle.split(";")
+        liste_enigmes = []
+        for num_enigme in liste_num_enigmes:
+            enigme = Enigme.objects.get(pk=int(num_enigme))
+            liste_enigmes.append(enigme)
+        return liste_enigmes
     
     def liste_enigmes(self):
         import random

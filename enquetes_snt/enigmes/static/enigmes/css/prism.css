@@ -17,6 +17,12 @@ https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javasc
 	background: #f5f2f0;
 }
 
+@media all and (max-width: 768px) {
+	:not(pre) > code {
+		padding: 0 .1em;
+	}
+}
+
 code{
 	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 }

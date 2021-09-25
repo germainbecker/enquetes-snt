@@ -1,0 +1,93 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<h1>Informations sur les enquêtes</h1>
+
+<ol>
+    <li><a href="#creation-enquete">Création d'une enquête</a></li>
+    <li><a href="#diffusion-eleves">Diffusion aux élèves</a></li>
+    <li><a href="#resultats-enquete">Résultats d'une enquête</a></li>
+    <li><a href="#modification-enquete">Modification d'une enquête</a></li>
+    <li><a href="#duplication-enquete">Duplication d'une enquête</a></li>
+    <li><a href="#partage-enquete">Partage d'enquêtes entre collègues</a></li>
+    <li><a href="#suppression-enquete">Suppression d'une enquête</a></li>
+</ol>
+
+<h2 id="creation-enquete">Création d'une enquête</h2>
+
+<p>Il y a deux façons de créer une enquête</p>
+<ul>
+    <li>par sélection manuelle : vous cochez les énigmes qui vous intéressent dans la liste des énigmes</li>
+    <li>par numéros d'énigmes : vous listez directement les numéros des énigmes qui vous intéressent</li>
+</ul>
+
+<p>Au moment de la création d'une enquête, vous devrez également :</p>
+<ul>
+    <li>renseigner <strong>une description de l'enquête</strong> (à destination uniquement de l'enseignant). Cette description peut contenir le nom de la classe ou du groupe concerné, le(s) thème(s) de l'enquête, etc. Elle permettra de mieux vous y retrouver.</li>
+    <li>choisir si les élèves auront accès aux <strong>indications</strong> (si celles-ci existent pour les énigmes choisies)</li>
+    <li>choisir si une <strong>correction</strong> est proposée aux élèves à la fin de leur enquête</li>
+    <li>choisir si le <strong>score</strong> de l'élève lui est communiqué à la fin de son enquête (en cas de correction activée, le score est automatiquement affiché)</li>
+    <li>choisir si les énigmes de l'enquête sont proposées dans un <strong>ordre aléatoire</strong> aux élèves</li>
+</ul>
+
+<p>Une enquête créée est par défaut <strong>active</strong>, c'est-à-dire qu'elle est disponible pour les élèves. Vous pouvez <strong>désactiver</strong> une enquête, elle ne sera alors plus accessible pour les élèves.</p>
+
+<h2 id="diffusion-eleves">Diffusion aux élèves</h2>
+
+<p>Pour chaque enquête, un <strong>code unique</strong> à 8 caractères sera généré. C'est ce code qu'il faut communiquer à vos élèves et qu'ils doivent saisir sur la <a href="/">page d'accueil</a> de l'application pour démarrer l'enquête. Vous pourrez aussi leur communiquer une URL directe vers l'enquête.</p>
+
+<p>Le code de l'enquête est accessible dans le tableau de bord ou dans la page de détail de l'enquête. L'URL directe s'obtient en cliquant sur l'icône <img class="image-inline" src="{% static 'enigmes/img/hyperlink.svg' %}" alt="bouton modifier" width="20px"> dans le tableau de bord ou dans la page de détail de l'enquête.</p>
+
+<div id="infos-enquetes">
+    <p><span style="font-size: 1.4em;">⚠️</span> <strong>IMPORTANT : les identifiants des élèves</strong></p>
+
+    <p>Pour différencier vos différents élèves, un <strong>identifiant</strong> leur sera demandé.</p> 
+    <p><strong>C'est à vous de définir les identifiants de vos élèves. Un identifiant ne peut pas être vide et doit nécessairement être de la forme suivante :</strong></p>
+    <ul>
+        <li>une suite de caractères parmi les chiffres de 0 à 9 ainsi que les caractères "-" (tiret) et "_" (underscore). </li>
+        <li>éventuellement <em>précédée</em> d'une seule et unique lettre (optionnel, mais permet éventuellement de différencier les classes)</li>
+    </ul>
+    
+    <p>Par exemple, les identifiants <em>2569845</em>, <em>B25</em> et <em>E-12_01</em> sont valides, mais <em>12/30</em> (caractère "/" non valide), <em>17B</em> (lettre pas en première position) et <em>A_25J</em> (une deuxième lettre interdite) ne le sont pas.</p>
+            
+    <p>Ces identifiants sont ainsi vierges de données personnelles sur les élèves. Ils seront stockés dans la base de données et permettront d'associer un résultat à chaque élève pour chaque enquête.</strong></p>
+</div>
+
+<h2 id="resultats-enquete">Résultats d'une enquête</h2>
+
+<p>Vous pouvez accéder aux résultats et réponses de vos élèves en cliquant sur le bouton <img class="image-inline" src="{% static 'enigmes/img/results.svg' %}" alt="lien" title="Voir les résultats" width="25px"> dans le tableau de bord ou dans la page de détails de l'enquête.</p>
+
+<p>La page de résultats d'une enquête permet de masquer les identifiants des élèves mais également leurs réponses et la correction. Elle contient également un récapitulatif des énigmes de l'enquête pour procéder à la correction devant les élèves. Le bouton "Actualiser" de cette page de résultats permet de mettre à jour en temps réel les réponses des élèves une fois qu'ils ont terminé l'enquête.</p>
+
+<p>Il est aussi possible d'exporter les résultats d'une enquête dans un fichier CSV en cliqant sur le bouton <img class="image-inline" src="{% static 'enigmes/img/csv-file.svg' %}" alt="icone csv" width="25px"> dans le tableau de bord ou dans la page de détails de l'enquête ou dans la page de résultats de l'enquête. Ce fichier n'est généré que si au moins un élève a terminé l'enquête.</p>
+
+<h2 id="modification-enquete">Modification d'une enquête</h2>
+
+<p>Vous pouvez modifier les énigmes choisies et les paramètres d'une enquête à tout moment, à condition de la désactiver au préalable. Il faudra alors la réactiver après les modifications pour que les élèves puissent y accéder.</p>
+<p>Pour cela, il suffit de cliquer sur l'icône <img class="image-inline" src="{% static 'enigmes/img/edit-pen.svg' %}" alt="bouton modifier" width="20px"> dans le tableau de bord ou directement dans la page de détail de l'enquête.</p>
+
+<h2 id="duplication-enquete">Duplication d'une enquête</h2>
+
+<p>Vous pouvez dupliquer une enquête, afin d'en créer une copie. La nouvelle enquête générée contient les mêmes énigmes et les mêmes paramètres que l'enquête de départ, et le mot "copie" s'ajoute automatiquement dans sa description. Cela peut être intéressant pour diffuser la même enquête (avec les mêmes énigmes mais avec un numéro d'enquête différent) à un autre groupe.</p>
+<p>Pour cela, il suffit de cliquer sur l'icône <img class="image-inline" src="{% static 'enigmes/img/copy-link.svg' %}" alt="bouton duplication" width="20px"> dans le tableau de bord ou directement dans la page de détail de l'enquête.</p>
+
+<h2 id="partage-enquete">Partage d'enquêtes entre collègues</h2>
+
+<p>Vous pouvez partager une enquête à d'autres collègues, simplement en leur communiquant l'URL de partage.</p>
+<p>Pour obtenir cette URL, il suffit de cliquer sur l'icône <img class="image-inline" src="{% static 'enigmes/img/share.svg' %}" alt="icone partage" width="20px" title="Partager l'enquête"> dans le tableau de bord ou directement dans la page de détail de l'enquête.</p>
+
+<p>Pour copier une enquête partagée sur son compte, il suffit d'être connecté à son compte et naviguer vers l'URL de partage. Avant de réellement copier l'enquête, il sera proposé un aperçu de celle-ci et la possibilité de modifier les paramètres de l'enquête, notamment sa description. Un nouveau code unique sera généré pour l'enquête copiée qui apparaîtra dans le tableau de bord.</p>
+
+<h2 id="suppression-enquete">Suppression d'une enquête</h2>
+
+<p>Vous pouvez également supprimer une enquête via le tableau de bord ou la page de détails de l'enquête, en cliquant sur le bouton <img class="image-inline" src="{% static 'enigmes/img/corbeille-ligne.svg' %}" alt="lien" title="Supprimer l'enquête" width="20px">. Cela supprimera l'enquête de la base de données ainsi que tous les résultats de celle-ci. Assurez-vous donc d'avoir récupéré les résultats avant la suppression.</p>
+
+
+
+{% endblock %}

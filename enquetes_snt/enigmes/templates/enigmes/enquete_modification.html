@@ -1,0 +1,37 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" %}
+{% endblock %}
+
+{% block content %}
+<div class="form-enquete-tri">
+    <h1>Modification de l'enquête de code {{ code }}</h1>
+</div>
+
+<p class="para-enonce">Choisissez si vous souhaitez modifier l'enquête par sélection manuelle ou par numéros d'énigmes. Si vous ne souhaitez que modifier les paramètres, l'un ou l'autre conviendra.</p>
+
+{% load static %}
+
+<div class="zone-creation">
+    <div class="creation-enquete">
+        <a class="lien-div" href="{% url 'enquete-manuelle-modification' enquete_id=enquete.pk %}"></a>
+        <div class="creation-contenu">
+            <img src="{% static 'enigmes/img/edit-pen-orange.svg' %}" alt="icone copier" height="40px">
+            <div class="zone-contenu">
+                <h2 class="titre">Modifier l'enquête par sélection manuelle</h2>
+            </div>
+        </div>
+    </div>
+    <div class="creation-enquete">
+        <a class="lien-div" href="{% url 'enquete-liste-modification' enquete_id=enquete.pk %}"></a>
+        <div class="creation-contenu">
+            <img src="{% static 'enigmes/img/edit-pen-orange.svg' %}" alt="icone copier" height="40px">
+            <div class="zone-contenu">
+                <h2 class="titre">Modifier l'enquête par numéros d'énigmes</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

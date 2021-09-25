@@ -12,9 +12,9 @@ function miseAJour(item) {
 }
 
 function changeCouleur(item) {
-    let num = item.id.split("-")[1];
-    let id_case = "case-" + num;
-    let id_enigme = "enigme-" + num;
+    let num = item.id.split("_").pop();
+    let id_case = "case_" + num;
+    let id_enigme = "id_enigme_" + num;
     let conteneurCase = document.getElementById(id_case);    
     let caseACocher = document.getElementById(id_enigme);
     if (caseACocher.checked) {
@@ -29,8 +29,8 @@ function changeCouleur(item) {
 function initialisationCouleur() {
     let cases = document.querySelectorAll('.case-a-cocher');
     cases.forEach(elt => {
-        let num = elt.id.split("-")[1];
-        let id_case = "case-" + num;
+        let num = elt.id.split("_").pop();
+        let id_case = "case_" + num;
         let conteneurCase = document.getElementById(id_case);
         if (elt.checked) {
             conteneurCase.style.backgroundColor = "var(--main)";
@@ -39,7 +39,7 @@ function initialisationCouleur() {
 }
 
 function changeListeCle(item) {
-    let num = item.id.split("-")[1];
+    let num = item.id.split("_").pop();
     if (liste_num_enigmes.includes(num)) {
         index_enigme = liste_num_enigmes.indexOf(num);
         liste_num_enigmes.splice(index_enigme, 1);
@@ -56,18 +56,33 @@ function changeCle() {
     } else {
         let nb_enigmes = liste_num_enigmes.length.toString();
         para.innerHTML = "Vous avez sélectionné " + nb_enigmes + " énigme(s)." + " La clé de votre enquête est : " + chaine;
-        // on efface le message d'erreur si une enquete est sélectionnée
-        document.querySelector('#message-erreur').style.visibility = "hidden";
+        // on efface les messages d'erreur si une enquete est sélectionnée
+        let zonesErreur = document.querySelectorAll('.message-erreur');
+        zonesErreur.forEach(item => {
+            item.style.display = "none";
+        })
     }
+
+    // on recopie le tout en bas de page
+    let zoneCle = document.getElementById('cle-enquete');
+    let paraCopie = document.getElementById("copie-cle-enquete");
+    paraCopie.innerHTML = zoneCle.innerHTML;
 
     // on met à jour la valeur du champ clé caché
     document.getElementById('id_cle').value = chaine;
+}
 
-   
 
+/* génération de la clé initiale */
+
+function creerCleInitiale() {
+    let cle = document.getElementById('liste-enigmes').dataset.cle;
+    liste_num_enigmes = cle.split(";")
+    changeCle();
 }
 
 let liste_num_enigmes = [];
+creerCleInitiale();
 const couleurFond = document.querySelector(".checkbox-container").style.backgroundColor;
 initialisationCouleur();
 
@@ -99,11 +114,14 @@ CbScore.addEventListener('click', () => {
 // Vérification formulaire avant envoi (au moins une énigme sélectionnée)
 
 document.getElementById("btn-creer-enquete").addEventListener("click", function(event) {
-    let zoneErreur = document.querySelector('#message-erreur');
+    let zonesErreur = document.querySelectorAll('.message-erreur');
     var donnees_formulaire = new FormData(document.getElementById("form"));
     if (!donnees_formulaire.has("enigmes")) {
         event.preventDefault();
-        zoneErreur.style.visibility = "visible";
-        zoneErreur.style.color = "red";
+        zonesErreur.forEach(item => {
+            item.style.display = "block";
+            item.style.color = "red";
+        })
+        
     }
 }, false);

@@ -5,23 +5,18 @@
 {% endblock %}
 
 {% block content %}
-<div class="enquete-creation-cle-container">
-    <h1>Créer une enquête à partir d'une liste</h1>
+{% include 'enigmes/modale_images.html' %}
 
-    <p>Renseignez les champs ci-dessous puis validez.</p>
+
+<div class="enquete-creation-cle-container">
+    <h1>Copier l'enquête {{ code }}</h1>
+
+    <p class="para-enonce">Avant de copier l'enquête sur votre compte, vous pouvez visualiser l'enquête ci-dessous et modifier, si vous le souhaitez, la description et les paramètres de l'enquête.</p>
+    <p class="para-enonce">Une fois l'enquête copiée sur votre compte, vous pourrez modifier les énigmes de l'enquête (et aussi la description et les paramètres).</p>
     
     <div class="form-creation-enquete">
-        <form method="POST" name="form-creation-enquete">
+        <form method="POST">
             {% csrf_token %}
-            <div class="input-container">
-                <p class="label">
-                    <label for="cle">{{ form.cle.label }}</label>
-                </p>
-                <p class="consigne">{{ form.cle.help_text }}</p>
-                <p class="input">
-                    {{form.cle}}
-                </p>
-            </div>
             <div class="input-container">
                 <p class="label">
                     <label for="description" class="label">{{ form.description.label }}</label>
@@ -62,17 +57,18 @@
                     <span class="consigne">{{ form.ordre_aleatoire.help_text }}</span>
                 </div>
             </div>
-    
+                
             <div class="btn-form">
-                <button id="btn-validation" class="btn-validation" type="submit">Créer l'enquête</button>
+                <button class="btn-validation" type="submit">Copier l'enquête</button>
             </div>
-            <button id="btn-apercu-enquete" type="submit" name="apercu-enquete">Voir un aperçu</button>
         </form>
     </div>
+
     <div id="apercu-enquete">
         {% load markdownify %}
         {% load static %}
         {% load custom_tags %}
+        <h2>Aperçu de l'enquête</h2>
         <div id="liste-enigmes">
             
             {% for enigme in enigmes %}
@@ -86,10 +82,14 @@
     </div>
 </div>
 
+{% if enigmes %}
+{% include 'enigmes/boutons_scroll.html' %}
+{% endif %}
+
 {% endblock %}
 
 {% block jsfiles %}
 {% load static %}
-<script src="{% static 'enigmes/js/enquete_form_cle.js' %}"></script>
+<script src="{% static 'enigmes/js/gestion_images_liens.js' %}"></script>
 <script src="{% static 'enigmes/js/prism.js' %}"></script>
 {% endblock %}

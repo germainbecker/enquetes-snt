@@ -29,29 +29,28 @@
                     <li><span class="info">DESCRIPTION</span> : {{enquete.description}}</li>
                     <li><span class="info">DATE DE CRÉATION</span> : {{enquete.date_creation}}</li>
                     <li><span class="info">ÉNIGMES</span> : {{ num_enigmes|join:', ' }}</li>
-                    <li><span class="info">CODE ENQUÊTE</span> : {{enquete.code}}</li>
-                    <li><span class="info">LIEN ENQUÊTE</span> : <span class="lien-url-enquete" data-lien="{% url 'enquete-eleve' code_enquete=enquete.code %}">
-                        Copier
-                        <img src="{% static 'enigmes/img/copy-link-white.svg' %}" alt="icone copier" height="20px">
-                    </span></li>
-                    <li>
-                        <span class="info">ACTIVE</span> : 
-                        <span class="oui-non">{% if enquete.active %}Oui{% else %}Non{% endif %}</span>
-                        {% if enquete.active %}
-                        <form class="form-activer-desactiver" action="" method="POST">
+                    <li><span class="info">CODE ENQUÊTE</span> : {{ enquete.code }}</li>
+                    <li class="info-image">
+                        <span class="info">LIEN ENQUÊTE</span> : 
+                        <span class="lien-url-enquete" data-lien="{% url 'enquete-eleve' code_enquete=enquete.code %}">
+                        <img src="{% static 'enigmes/img/hyperlink-white.svg' %}" alt="icone copier" height="20px" title="Copier le lien élève"></span>
+                    </li>
+                    <li class="info-image">
+                        <span class="info">PARTAGER L'ENQUÊTE</span> :
+                        <span class="lien-url-enquete" data-lien="{%url 'partage-enquete' code_enquete=enquete.code %}">
+                            <img src="{% static 'enigmes/img/share-white.svg' %}" alt="icone partage" height="20px" title="Partager l'enquête">
+                        </span>
+                    
+                    </li>
+                    <li class="info-image">
+                        <span class="info">DUPLIQUER L'ENQUÊTE</span> :
+                        <form style="display: inline-block;" class="btn-dupliquer" action="" method="POST">
                             {% csrf_token %}
-                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver">
-                                Désactiver l'enquête
+                            <button class="btn-duplique" type="submit" value="{{enquete.pk}}" name="dupliquer" title="Dupliquer l'enquête">
+                                {% load static %}
+                                <img class="centre img-corbeille" src="{% static 'enigmes/img/copy-link-white.svg' %}" alt="corbeille" width="20px">
                             </button>
                         </form>
-                        {% else %}
-                        <form class="form-activer-desactiver" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-activer" type="submit" value="{{enquete.pk}}" name="activer">
-                                Activer l'enquête
-                            </button>
-                        </form>
-                        {% endif %}
                     </li>
                     <li class="droite">
                         <form class="form-activer-desactiver" action="" method="POST">
@@ -69,66 +68,50 @@
                     <img class="icone-details-enquete" src="{% static 'enigmes/img/gears.svg' %}" alt="icone information">
                     <h3>Paramètres</h3>
                 </div>
-                <ul>                
-                    <li>
-                        <span class="info">INDICATIONS</span> :
-                        <span class="oui-non">{% if enquete.indications %}Oui{% else %}Non{% endif %}</span>
-                        {% if enquete.indications %}
+                <ul>
+                    <li id="active-desactive">
+                        <span class="info">ACTIVE</span> : 
+                        <span class="oui-non-active">{% if enquete.active %}Oui{% else %}Non{% endif %}</span>
+                        {% if enquete.active %}
                         <form class="form-activer-desactiver" action="" method="POST">
                             {% csrf_token %}
-                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver-indications">Désactiver</button>
+                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver">
+                                Désactiver l'enquête
+                            </button>
                         </form>
                         {% else %}
                         <form class="form-activer-desactiver" action="" method="POST">
                             {% csrf_token %}
-                            <button class="btn-activer" type="submit" value="{{enquete.pk}}" name="activer-indications">Activer</button>
+                            <button class="btn-activer" type="submit" value="{{enquete.pk}}" name="activer">
+                                Activer l'enquête
+                            </button>
                         </form>
                         {% endif %}
+                    </li>             
+                    <li>
+                        <span class="info">INDICATIONS</span> :
+                        <span class="oui-non">{% if enquete.indications %}Oui{% else %}Non{% endif %}</span>
                     </li>
                     <li>
                         <span class="info">CORRECTION</span> : 
                         <span class="oui-non">{% if enquete.correction %}Oui{% else %}Non{% endif %}</span>
-                        {% if enquete.correction %}
-                        <form class="form-activer-desactiver" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver-correction">Désactiver</button>
-                        </form>
-                        {% else %}
-                        <form class="form-activer-desactiver" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-activer" type="submit" value="{{enquete.pk}}" name="activer-correction">Activer</button>
-                        </form>
-                        {% endif %}
                     </li>
                     <li>
                         <span class="info">SCORE</span> :
                         <span class="oui-non">{% if enquete.score %}Oui{% else %}Non{% endif %}</span>
-                        {% if enquete.score %}
-                        <form class="form-activer-desactiver" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver-score">Désactiver</button>
-                        </form>
-                        {% else %}
-                        <form class="form-activer-desactiver" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-activer" type="submit" value="{{enquete.pk}}" name="activer-score">Activer</button>
-                        </form>
-                        {% endif %}
                     </li>
                     <li>
                         <span class="info">ORDRE ALÉATOIRE</span> : 
                         <span class="oui-non">{% if enquete.ordre_aleatoire %}Oui{% else %}Non{% endif %}</span>
-                        {% if enquete.ordre_aleatoire %}
-                        <form class="form-activer-desactiver" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-desactiver" type="submit" value="{{enquete.pk}}" name="desactiver-ordre-aleatoire">Désactiver</button>
+                    </li>
+                    <li>
+                        <form class="form-modifier" action="" method="POST">
+                            {% csrf_token %}                            
+                            <button class="btn-modifier" type="submit" value="{{enquete.pk}}" name="modifier">
+                                <img src="{% static 'enigmes/img/edit-pen-white.svg' %}" alt="icone copier" height="20px">
+                                <span>Modifier l'enquête</span>
+                            </button>
                         </form>
-                        {% else %}
-                        <form class="form-activer-desactiver" action="" method="POST">
-                            {% csrf_token %}
-                            <button class="btn-activer" type="submit" value="{{enquete.pk}}" name="activer-ordre-aleatoire">Activer</button>
-                        </form>
-                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -158,11 +141,13 @@
             </div>
         </div>
         
-        <div class="modal-lien" id="modale-lien">
-            <div class="modal-lien-content">
+        <div class="modal-lien-copie-csv" id="modale-lien-copie-csv">
+            <div id="lien-csv">
                 <p class="texte-modale"></p>
             </div>
         </div>
+
+        {% include 'enigmes/modales_copie_liens.html' %}
         
         
         <p>Voici l'enquête telle qu'elle sera vue par les élèves.</p>

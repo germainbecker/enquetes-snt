@@ -25,6 +25,7 @@ Ce document est une présentation de l'application.
 * [Création d'un compte enseignant](#cr%C3%A9ation-dun-compte-enseignant)
 * [Énigmes](#%C3%A9nigmes)
     * [Qu'est-ce qu'une *énigme* ?](#quest-ce-quune-%C3%A9nigme)
+        * [Cas particuliers des "énigmes-questions" de type Vrai/Faux ou QCM](#cas-particuliers-des-%C3%A9nigmes-questions-de-type-vraifaux-ou-qcm)
     * [Ajout d'une énigme](#ajout-dune-%C3%A9nigme)
 * [Enquêtes](#enqu%C3%AAtes)
     * [Qu'est-ce qu'une enquête ?](#quest-ce-quune-enqu%C3%AAte)
@@ -32,6 +33,9 @@ Ce document est une présentation de l'application.
     * [Tableau de bord](#tableau-de-bord)
     * [Détails d'une enquête](#d%C3%A9tails-dune-enqu%C3%AAte)
     * [Résultats d'une enquête](#r%C3%A9sultats-dune-enqu%C3%AAte)
+    * [Modification d'une enquête](#modification-dune-enqu%C3%AAte)
+    * [Duplication d'une enquête](#duplication-dune-enqu%C3%AAte)
+    * [Partage d'enquêtes entre collègues](#partage-denqu%C3%AAtes-entre-coll%C3%A8gues)
 * [Côté elève](#c%C3%B4t%C3%A9-%C3%A9l%C3%A8ve)
   * [Accès à une enquête](#acc%C3%A8s-%C3%A0-une-enqu%C3%AAte)
   * [Résolution de l'enquête](#r%C3%A9solution-de-lenqu%C3%AAte)
@@ -64,7 +68,7 @@ L'application respecte le Réglement Général sur la Protection des Données (R
 
 Seules des données nécessaires au fonctionnement de l'application sont collectées sur les utilisateurs (les enseignants qui se créent un compte) : nom, prénom, nom d'utilisateur, adresse e-mail, mot de passe. 
 
-Les données collectées sont stockées de manière sécurisée et conforme au RGPD sur les serveurs européens de l'entreprise [PythonAnywhere](https://eu.pythonanywhere.com/), ces serveurs étant situés à Francfort (Allemagne) dans un centre de données d'Amazon Web Services.
+Les données collectées sont stockées de manière sécurisée et conforme au RGPD sur les **serveurs européens** de l'entreprise [PythonAnywhere](https://eu.pythonanywhere.com/), situés à Francfort (Allemagne) dans un centre de données d'Amazon Web Services.
 
 Seuls des cookies nécessaires à la connexion des utilisateurs et à l'utilisation de l'application sont utilisés.
 
@@ -114,7 +118,16 @@ Chaque énigme devra être associée à l'un des thèmes suivants :
 
 * la réponse à une énigme est **unique** et nécessairement **de type texte**, donc de préférence un **mot unique ou un code** qui devra être **bien orthographié**. 
 * Un traitement est néanmoins prévu pour nettoyer les réponses afin de comparer celles saisies par les élèves à celle attendue : passage en minuscules, suppression des accents et des espaces inutiles en début et fin. Ainsi, si la réponse attendue (saisie par l'auteur de l'énigme) est la chaîne de caractères `"Orléans"` et qu'un élève saisit `"orleans "`, sa réponse sera jugée correcte. En revanche, s'il répond `"Orléan"`, elle sera incorrecte.
-* les énigmes ne peuvent pas être des questions de type Vrai/Faux, QCM, associations, texte à trous, etc.
+
+### Cas particuliers des "énigmes-questions" de type Vrai/Faux ou QCM
+
+Les énigmes ne peuvent pas directement être des questions de type Vrai/Faux ou des questions à choix multiple, pour lesquelles il suffirait de cocher la bonne réponse. Mais on peut facilement contourner cela : il suffit de rédiger l'énigme en conséquence et préciser dans l'énoncé qu'il faut répondre :
+- par _Vrai_ ou _Faux_
+- par _A_, _B_, _C_, _D_, etc.
+
+| ![Filtrer les énigmes](img/enigme_ex3.png) |
+|:--:| 
+| *Une question à choix multiple* |
 
 ## Ajout d'une énigme
 
@@ -126,8 +139,12 @@ Très rapidement, une énigme est composée de 6 champs :
 2. Énoncé (obligatoire) : pour saisir l'énoncé de l'énigme
 3. Réponse (obligatoire) : pour saisir la réponse à l'énigme
 4. Indication (optionnel) : pour saisir une indication à destination des élèves (l'affichage des indications pourra être activée ou désactivée dans les paramètres d'une enquête)
-5. Image d'illustration (optionnel) : pour téléverser une image pour accompagner l'énigme
-6. Fichier en pièce jointe (optionnel) : pour téléverser une pièce jointe à l'énigme qui pourra être téléchargée par les élèves
+5. Image d'illustration (optionnel) : on peut au choix
+    * indiquer un lien vers l'url d'une image en ligne
+    * téléverser une image pour accompagner l'énigme. 
+    **Afin de ne pas ralentir le chargement des pages, merci de ne fournir une image d'illustration que si celle-ci est nécessaire à la résolution de l'énigme.**
+6. Crédits/Licence de l'image (optionnel) : pour indiquer la licence de l'image, le nom de l'auteur, etc.
+7. Fichier en pièce jointe (optionnel) : pour téléverser une pièce jointe à l'énigme qui pourra être téléchargée par les élèves
 
 Sachez que les énoncés et indications peuvent être rédigées en **Markdown** ou en **HTML**. Une zone vous permet de visualiser en direct le rendu de votre énigme.
 
@@ -135,7 +152,10 @@ Sachez que les énoncés et indications peuvent être rédigées en **Markdown**
 |:--:| 
 | *Création d'une énigme* |
 
-> Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
+**Remarques** :
+
+* La bibliothèque JavaScript qui permet de voir le rendu en direct, n'implémente pas le Markdown exactement de la même manière que celui utilisé par Python pour l'application. Il se peut donc qu'il y ait de légères différences entre la zone d'aperçu de création d'énigme et le rendu réel une fois l'énigme enregistrée en base de données.
+* Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
 
 # Enquêtes
 
@@ -190,6 +210,22 @@ La page de résultats d'une enquête permet de voir dans un tableau la réussite
 | ![Résultats d'une enquête](img/resultats_enquete.png) | 
 |:--:| 
 | *Résultats d'une enquête* |
+
+## Modification d'une enquête
+
+Vous pouvez modifier les énigmes choisies et les paramètres d'une enquête à tout moment, à condition de la désactiver au préalable. Il faudra alors la réactiver après les modifications pour que les élèves puissent y accéder.
+
+## Duplication d'une enquête
+
+Vous pouvez dupliquer une enquête, afin d'en créer une copie. La nouvelle enquête générée contient les mêmes énigmes et les mêmes paramètres que l'enquête de départ, et le mot "copie" s'ajoute automatiquement dans sa description. Cela peut être intéressant pour diffuser la même enquête (avec les mêmes énigmes mais avec un numéro d'enquête différent) à un autre groupe.
+
+## Partage d'enquêtes entre collègues
+
+Vous pouvez partager une enquête à d'autres collègues, simplement en leur communiquant l'URL de partage.
+
+Cette URL s'obtient soit directement dans le tableau de bord soit dans la page de détails de l'enquête.
+
+Pour copier une enquête partagée sur son compte, il suffit d'être connecté à son compte et naviguer vers l'URL de partage. Avant de réellement copier l'enquête, il sera proposé un aperçu de celle-ci et la possibilité de modifier les paramètres de l'enquête, notamment sa description. Un nouveau code unique sera généré pour l'enquête copiée qui apparaîtra dans le tableau de bord.
 
 # Côté élève
 

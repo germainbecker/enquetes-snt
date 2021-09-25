@@ -1,0 +1,30 @@
+{% load static %}
+<div id="modale-lien-eleve" class="modal-lien">
+    <div class="modal-lien-content">
+        <p class="close-lien">&times;</p>
+        <h3 class="zone-titre">Lien de l'enquête pour les élèves</h3>
+        <p class="zone-texte">Vous pouvez copiez ce lien :</p>
+        <div class="zone-lien">
+            <input type="text" id="input-lien" readonly>
+            <div class="icone-copie-lien">
+                <img src="{% static 'enigmes/img/hyperlink-white.svg' %}" alt="icone copier" width="20px" title="Copier">
+            </div>
+        </div>
+        <p class="message-lien-copie" id="message-lien-eleve">Lien copié</p>
+    </div>
+</div>
+
+<div id="modale-lien-partage" class="modal-lien partage">
+    <div class="modal-lien-content">
+        <p class="close-lien partage">&times;</p>
+        <h3 class="zone-titre">Partager l'enquête aux collègues</h3>
+        <p class="zone-texte">Voici le lien à communiquer aux collègues :</p>
+        <div class="zone-lien">
+            <input type="text" id="input-lien-partage" class="partage" readonly>
+            <div class="icone-copie-lien partage">
+                <img src="{% static 'enigmes/img/hyperlink-white.svg' %}" alt="icone copier" width="20px" title="Copier">
+            </div>
+        </div>
+        <p class="message-lien-copie" id="message-lien-partage">Lien copié</p>
+    </div>
+</div>
