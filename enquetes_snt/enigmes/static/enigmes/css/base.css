@@ -2830,7 +2830,7 @@ input:checked + .slider:before {
     border-spacing: 5px;
     font-size: 0.9em;
     margin-bottom: 40px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .zone-eleve-score {
