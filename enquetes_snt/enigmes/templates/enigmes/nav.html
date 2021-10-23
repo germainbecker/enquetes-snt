@@ -152,7 +152,8 @@
             {% if user.is_authenticated %}
             <li><a class="{% if page == 'accueil' %}active{% endif %}" href="{% url 'accueil' %}">Accueil</a></li>
             <li><a class="{% if page == 'enigmes' %}active{% endif %}" href="{% url 'enigmes' %}">Énigmes</a></li>
-            <li class="gauche"><a class="{% if page == 'espace_perso' %}active{% endif %}" href="{% url 'espace-perso' %}">Espace personnel</a></li>                
+            <li><a class="{% if page == 'espace_perso' %}active{% endif %}" href="{% url 'espace-perso' %}">Espace personnel</a></li> 
+            <li class="gauche"><a class="{% if page == 'mes_fichiers' %}active{% endif %}" href="{% url 'mes-fichiers' %}">Mes fichiers</a></li>                
             <li class="droite username">
                 {% load static %}
                 <img class="icone-auteur dim-fixe" src="{% static 'enigmes/img/avatar_nav.svg' %}" alt="icone avatar profil">

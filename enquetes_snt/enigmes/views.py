@@ -28,8 +28,10 @@ from .forms import (
     EnqueteShareListForm,
     EnqueteUpdateForm,
     EnqueteUpdateListForm,
+    UploadFileForm,
+    UploadImageForm,
 )
-from .models import Enigme, Enquete, Resultat
+from .models import Enigme, Enquete, Resultat, Fichier, Image
 
 
 def conditions(request):
@@ -90,6 +92,112 @@ def enigmes(request):
     }
     return render(request, 'enigmes/liste.html', context)
 
+@login_required
+def mes_fichiers(request):
+    user = request.user
+    context = {}
+    print(request.POST)
+    if request.method == 'POST':
+        if 'fichier' in request.POST:
+            form_fichier = UploadFileForm(request.POST, request.FILES)
+            if form_fichier.is_valid():
+                fichier = form_fichier.save(commit=False)  # pour enregistrer l'auteur avant la sauvegarde en bdd
+                fichier.auteur = user
+                fichier.save()
+                messages.success(request, "Le fichier a bien été ajouté !")
+                redirect('mes-fichiers')
+        if 'image' in request.POST:
+            form_image = UploadImageForm(request.POST, request.FILES)
+            if form_image.is_valid():
+                image = form_image.save(commit=False)  # pour enregistrer l'auteur avant la sauvegarde en bdd
+                image.auteur = user
+                image.save()
+                messages.success(request, "L'image a bien été ajoutée !")
+                redirect('mes-fichiers')
+        
+        # suppression d'image non utilisée
+        if 'supprimer-image' in request.POST:
+            image_id = int(request.POST.get('supprimer-image'))
+            image = get_object_or_404(Image, pk=image_id)
+            if not image.enigme.all():  # si aucune énigme n'utilise l'image
+                try:
+                    with transaction.atomic():
+                        image.image.delete()  # suppression du fichier
+                        image.delete()  # suppression de l'instance
+                        messages.success(request, "L'image a bien été supprimée.")
+                        redirect('mes-fichiers')
+                except IntegrityError:
+                    messages.warning(request, "Une erreur interne est apparue. Merci de recommencer.")
+            else:
+                messages.warning(request, "Vous ne pouvez pas supprimer une image utilisée dans les énigmes.")
+                redirect('mes-fichiers')
+        
+        # suppression de fichier pj non utilisé
+        if 'supprimer-fichier' in request.POST:
+            fichier_id = int(request.POST.get('supprimer-fichier'))
+            fichier = get_object_or_404(Fichier, pk=fichier_id)
+            if not fichier.enigme.all():  # si aucune énigme n'utilise le fichier
+                try:
+                    with transaction.atomic():
+                        fichier.fichier.delete()  # suppression du fichier
+                        fichier.delete()  # suppression de l'instance
+                        messages.success(request, "Le fichier a bien été supprimé.")
+                        redirect('mes-fichiers')
+                except IntegrityError:
+                    messages.warning(request, "Une erreur interne est apparue. Merci de recommencer.")
+            else:
+                messages.warning(request, "Vous ne pouvez pas supprimer un fichier utilisé dans les énigmes.")
+                redirect('mes-fichiers')
+    
+    form_file = UploadFileForm()
+    form_image = UploadImageForm()
+    images = Image.objects.filter(auteur=user)
+    fichiers = Fichier.objects.filter(auteur=user)
+    context = {
+        'user': user,
+        'form_fichier': form_file,
+        'form_image': form_image,
+        'images': images,
+        'fichiers': fichiers
+    }
+
+    # Ajout des fichiers téléversés au contexte
+
+    enigmes_par_image = {}
+    for image in images:
+        enigmes = [enigme.pk for enigme in image.enigme.all()]
+        enigmes_par_image[image] = enigmes
+    
+    enigmes_par_fichier = {}
+    for fichier in fichiers:
+        enigmes = [enigme.pk for enigme in fichier.enigme.all()]
+        enigmes_par_fichier[fichier] = enigmes
+
+    """ for enigme in enigmes_perso:
+        if enigme.image:
+            if enigme not in liste_images:
+                liste_images[enigme.image] = [enigme]
+            else:
+                liste_images[enigme.image].append(enigme)
+    print(liste_images)
+
+    liste_pj = {}
+    for enigme in enigmes_perso:
+        if enigme.fichier:
+            if enigme not in liste_pj:
+                liste_pj[enigme.fichier] = [enigme]
+            else:
+                liste_pj[enigme.fichier].append(enigme)
+    print(liste_pj) """
+
+    context['enigmes_par_image'] = enigmes_par_image
+    context['enigmes_par_fichier'] = enigmes_par_fichier
+
+    print(context)
+
+    return render(request, 'enigmes/mes_fichiers.html', context)
+
+
 class EnigmeListView(LoginRequiredMixin, ListView):
     model = Enigme
     template_name = 'enigmes/liste.html'  # <app>/<model>_<viewtype>.html
@@ -115,6 +223,11 @@ class EnigmeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = EnigmeCreateForm
     success_message = "Votre énigme a bien été ajoutée à la base 😊"
 
+    def get_form_kwargs(self):
+        kwargs = super(EnigmeCreateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
     def form_valid(self, form):
         """Ajoute l'auteur de l'énigme en bdd lors de la validation du formulaire"""
         form.instance.auteur = self.request.user
@@ -125,6 +238,11 @@ class EnigmeExampleCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
     template_name = 'enigmes/enigme_example_form.html'
     context_object_name = 'enigme'
     form_class = EnigmeExampleCreateForm
+    
+    def get_form_kwargs(self):
+        kwargs = super(EnigmeExampleCreateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_initial(self):
         return self.form_class.get_initial()
@@ -136,6 +254,11 @@ class EnigmeUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMi
     template_name_suffix = '_update_form'
     form_class = EnigmeUpdateForm
     success_message = "Les modifications ont bien été enregistrées 😊"
+
+    def get_form_kwargs(self):
+        kwargs = super(EnigmeUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def test_func(self):
         """Seul l'auteur d'une énigme peut la modifier"""
@@ -929,11 +1052,13 @@ def espace_perso(request):
         except IntegrityError:
             messages.warning(request, "Une erreur interne est apparue. Merci de recommencer.")
         
-        
+    enigmes_perso = Enigme.objects.filter(auteur=user)
+    enquetes_perso = Enquete.objects.filter(auteur=user).order_by('-date_creation')
+    
     context = {
         "auteur": user,
-        "enigmes_perso" : Enigme.objects.filter(auteur=user),
-        "enquetes_perso" : Enquete.objects.filter(auteur=user).order_by('-date_creation'),
+        "enigmes_perso" : enigmes_perso,
+        "enquetes_perso" : enquetes_perso
     }
     return render(request, 'enigmes/espace_perso.html', context)
 

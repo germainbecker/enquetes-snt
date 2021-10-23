@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
@@ -13,6 +13,9 @@ from django.conf import settings
 from django.contrib.auth import views as auth_views
 
 from .forms import UserRegisterForm, ParagraphErrorList, MyAuthenticationForm
+from enigmes.models import Enigme
+from . models import User
+
 
 LISTE_ADRESSES_CORRECTES = [
     'ac-aix-marseille.fr',
@@ -119,3 +122,18 @@ def activation(request, uidb64, token):
     else:
         messages.warning(request, "Le lien d'activation n'est pas valide.")
         return render(request, 'enseignants/enseignants.html')
+
+def profil(request):
+    user = request.user
+    enigmes = Enigme.objects.filter(auteur=user)
+    liste_fichiers = []
+    for enigme in enigmes:
+        if enigme.fichier:
+            liste_fichiers.append(enigme.fichier)
+    context = {
+        'auteur': user,
+        'fichiers': liste_fichiers,
+    }
+    return render(request, 'enseignants/profil.html', context)
+
+    

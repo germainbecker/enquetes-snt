@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Enigme, Enquete, Resultat
+from .models import Enigme, Enquete, Resultat, Image, Fichier
 from enseignants.models import User
 
 admin.site.register(Enigme)
 admin.site.register(Enquete)
 admin.site.register(Resultat)
+admin.site.register(Image)
+admin.site.register(Fichier)
 #admin.site.register(User)
 
 class MyUserAdmin(UserAdmin):

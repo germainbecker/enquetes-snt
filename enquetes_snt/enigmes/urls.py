@@ -32,6 +32,7 @@ urlpatterns = [
     path('enquete/partage/<str:code_enquete>/', views.partage_enquete, name='partage-enquete'),
     path('mon-espace/', views.espace_perso, name='espace-perso'),
     path('mon-espace/mes-enigmes/', views.mes_enigmes, name='mes-enigmes'),
+    path('mon-espace/mes-fichiers/', views.mes_fichiers, name='mes-fichiers'),
     path('eleve/enquete/<str:code_enquete>/', views.eleve, name='enquete-eleve'),
     path('conditions/', views.conditions, name='cgu'),
 ]

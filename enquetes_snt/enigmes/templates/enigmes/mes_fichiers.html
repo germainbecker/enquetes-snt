@@ -1,0 +1,128 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" page="mes_fichiers" %}
+{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+
+<h1>Mes fichiers</h1>
+
+<p>Vous pouvez téléverser des fichiers (images ou pièces jointes) afin de les utiliser dans vos énigmes. Les fichiers non utilisées dans les énigmes peuvent être supprimés.</p>
+
+<section id="mes-pieces-jointes">
+    <div class="zone-container">
+        <span class="titre-zone">Mes images</span>
+        <div class="form-creation">
+            <form id="form-image" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <input type="hidden" name="image">
+                {{ form_image.as_p }}
+                <div class="btn-form">
+                    <button class="btn-validation" type="submit">
+                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 95.52"><title>upload-image</title><path d="M5.68,12.23H61.14a36.79,36.79,0,0,0-2.3,6.7H6.74V88.78h98.72V63.65a37.49,37.49,0,0,0,6.7-2.64V89.88a5.58,5.58,0,0,1-1.65,4,1.6,1.6,0,0,1-.3.26,5.48,5.48,0,0,1-3.73,1.4H5.64a5.61,5.61,0,0,1-4-1.66,5.68,5.68,0,0,1-1.65-4v-72a5.63,5.63,0,0,1,5.64-5.63ZM95.19,0A27.69,27.69,0,1,1,67.51,27.68,27.68,27.68,0,0,1,95.19,0Zm-4,41h8.07a2.91,2.91,0,0,0,2.91-2.9V28.91h5.12a2.4,2.4,0,0,0,2.06-1c1.07-1.61-.39-3.2-1.42-4.33C105,20.44,98.47,14.69,97,13a2.35,2.35,0,0,0-3.7,0C91.86,14.73,85,20.83,82.2,23.92c-1,1.07-2.14,2.54-1.14,4a2.41,2.41,0,0,0,2,1h5.15v9.23A2.91,2.91,0,0,0,91.17,41ZM29,31.78a8.1,8.1,0,1,1-8.09,8.09A8.09,8.09,0,0,1,29,31.78ZM63,66.51,69.68,55a37.3,37.3,0,0,0,19.66,9.61l7.07,18.2H16.16V76.63l6.74-.34,6.74-16.52L33,71.57H43.13L51.9,49,63,66.51Z"/></svg>
+                        Téléverser l'image sélectionnée
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="fichiers-televerses">
+            <h4>Liste des images déjà téléversées :</h4>
+            <ul>
+                {% for image, enigmes in enigmes_par_image.items %}
+                    <li>
+                        <a href="{{image.url}}" target="_blank">   
+                            <span>{{image.image|filename}}</span>
+                        </a> 
+                        
+                        {% if enigmes %}
+                            <div class="liste-enigmes">
+                                utilisée dans les énigmes : 
+                                {% for num_enigme in enigmes %}
+                                    <span>
+                                        <a href="{% url 'enigme-detail' num_enigme %}" target="_blank">{{ num_enigme }}</a>{% if not forloop.last %} - {% endif %}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            
+                        {% else %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button class="btn-suppression-fichier" type="submit" value="{{image.pk}}" name="supprimer-image">Supprimer l'image</button>
+                        </form>   
+                        {% endif %}
+        
+                    </li>
+                {% endfor %}
+            </ul> 
+        
+        </div>
+    </div>
+    
+    
+    <div class="zone-container">
+        <span class="titre-zone">Mes pièces jointes</span>
+        <div class="form-creation">
+            <form id="form-fichier" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <input type="hidden" name="fichier">
+                {{ form_fichier.as_p }}
+                <div class="btn-form">
+                    <button class="btn-validation" type="submit">
+                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99.09 122.88"><title>file-upload</title><path d="M64.64,13,86.77,36.21H64.64V13ZM42.58,71.67a3.25,3.25,0,0,1-4.92-4.25l9.42-10.91a3.26,3.26,0,0,1,4.59-.33,5.14,5.14,0,0,1,.4.41l9.3,10.28a3.24,3.24,0,0,1-4.81,4.35L52.8,67.07V82.52a3.26,3.26,0,1,1-6.52,0V67.38l-3.7,4.29ZM24.22,85.42a3.26,3.26,0,1,1,6.52,0v7.46H68.36V85.42a3.26,3.26,0,1,1,6.51,0V96.14a3.26,3.26,0,0,1-3.26,3.26H27.48a3.26,3.26,0,0,1-3.26-3.26V85.42ZM99.08,39.19c.15-.57-1.18-2.07-2.68-3.56L63.8,1.36A3.63,3.63,0,0,0,61,0H6.62A6.62,6.62,0,0,0,0,6.62V116.26a6.62,6.62,0,0,0,6.62,6.62H92.46a6.62,6.62,0,0,0,6.62-6.62V39.19Zm-7.4,4.42v71.87H7.4V7.37H57.25V39.9A3.71,3.71,0,0,0,61,43.61Z"/></svg>
+                        Téléverser le fichier sélectionnée
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="fichiers-televerses">
+            <h4>Liste des fichiers déjà téléversés :</h4>
+            {% if fichiers %}
+            <ul>
+                {% for fichier, enigmes in enigmes_par_fichier.items %}
+                    <li>
+                        <a href="{{fichier.url}}" target="_blank" download>   
+                            <span>{{fichier.fichier|filename}}</span>
+                        </a> 
+                        
+                        {% if enigmes %}
+                            <div class="liste-enigmes">
+                                utilisé dans les énigmes : 
+                                {% for num_enigme in enigmes %}
+                                    <span>
+                                        <a href="{% url 'enigme-detail' num_enigme %}" target="_blank">{{ num_enigme }}</a>{% if not forloop.last %} - {% endif %}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            
+                        {% else %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <button class="btn-suppression-fichier" type="submit" value="{{fichier.pk}}" name="supprimer-fichier">Supprimer le fichier</button>
+                            </form>    
+                        {% endif %}
+        
+                    </li>
+                {% endfor %}
+            </ul> 
+            {% else %}
+            <p>Aucune pièce jointe téléversée pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    
+    
+</section>
+
+{% endblock %}
+
+
+{% block jsfiles %}
+{% load static %}
+<!-- verification ajout fichiers -->
+<script src="{% static 'enigmes/js/ajout_fichiers.js' %}"></script>
+{% endblock %}
+
+

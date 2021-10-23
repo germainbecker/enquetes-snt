@@ -12,7 +12,19 @@
         <div class="form-creation">
             <form method="POST" enctype='multipart/form-data'>
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <p>
+                        <label for="{{ field.id_for_label }}">
+                            {{field.label}} {% if field.field.required %} (obligatoire) {% endif %} :
+                        </label>
+                        {{field}}
+                        {{field.errors}}
+                        {% if field.help_text %}
+                            <span class="helptext">{{ field.help_text|safe }}</span>
+                        {% endif %}
+                    </p>
+                {% endfor %}
    
                 <div class="btn-form">
                     <button class="btn-validation" type="submit">Enregistrer les modifications</button>
@@ -36,7 +48,7 @@
                                     {% load static %}
                                     <object id="image-theme" class="icone-theme centre" type="image/svg+xml" data="{% static 'enigmes/img/python-logo.svg' %}"></object>
                                     <img id="image" class="centre image-responsive" src="" alt="image illustration">
-                                    <div class="apercu-credits-image"><span>Crédits / Licence :</span> <div class="credits-image"></div></div>
+                                    <div class="apercu-credits-image"><span>Crédits :</span> <div class="credits-image"></div></div>
                                 </div>
                                 <div class="apercu-enonce"></div>
                                 <div class="piece-jointe">

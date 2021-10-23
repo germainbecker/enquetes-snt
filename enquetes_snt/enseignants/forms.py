@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import widgets
 from django.forms.widgets import CheckboxInput
 from .models import User  # modèle personnalisé
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
@@ -74,3 +75,4 @@ class MyAuthenticationForm(auth_forms.AuthenticationForm):
         'inactive': _("Ce compte est inactif. Pour l'activer, vous devez cliquer sur le lien qui vous a été envoyé par email."),
     }
     
+

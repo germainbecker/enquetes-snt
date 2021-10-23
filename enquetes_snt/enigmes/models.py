@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.fields import DateTimeField
+from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
@@ -15,6 +16,81 @@ import pytz
 import csv
 import json
 import datetime
+
+class Fichier(models.Model):
+    
+    def repertoire_fichiers_auteur(instance, nom_fichier):
+        # le fichier sera uploadé dans MEDIA_ROOT/auteur_<id>/<nom_fichier>
+        return 'auteur_{0}/fichiers/{1}'.format(instance.auteur.id, nom_fichier)
+    
+    fichier = models.FileField(
+        "Sélectionner un fichier",
+        blank=False,
+        max_length=100,
+        upload_to=repertoire_fichiers_auteur,
+        validators=[
+            FileValidator(
+                max_size=1024 * 1000, # 1 Mio
+                content_types=(
+                    'text/csv',
+                    'application/vnd.oasis.opendocument.spreadsheet',  #.ods
+                    'application/vnd.ms-excel',  #.xls
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',  #.xlsx
+                    'text/x-python',  #.py
+                    'text/html',
+                    'text/css',
+                    'text/plain', #.txt
+                    'application/json',
+                    'image/jpeg',
+                    'image/png',
+                )
+            )
+        ]
+    )
+
+    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)  # si un utilisateur supprime son compte, ses fichiers restent
+    
+    @property
+    def url(self):
+        return self.fichier.url
+
+    def __str__(self):
+        return os.path.basename(self.fichier.name)
+
+class Image(models.Model):
+    
+    def repertoire_images_auteur(instance, nom_fichier):
+        # le fichier sera uploadé dans MEDIA_ROOT/auteur_<id>/<nom_fichier>
+        return 'auteur_{0}/images/{1}'.format(instance.auteur.id, nom_fichier)
+    
+    image = models.ImageField(
+        "Sélectionner une image",
+        blank=False,
+        max_length=100,
+        upload_to=repertoire_images_auteur,
+        validators=[
+            FileValidator(
+                max_size=1024 * 300, # 300 Kio
+                content_types=(
+                    'image/jpeg',
+                    'image/png',
+                )
+            )
+        ]
+    )
+
+    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)  # si un utilisateur supprime son compte, ses fichiers restent
+
+    @property
+    def name(self):
+        return os.path.basename(self.image.name)
+
+    @property
+    def url(self):
+        return self.image.url
+
+    def __str__(self):
+        return os.path.basename(self.image.name)
 
 def generer_code_enquete_unique():
     enquetes = Enquete.objects.all()
@@ -55,7 +131,9 @@ class Enigme(models.Model):
         # le fichier sera uploadé dans MEDIA_ROOT/auteur_<id>/<nom_fichier>
         return 'auteur_{0}/{1}'.format(instance.auteur.id, nom_fichier)
     
-    image = models.ImageField(
+    image = models.ForeignKey(Image, related_name='enigme', blank=True, null=True,on_delete=models.SET_NULL)
+    
+    """ image = models.ImageField(
         "Téléverser une image d'illustration",
         blank=True,
         max_length=100,
@@ -66,14 +144,18 @@ class Enigme(models.Model):
                 content_types=(
                     'image/jpeg',
                     'image/png',
-                ))]
-    )
+                )
+            )
+        ]
+    ) """
 
     url_image = models.URLField("URL de l'image d'illustration", blank=True, null=True)
 
-    credits_image = models.TextField("Crédits/Licence de l'image", blank=True, null=True)
+    credits_image = models.TextField("Crédits de l'image", blank=True, null=True)
 
-    fichier = models.FileField(
+    fichier = models.ForeignKey(Fichier, related_name='enigme', blank=True, null=True,on_delete=models.SET_NULL)
+
+    """ fichier = models.FileField(
         "Fichier en pièce jointe",
         blank=True,
         max_length=100,
@@ -95,7 +177,7 @@ class Enigme(models.Model):
                     'image/png',
                 )
             )]
-        )
+        ) """
 
     def __str__(self):
         return str(self.id) + " / " + str(self.auteur)

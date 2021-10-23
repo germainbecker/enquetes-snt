@@ -2541,6 +2541,14 @@ td.enquete-active span {
     border-radius: 5px;
 }
 
+/* Mes fichiers téléversés */
+
+#mes-fichiers-televerses a.lien-detail {
+    color: var(--black);
+    text-decoration: none;
+} 
+
+
 /* Infos sur les enquêtes */
 
 #infos-enquetes {
@@ -3045,10 +3053,8 @@ input:checked + .slider:before {
     background-color: white;
 }
 
-.form-inscription p,
-.form-creation p,
-.description-container p {
-    margin: 0.5em 0;
+.form-inscription p, .form-creation p, .description-container p {
+    margin: 0.8em 0;
     display: flex;
     flex-direction: column;
 }
@@ -3067,6 +3073,12 @@ input:checked + .slider:before {
 .form-creation p input,
 .description-container p input {
     line-height: 20px;
+}
+
+.form-creation p select {
+    height: 25px;
+    border-radius: 3px;
+    font-size: 0.9em;
 }
 
 .form-inscription #cgu {
@@ -3640,6 +3652,65 @@ input:checked + .slider:before {
     color:#843534
 }
 
+
+/* Onglet Mes fichiers */ 
+
+#mes-pieces-jointes .btn-form {
+    margin: 0;
+}
+
+#mes-pieces-jointes .fichiers-televerses {
+    margin-top: 15px;
+    background-color: rgb(255 250 250);
+    padding: 1px 10px;
+    border-radius: 0 10px 10px 0;
+    border-left: 5px solid var(--second);
+}
+
+#mes-pieces-jointes .btn-validation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#mes-pieces-jointes .btn-validation svg {
+    fill: white;
+    height: 25px;
+}
+
+#mes-pieces-jointes .fichiers-televerses ul {
+    padding-inline-start: 5px;
+}
+
+#mes-pieces-jointes .fichiers-televerses ul li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#mes-pieces-jointes .fichiers-televerses ul li .btn-suppression-fichier {
+    cursor: pointer;
+}
+
+#mes-pieces-jointes .fichiers-televerses ul li a {
+    text-decoration: none;
+    color: var(--third);
+}
+
+#mes-pieces-jointes .fichiers-televerses ul li a:hover {
+    text-decoration: underline;
+}
+
+#mes-pieces-jointes .fichiers-televerses ul li .liste-enigmes a {
+    text-decoration: none;
+    color: var(--black);
+}
+
+#mes-pieces-jointes .fichiers-televerses ul li .liste-enigmes a:hover {
+    text-decoration: underline;
+    color: var(--third);
+}
 
 /* FOOTER */
 

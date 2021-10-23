@@ -1,19 +1,36 @@
 from django.db.models.base import Model
 from django.db.models.fields import BooleanField, TextField
-from django.forms import Form, ModelForm, ModelMultipleChoiceField, TextInput, CharField, CheckboxSelectMultiple, ModelChoiceField, MultipleChoiceField
+from django.forms import Form, ModelForm, ModelMultipleChoiceField, TextInput, CharField, CheckboxSelectMultiple, Select
 from django.forms import widgets
+from django.forms.fields import ChoiceField
+from django.forms.models import ModelChoiceField
 from django.utils.html import format_html
 from django.core.validators import RegexValidator
-from django.forms.widgets import ClearableFileInput, HiddenInput, Textarea
+from django.forms.widgets import ClearableFileInput, HiddenInput, Textarea, Select
 from django.core.exceptions import ValidationError
 
-from enigmes.models import Enquete, Enigme
+from enigmes.models import Enquete, Enigme, Fichier, Image
 from enseignants.forms import ParagraphErrorList
 import os
+from django.conf import settings
 
 
+class UploadFileForm(ModelForm):
+    class Meta:
+        model = Fichier
+        fields = ('fichier',)
+        
+        help_texts = {
+            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
+        }
 
-# Pour personnaliser le formulaire de la vue EnigmeUpdateView
+class UploadImageForm(ModelForm):
+    class Meta:
+        model = Image
+        fields = ('image',)
+        help_texts = {
+            'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
+        }
 
 class CustomClearableFileInput(ClearableFileInput):
     """Personnalisation du champ FileInput"""
@@ -23,17 +40,54 @@ class CustomClearableFileInput(ClearableFileInput):
             value.basename = os.path.basename(value.name)
             return value
 
+
+class FileSelect(Select):
+    '''
+    Sous-classe de forms.Select pour ajouter l'url dans les data attributs du composant Select pour les choix de fichiers
+    images et pièce jointes dans les formulaires de création/modification d'une énigme.
+    Source: https://docs.djangoproject.com/fr/3.2/ref/forms/fields/#iterating-relationship-choices
+    '''
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(name, value, label, selected, index, subindex, attrs)
+        if value:
+            option['attrs']['data-url'] = value.instance.url
+        return option
+
+
+
 class EnigmeCreateForm(ModelForm):
     
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
         # pour personnaliser la liste d'erreurs (ErrorList)
         kwargs.update({'error_class': ParagraphErrorList})
-        super(EnigmeCreateForm, self).__init__(*args, **kwargs)
-    
+        super(EnigmeCreateForm, self).__init__(*args, **kwargs)       
+
+        self.fields['image'] = ModelChoiceField(
+            queryset=Image.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucune image sélectionnée ---'
+        )
+        self.fields['image'].label = "Choisir une image d'illustration"
+
+        self.fields['fichier'] = ModelChoiceField(
+            queryset=Fichier.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucun fichier sélectionné ---',
+            help_text="Vous pouvez sélectionner un de vos fichiers téléversés.",
+        )
+        self.fields['fichier'].label = "Choisir un fichier"
+
     class Meta:
         
         model = Enigme
         fields = ('theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
+        
+        # test
+        """ fields = ('theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier', 'selection_pj') """
+        
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
@@ -44,36 +98,63 @@ class EnigmeCreateForm(ModelForm):
             'indication': Textarea(
                 attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
             ),
-            'image': CustomClearableFileInput(),
             'credits_image': Textarea(
                 attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
-            ),
-            'fichier': CustomClearableFileInput(),
+            ),  
+        }
+        label = {
+            'image': "Choisir une image d'illustration",
         }
         help_texts = {
-            'url_image': "Copiez l'URL de l'image désirée (à privilégier). L'autre solution est de téléverser une image d'illustration ci-dessous.",
-            'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
-            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
+            'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
         }
     
     def clean(self):
         cleaned_data = super().clean()
-        credits_image = cleaned_data.get("credits_image")
         image = cleaned_data.get("image")
         url_image = cleaned_data.get("url_image")
+        
+        # on s'assure de ne pas enregistrer des crédits si aucune image (url ou fichier) n'est choisie
+        credits_image = cleaned_data.get("credits_image")
         no_image = (url_image == '' and (image == None or image == False))
         if credits_image != '' and no_image:
             raise ValidationError(
                 "Il n'est pas possible de définir les crédits si aucune image n'est sélectionnée."
             )
-
+        return cleaned_data
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if instance.url_image is not None:  # si une url est définie
+            instance.image = None  # on s'assure qu'aucune image téléversée n'est associée à l'énigme
+        if commit:
+            instance.save()  # on sauvegarde en bdd l'instance
+            self.save_m2m()  # on sauvegarde en bdd les relations many2many
+        return instance
 
 class EnigmeExampleCreateForm(ModelForm):
     
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
         # pour personnaliser la liste d'erreurs (ErrorList)
         kwargs.update({'error_class': ParagraphErrorList})
         super(EnigmeExampleCreateForm, self).__init__(*args, **kwargs)
+        self.fields['image'] = ModelChoiceField(
+            queryset=Image.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucune image sélectionnée ---'
+        )
+        self.fields['image'].label = "Choisir une image d'illustration"
+
+        self.fields['fichier'] = ModelChoiceField(
+            queryset=Fichier.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucun fichier sélectionné ---',
+            help_text="Vous pouvez sélectionner un de vos fichiers téléversés.",
+        )
+        self.fields['fichier'].label = "Choisir un fichier"
     
     def get_initial():
         enonce = '''En Markdown on peut facilement écrire en _italique_ ou en **gras**. On peut aussi insérer des liens : [un lien vers codepen](https://codepen.io/gbecker/pen/jObKbvX?editors=1100).
@@ -126,21 +207,20 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
             'indication': Textarea(
                 attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
             ),
-            'image': CustomClearableFileInput(),
+            'image': FileSelect,
             'credits_image': Textarea(
                 attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
             ),
-            'fichier': CustomClearableFileInput(),
+            'fichier': FileSelect,
         }
         help_texts = {
-            'url_image': "Copiez l'URL de l'image désirée (à privilégier). L'autre solution est de téléverser une image d'illustration ci-dessous.",
-            'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
-            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
+            'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
         }
 
 class EnigmeUpdateForm(ModelForm):
     
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
         # pour personnaliser la liste d'erreurs (ErrorList)
         kwargs.update({'error_class': ParagraphErrorList})
         super(EnigmeUpdateForm, self).__init__(*args, **kwargs)
@@ -153,21 +233,38 @@ class EnigmeUpdateForm(ModelForm):
             if credits_image != '' and no_image:
                 data['credits_image'] = ''
                 self.data = data
-            
+        
+        
+        self.fields['image'] = ModelChoiceField(
+            queryset=Image.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucune image sélectionnée ---'
+        )
+        self.fields['image'].label = "Choisir une image d'illustration"
+
+        self.fields['fichier'] = ModelChoiceField(
+            queryset=Fichier.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucun fichier sélectionné ---',
+            help_text="Vous pouvez sélectionner un de vos fichiers téléversés.",
+        )
+        self.fields['fichier'].label = "Choisir un fichier"
     
     class Meta:
         model = Enigme
         fields = ['theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier']
         widgets = {
-            'image': CustomClearableFileInput(),
+            'image': FileSelect(),
             'credits_image': Textarea(
                 attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
             ),
-            'fichier': CustomClearableFileInput(),
+            'fichier': FileSelect,
         }
         help_texts = {
-            'image': "Les extensions acceptées sont .jpg et .png. La taille maximale autorisée est 300 Kio.",
-            'fichier': "Les extensions acceptées sont .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png et .json. La taille maximale de la pièce jointe est de 1 Mio."
+            'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
+            
         }
     
     def clean(self):

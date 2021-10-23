@@ -1,0 +1,37 @@
+{% extends 'enigmes/base.html' %}
+
+{% block nav %}
+{% include 'enigmes/nav.html' with nav="nav_complete" page="accueil" %}
+{% endblock %}
+
+{% block content %}
+{% load custom_tags %}
+
+<section>
+    <h1>Mon profil</h1>
+    <ul>
+        <li>Nom d'utilisateur : <span>{{ user.username }}</span></li>
+        <li>Adresse e-mail : <span>{{ user.email }}</span></li>
+    </ul>
+</section>
+
+<section id="mes-pieces-jointes">
+    <h1>Mes pièces jointes</h1>
+    <ul>
+        {% for fichier in fichiers %}
+            <li>
+                <a href="{{fichier.url}}" target="_blank" download="">   
+                    <span id="nom-fichier">{{fichier|filename}}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul> 
+</section>
+
+
+
+{% endblock %}
+
+
+
+

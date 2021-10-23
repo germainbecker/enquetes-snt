@@ -27,6 +27,7 @@ Ce document est une présentation de l'application.
     * [Qu'est-ce qu'une *énigme* ?](#quest-ce-quune-%C3%A9nigme)
         * [Cas particuliers des "énigmes-questions" de type Vrai/Faux ou QCM](#cas-particuliers-des-%C3%A9nigmes-questions-de-type-vraifaux-ou-qcm)
     * [Ajout d'une énigme](#ajout-dune-%C3%A9nigme)
+* [Téléversement de fichiers](#t%C3%A9l%C3%A9versement-de-fichiers)
 * [Enquêtes](#enqu%C3%AAtes)
     * [Qu'est-ce qu'une enquête ?](#quest-ce-quune-enqu%C3%AAte)
     * [Création d'une enquête](#cr%C3%A9ation-dune-enqu%C3%AAte)
@@ -141,10 +142,10 @@ Très rapidement, une énigme est composée de 6 champs :
 4. Indication (optionnel) : pour saisir une indication à destination des élèves (l'affichage des indications pourra être activée ou désactivée dans les paramètres d'une enquête)
 5. Image d'illustration (optionnel) : on peut au choix
     * indiquer un lien vers l'url d'une image en ligne
-    * téléverser une image pour accompagner l'énigme. 
+    * sélectionner une image qui aura préalablement été téléversée (voir paragraphe suivant). 
     **Afin de ne pas ralentir le chargement des pages, merci de ne fournir une image d'illustration que si celle-ci est nécessaire à la résolution de l'énigme.**
 6. Crédits/Licence de l'image (optionnel) : pour indiquer la licence de l'image, le nom de l'auteur, etc.
-7. Fichier en pièce jointe (optionnel) : pour téléverser une pièce jointe à l'énigme qui pourra être téléchargée par les élèves
+7. Fichier en pièce jointe (optionnel) : pour sélectionner une pièce jointe à l'énigme parmi les fichiers préalablement téléchargés (voir paragraphe suivant)
 
 Sachez que les énoncés et indications peuvent être rédigées en **Markdown** ou en **HTML**. Une zone vous permet de visualiser en direct le rendu de votre énigme.
 
@@ -156,6 +157,19 @@ Sachez que les énoncés et indications peuvent être rédigées en **Markdown**
 
 * La bibliothèque JavaScript qui permet de voir le rendu en direct, n'implémente pas le Markdown exactement de la même manière que celui utilisé par Python pour l'application. Il se peut donc qu'il y ait de légères différences entre la zone d'aperçu de création d'énigme et le rendu réel une fois l'énigme enregistrée en base de données.
 * Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
+
+# Téléversement de fichiers
+
+Via l'onglet **Mes fichiers** vous pouvez téléverser des images et des fichiers que vous pourrez ensuite sélectionner lors de la création d'une énigme.
+
+Pour des raisons de performances et de sécurité, les formats et tailles de ces fichiers sont limités :
+
+| | Images | Fichiers |
+| --- | --- | --- |
+| Extensions acceptées | .jpg, .png | .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png, .json |
+| Taille maximale | 300 Kio | 1 Mio |
+
+>**Attention** : La taille du serveur étant limitée, merci de ne téléverser que des fichiers absolument nécessaires aux énigmes. Concernant les images, privilégiez plutôt l'URL d'une image déjà sur le Web lorsque cela est possible.
 
 # Enquêtes
 
