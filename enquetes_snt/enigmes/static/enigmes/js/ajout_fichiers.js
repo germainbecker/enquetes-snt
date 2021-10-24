@@ -8,7 +8,17 @@ function validationImage(){
 
     const extensionsAcceptees =  ['jpeg','jpg','png'],
             tailleMax = 1024*300; // 300 Kio
-
+    
+    var fichierImage = document.getElementById("id_image");
+    var apercuImage = document.querySelector("#image");
+    var fichierImageReader = new FileReader();
+    fichierImageReader.addEventListener("load", function () {
+        if (!(fichierImage.files.length == 0)) {
+            apercuImage.src = fichierImageReader.result;
+        } else {
+            apercuImage.src = '';
+        }
+    }, false);
     
     // si un fichier image a été choisi
     if (this.files.length == 1 && this.files[0]) {
@@ -22,16 +32,26 @@ function validationImage(){
         // vérification de l'extension et de la taille de l'image
         if (!extensionsAcceptees.includes(extensionFichier)){
             alert("Extension non acceptée. Seules les images aux formats .jpg ou .png sont acceptées.");
-            this.value = null;            
+            this.value = null; 
+            apercuImage.src = '';
+            apercuImage.style.display = "none";           
             return false;
         } else if (tailleFichier > tailleMax){
             alert("Fichier trop volumineux. Assurez-vous que l'image ait une taille inférieure à 300 Kio.")
             this.value = null;
+            apercuImage.src = '';
+            apercuImage.style.display = "none";
             return false;
         } else {
+            // on lit son contenu
+            fichierImageReader.readAsDataURL(this.files[0]);  
+            // on l'affiche dans l'aperçu
+            apercuImage.style.display = "block";
             return true;
         }
     } else {
+        apercuImage.src = '';
+        apercuImage.style.display = "none";
         this.value = "";
         return false;
     }
