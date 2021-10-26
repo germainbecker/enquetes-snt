@@ -315,8 +315,9 @@ function majResultats(result) {
     
         function conversionDate(date) {
             d1 = new Date(date);
-
-            return d1.toLocaleDateString('fr-FR') + ' ' + d1.toLocaleTimeString('fr-FR');
+            let locale = 'fr-FR';
+            let opts = {hour: '2-digit', minute: '2-digit'};
+            return d1.toLocaleDateString(locale) + ' ' + d1.toLocaleTimeString(locale, opts);
         }
 }
 
