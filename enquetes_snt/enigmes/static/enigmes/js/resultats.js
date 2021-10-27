@@ -9,7 +9,7 @@ gestionIdentifants();
 gestionReponses();
 gestionResultats();
 
-//console.log(zoneReponsesEleves);
+
 
 document.getElementById("switch-id").addEventListener("change", gestionIdentifants);
 document.getElementById("switch-reponses").addEventListener("change", gestionReponses);
@@ -73,7 +73,6 @@ function gestionResultats() {
     var nbReponsesEleves = document.querySelectorAll(".reponse").length;
     var scoreEleves = document.querySelectorAll(".score-eleve");
     var pourcentagesReussite = document.querySelectorAll(".pourcentage");
-    console.log(pourcentagesReussite);
     if (document.getElementById("switch-resultats-checkbox").checked) {
         for (var i = 0; i < nbReponsesEleves; i++) {
             zoneReponsesEleves[i].classList.remove("masque-resultat");
@@ -211,7 +210,6 @@ document.querySelector("#fetch-call").addEventListener("click", event => {
     // Création d'une requête à envoyer au serveur
     let formData = new FormData();
     formData.append('maj', 'true');
-    console.log(formData);
     let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const request = new Request(window.location.href, {
         method: 'POST',
@@ -231,17 +229,12 @@ document.querySelector("#fetch-call").addEventListener("click", event => {
 });
 
 function majResultats(result) {
-    console.log("reponse requete", result);
     const nbResultats = result['resultats'].length;
-    console.log(nbResultats);
     let numEnigmes = result["enigmes"];
-    console.log("num des enigmes");
-    console.log(numEnigmes);
-    
+
     // ajout des lignes avec les nouveaux résultats
     let resultatsEleves = document.querySelector("#resultats-eleves");
     let nbResultatsAffiches = resultatsEleves.childElementCount - 1;
-    console.log(nbResultatsAffiches);
     let ligneReussite = document.querySelector("#ligne-reussite");
     for (let i=nbResultatsAffiches; i<nbResultats; i++) {
         let nouvResultat = document.createElement('tr');
@@ -252,10 +245,7 @@ function majResultats(result) {
     // ajout des nouveaux pourcentages de réussite
     var pourcentagesReussite = document.querySelectorAll(".pourcentage");
     let pourcentages_bonnes_reponses = Object.values(result['pourcentage']); // conversion en un tableau
-    console.log("python renvoie :", pourcentages_bonnes_reponses);
-    console.log(pourcentagesReussite);
     let nbEnigmes = result['enigmes'].length;
-    console.log("nombre", nbEnigmes);
     for (let i=0; i<nbEnigmes; i++) {
         pourcentagesReussite[i].innerHTML = String(pourcentages_bonnes_reponses[i]) + ' %';
     }
@@ -280,18 +270,15 @@ function majResultats(result) {
                 "date": date
             }
         */
-        console.log(resultat);
         let idEleve = resultat["id"];
         let scoreEleve = resultat["score"];
         let date = conversionDate(resultat["date"]);
-        console.log(date)
         let nbEnigme = Object.keys(resultat["reponses"]).length;
         let htmlLigne = '<td class="zone-eleve-score cache-eleve" data-cache="●●●●">' +
                         '<span class="flex-grow id-eleve" data-resultats=' + String(numResultat) + '>' + idEleve + '</span>' +
                         '<span class="score-eleve">' + String(scoreEleve) + ' / ' + String(nbEnigme) + '</span></td>';
         
         let reponsesEleve = resultat["reponses"];
-        console.log(reponsesEleve);
 
         numEnigmes.forEach(function(num) {
             if (reponsesEleve[num]["correct"] == true) {
