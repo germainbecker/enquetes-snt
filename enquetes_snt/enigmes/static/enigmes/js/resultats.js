@@ -302,27 +302,9 @@ function majResultats(result) {
     
         function conversionDate(date) {
             d1 = new Date(date);
-            let jour = d1.getDate();
-            let mois = d1.getMonth()+1;
-            let annee = d1.getFullYear();
-            let heures = d1.getHours();
-            let minutes = d1.getMinutes();
-            
-            // ajout d'un 0 éventuellement
-            if (jour < 10) {
-                jour = '0' + jour;
-            }
-            if (mois < 10) {
-                mois = '0' + mois;
-            }
-            if (heures < 10) {
-                heures = '0' + heures;
-            }
-            if (minutes < 10) {
-                mois = '0' + minutes;
-            }
-
-            return jour + '/' + mois + '/' + annee + ' ' + heures + ':' + minutes;
+            let locale = 'fr-FR';
+            let opts = {hour: '2-digit', minute: '2-digit'};
+            return d1.toLocaleDateString(locale) + ' ' + d1.toLocaleTimeString(locale, opts);
         }
 }
 
