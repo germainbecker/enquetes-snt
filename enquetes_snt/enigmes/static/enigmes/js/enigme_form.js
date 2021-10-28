@@ -208,11 +208,6 @@ function apercuImage(theme) {
             fichierImage.disabled = true;
             // on autorise la saisie de crédits
             autoriseSaisieCredits();
-            EXIF.getData(urlImage, function() {
-                let artiste = EXIF.getTag(this, "Artist");
-                let copyright = EXIF.getTag(this, "Copyright");
-                majCredits(copyright + " " + artiste);
-            });
             // on n'affiche pas l'image du thème
             imageTheme.style.display = "none";
             imageTheme.data = "none";
@@ -220,13 +215,22 @@ function apercuImage(theme) {
             apercuImage.src = urlImage.value;
             // on affiche l'image de l'apercu
             apercuImage.style.display = "block";
-            
+            // recherche des données EXIF pour les crédits
+            var texteCredit = "";
+            EXIF.getData(urlImage, function() {
+                let artiste = EXIF.getTag(this, "Artist");
+                let copyright = EXIF.getTag(this, "Copyright");
+                texteCredit = copyright + " " + artiste;
+            });
             // si des crédits sont absents
-            if (creditsImageMD.value == "") {
+            if (creditsImageMD.value == "" && texteCredit == "") {
                 // on n'affichage pas les crédits dans l'aperçu
                 apercuCreditsImage.style.display = "none";
             }
             else {
+                if (creditsImageMD.value == "" && !(texteCredit == "")) {
+                    creditsImageMD.value = texteCredit;
+                }
                 // sinon on les affiche
                 apercuCreditsImage.style.display = "flex";
                 let creditsImageHTML = marked(creditsImageMD.value);  // conversion en HTML
@@ -265,8 +269,9 @@ function autoriseSaisieCredits() {
 }
 
 function majCredits(texte) {
-    if (!(texte == "")){
-        document.getElementById('id_credits_image').innerHTML = texte
+
+    if (!(texte == "") && (creditsImageMD.value == "")){
+        
     }
 }
 
