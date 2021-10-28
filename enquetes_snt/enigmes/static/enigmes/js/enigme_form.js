@@ -208,6 +208,11 @@ function apercuImage(theme) {
             fichierImage.disabled = true;
             // on autorise la saisie de crédits
             autoriseSaisieCredits();
+            EXIF.getData(urlImage, function() {
+                let artiste = EXIF.getTag(this, "Artist");
+                let copyright = EXIF.getTag(this, "Copyright");
+                majCredits(copyright + " " + artiste);
+            });
             // on n'affiche pas l'image du thème
             imageTheme.style.display = "none";
             imageTheme.data = "none";
@@ -259,6 +264,11 @@ function autoriseSaisieCredits() {
     document.getElementById('id_credits_image').disabled = false;
 }
 
+function majCredits(texte) {
+    if (!(texte == "")){
+        document.getElementById('id_credits_image').innerHTML = texte
+    }
+}
 
 
 function apercuFichier() {
@@ -354,6 +364,7 @@ document.querySelector("form").addEventListener("submit", function(event) {
 });
 
 
+window.onload=getExif;
 /* Pour afficher l'aperçu directement */
 let theme = document.querySelector('#id_theme').value;
 apercuImage(theme);
