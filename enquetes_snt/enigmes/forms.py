@@ -83,16 +83,22 @@ class EnigmeCreateForm(ModelForm):
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
-        
-        # test
-        """ fields = ('theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier', 'selection_pj') """
+        fields = ('theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
         
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
             ),
             'reponse': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse2': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse3': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse4': TextInput(
                 attrs={'placeholder': '100 caractères max.'}
             ),
             'indication': Textarea(
@@ -102,9 +108,11 @@ class EnigmeCreateForm(ModelForm):
                 attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
             ),  
         }
+
         label = {
             'image': "Choisir une image d'illustration",
         }
+
         help_texts = {
             'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
         }
@@ -125,6 +133,21 @@ class EnigmeCreateForm(ModelForm):
     
     def save(self, commit=True):
         instance = super().save(commit=False)
+
+        # on décale les réponses optionnelles si nécessaire
+        autres_reponses = [instance.reponse2, instance.reponse3, instance.reponse4]
+        autres_reponses_valides = [rep for rep in autres_reponses if rep is not None]
+        
+        if len(autres_reponses_valides) == 2:
+            instance.reponse2 = autres_reponses_valides[0]
+            instance.reponse3 = autres_reponses_valides[1]
+            instance.reponse4 = None
+        elif len(autres_reponses_valides) == 1:
+            instance.reponse2 = autres_reponses_valides[0]
+            instance.reponse3 = None
+            instance.reponse4 = None
+
+        # on efface l'attribut image si url_image est définie
         if instance.url_image is not None:  # si une url est définie
             instance.image = None  # on s'assure qu'aucune image téléversée n'est associée à l'énigme
         if commit:
@@ -157,7 +180,7 @@ class EnigmeExampleCreateForm(ModelForm):
         self.fields['fichier'].label = "Choisir un fichier"
     
     def get_initial():
-        enonce = '''En Markdown on peut facilement écrire en _italique_ ou en **gras**. On peut aussi insérer des liens : [un lien vers codepen](https://codepen.io/gbecker/pen/jObKbvX?editors=1100).
+        enonce = '''En Markdown on peut facilement écrire en *italique* ou en **gras**. On peut aussi insérer des liens : [un lien vers codepen](https://codepen.io/gbecker/pen/jObKbvX?editors=1100).
 
 Un saut de ligne crée un nouveau paragraphe. On peut écrire des listes :
 
@@ -196,7 +219,7 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
+        fields = ('theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
@@ -204,15 +227,27 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
             'reponse': TextInput(
                 attrs={'placeholder': '100 caractères max.'}
             ),
+            'reponse2': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse3': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse4': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
             'indication': Textarea(
                 attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
             ),
-            'image': FileSelect,
             'credits_image': Textarea(
                 attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
-            ),
-            'fichier': FileSelect,
+            ),  
         }
+
+        label = {
+            'image': "Choisir une image d'illustration",
+        }
+
         help_texts = {
             'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
         }
@@ -254,8 +289,20 @@ class EnigmeUpdateForm(ModelForm):
     
     class Meta:
         model = Enigme
-        fields = ['theme', 'enonce', 'reponse', 'indication', 'url_image', 'image', 'credits_image', 'fichier']
+        fields = ['theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'indication', 'url_image', 'image', 'credits_image', 'fichier']
         widgets = {
+            'reponse': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse2': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse3': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse4': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
             'image': FileSelect(),
             'credits_image': Textarea(
                 attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
@@ -283,6 +330,24 @@ class EnigmeUpdateForm(ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
+
+        # on décale les réponses optionnelles si nécessaire
+        autres_reponses = [instance.reponse2, instance.reponse3, instance.reponse4]
+        autres_reponses_valides = [rep for rep in autres_reponses if rep is not None]
+        
+        if len(autres_reponses_valides) == 2:
+            instance.reponse2 = autres_reponses_valides[0]
+            instance.reponse3 = autres_reponses_valides[1]
+            instance.reponse4 = None
+        elif len(autres_reponses_valides) == 1:
+            instance.reponse2 = autres_reponses_valides[0]
+            instance.reponse3 = None
+            instance.reponse4 = None
+        elif len(autres_reponses_valides) == 0:
+            instance.reponse2 = None
+            instance.reponse3 = None
+            instance.reponse4 = None
+        
         if instance.url_image is not None:  # si une url est définie
             instance.image = None  # on s'assure qu'aucune image téléversée n'est associée à l'énigme
         if commit:

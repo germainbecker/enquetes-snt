@@ -44,15 +44,21 @@
                     <label for="{{enigme.pk}}">Réponse :</label>
                 </p>
                 <p>
-                    <input type="text" name="{{enigme.pk}}" placeholder="{{reponses|get:enigme.pk}}">
+                    <input type="text" name="{{enigme.pk}}" value="{{reponses|get:enigme.pk}}" disabled>
                 </p>
+                {% if correction|get:enigme.pk %}
                 <p class="reponse">
-                    {% if correction|get:enigme.pk %}
-                        ✔️ Réponse correcte !
-                    {% else %}
-                        ❌ Réponse incorrecte, la réponse attendue était <strong>{{ enigme.reponse }}</strong>.
-                    {% endif %}
+                    ✔️ Réponse correcte !
                 </p>
+                {% else %}
+                <p class="reponse">
+                    ❌ Réponse incorrecte, la réponse attendue était <strong>{{ enigme.reponse }}</strong>.
+                </p>
+                {% if enigme.reponse2 %}
+                <p>Autre(s) réponse(s) acceptée(s) : <span class="autre-reponse-attendue">{{ enigme.reponse2 }}</span>{% if enigme.reponse3%}, <span class="autre-reponse-attendue">{{ enigme.reponse3 }}</span>{% endif %}{% if enigme.reponse4%}, <span class="autre-reponses-attendue">{{ enigme.reponse4 }}</span>{% endif %}</p>
+                {% endif %}     
+                {% endif %}
+                
             </div>            
         </div>
     {% endfor %}

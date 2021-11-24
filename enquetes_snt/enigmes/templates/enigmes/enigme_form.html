@@ -20,23 +20,37 @@
         </div>
         
         <p>Complétez les champs suivants afin de créer une nouvelle énigme. La zone d'aperçu vous permet de visualiser en direct l'énigme que vous créez.</p>
-        <p><strong>Attention</strong>, si vous souhaitez utiliser une image d'illustration ou un fichier en pièce jointe, il faut d'abord les téléverser sur le serveur via l'onglet "Mes fichiers".</p>
+        <p><strong>Attention</strong>, si vous souhaitez utiliser une image d'illustration ou un fichier en pièce jointe, il faut d'abord le(s) téléverser sur le serveur via l'onglet "Mes fichiers".</p>
         
         <div class="form-creation">
             <form method="POST" enctype='multipart/form-data'>
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 {% for field in form %}
+                    {% if field.name != 'reponse2' and field.name != 'reponse3' and field.name != 'reponse4' %}
                     <p>
                         <label for="{{ field.id_for_label }}">
                             {{field.label}} {% if field.field.required %} (obligatoire) {% endif %} :
                         </label>
                         {{field}}
-                        {{field.errors}}
                         {% if field.help_text %}
                             <span class="helptext">{{ field.help_text|safe }}</span>
                         {% endif %}
                     </p>
+                    {{field.errors}}
+                    {% else %}
+                    <p class="champ-reponse hidden" id="champ-{{field.name}}">
+                        {{field}}
+                        {{field.errors}}
+                    </p>
+                    {% endif %}
+                    {% if field.name == 'reponse4' %}
+                    <div class="btn-ajout-reponse">
+                        <button id="ajouter-reponse" type="button">Ajouter une réponse</button>
+                    </div>
+                    
+                    
+                    {% endif %}
                 {% endfor %}
                 <div class="btn-form">
                     <button class="btn-validation" type="submit">Ajouter l'énigme dans la base</button>
@@ -75,7 +89,8 @@
                                 <div class="enigme-reponse">
                                     <details>
                                         <summary><span class="voir-reponse">Voir la réponse</span></summary>
-                                        <p>Réponse attendue : <span class="reponse">{{ enigme.reponse }}</span></p>
+                                        <p>Réponse attendue : <span class="reponse-affichee">{{ enigme.reponse }}</span></p>
+                                        <p id="autres-reponses">Autre(s) réponse(s) acceptée(s) : <span class="autres-reponses-affichees"></span></p>
                                     </details>
                                 </div>
                             </div>   
@@ -92,7 +107,7 @@
 {% block jsfiles %}
 {% load static %}
 <!-- Conversion markdown en HTML -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markedjs@3.0.4/marked.min.js" integrity="sha256-FAroCWEq31+au9TcBuLcuS+WvfVvGaVlY9tV9gntJZ8=" crossorigin="anonymous"></script>
 
 <!-- DOMPurify : purificateur de HTML -->    
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.9/purify.min.js"></script>

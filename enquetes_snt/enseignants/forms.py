@@ -58,7 +58,7 @@ class ParagraphErrorList(ErrorList):
     def as_divs(self):
         if not self: 
             return ''
-        return '<div class="errorlist">%s</div>' % ''.join(['<p class="small error">%s</p>' % e for e in self])
+        return format_html('<div class="errorlist">%s</div>' % ''.join(['<p class="small error">%s</p>' % e for e in self]))
 
 class MyAuthenticationForm(auth_forms.AuthenticationForm):
     def __init__(self, *args, **kwargs):  # redéfinition de la méthode  __init__ de la classe 

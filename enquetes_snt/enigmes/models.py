@@ -6,6 +6,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.http import HttpResponse
 from django import forms
+from django.utils.functional import cached_property
 from enigmes.validators import FileValidator
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
@@ -125,6 +126,9 @@ class Enigme(models.Model):
     
     enonce = models.TextField('énoncé')
     reponse = models.CharField('réponse', max_length=100)
+    reponse2 = models.CharField('réponse 2', max_length=100, blank=True, null=True)
+    reponse3 = models.CharField('réponse 3', max_length=100, blank=True, null=True)
+    reponse4 = models.CharField('réponse 4', max_length=100, blank=True, null=True)
     indication = models.TextField('indication', blank=True, null=True)
 
     def repertoire_auteur(instance, nom_fichier):
@@ -185,6 +189,13 @@ class Enigme(models.Model):
     def get_absolute_url(self):
         return reverse('enigme-detail', kwargs={'pk': self.pk})
 
+    def liste_reponses(self):
+        lst = [self.reponse]
+        for r in [self.reponse2, self.reponse3, self.reponse4]:
+            if r is not None:
+                lst.append(r)
+        return [reponse_nettoyee(rep) for rep in lst]
+
     class Meta:
         verbose_name = 'énigme'
 
@@ -207,16 +218,18 @@ class Enquete(models.Model):
         null=True,
         default=generer_code_enquete_unique
     )
-        
+
+    @cached_property 
     def liste_enigmes_ordre_initial(self):
         '''on se base sur la clé pour avoir l'ordre'''
         liste_num_enigmes = self.cle.split(";")
         liste_enigmes = []
         for num_enigme in liste_num_enigmes:
-            enigme = Enigme.objects.get(pk=int(num_enigme))
+            enigme = Enigme.objects.select_related('auteur', 'image', 'fichier').get(pk=int(num_enigme))
             liste_enigmes.append(enigme)
         return liste_enigmes
     
+    @cached_property 
     def liste_enigmes(self):
         import random
         L = list(self.enigmes.all())
@@ -226,22 +239,30 @@ class Enquete(models.Model):
             random.shuffle(L)  # mélange en place
             return L
     
+    @cached_property 
     def liste_numeros_enigmes_ordre_initial(self):
-        return [enigme.pk for enigme in self.liste_enigmes_ordre_initial()]
+        liste_num_enigmes = self.cle.split(";")
+        return [int(num) for num in liste_num_enigmes]
 
+    @cached_property
     def liste_numeros_enigmes(self):
-        return [enigme.pk for enigme in self.liste_enigmes()]
+        return [enigme.pk for enigme in self.liste_enigmes]
     
     def creation_cle_enquete(self):
         enquete = Enquete.objects.get(pk=self.pk)
-        liste_enigmes = enquete.liste_enigmes()
+        liste_enigmes = enquete.liste_enigmes
         liste_num_enigmes = [str(enigme.pk) for enigme in liste_enigmes]
         cle = ";".join(liste_num_enigmes)
         self.cle = cle
 
+    def dico_bonnes_reponses(self):
+        liste_enigmes = self.liste_enigmes_ordre_initial
+        bonnes_reponses = {enigme.pk: enigme.liste_reponses for enigme in liste_enigmes}
+        return bonnes_reponses
+
     def creation_tableau_resultats(self):
         liste_resultats = Resultat.objects.filter(enquete=self.pk)
-        nb_enigmes = len(self.liste_enigmes_ordre_initial())
+        nb_enigmes = len(self.liste_numeros_enigmes_ordre_initial)
         liste_complete = []
         for resultat in liste_resultats:
             dico = {}
@@ -325,48 +346,22 @@ class Resultat(models.Model):
         reponses_eleves = ast.literal_eval(self.reponses)  # type(reponses_eleves) = dict 
         return reponses_eleves
 
-    """ def calcul_score(self):
-        liste_enigmes = self.enquete.liste_enigmes()
-        bonnes_reponses = {enigme.pk: enigme.reponse for enigme in liste_enigmes}
-        reponses_eleves = self.dictionnaire_reponses_eleve()
-        score = 0
-        for num_enigme in bonnes_reponses.keys():
-            if reponses_eleves[num_enigme] == bonnes_reponses[num_enigme]:
-                score = score + 1
-        return score """
-    
     def bonnes_mauvaises_reponses(self):
-        liste_enigmes = self.enquete.liste_enigmes()
+        liste_enigmes = self.enquete.liste_enigmes
         bonnes_reponses = {enigme.pk: enigme.reponse for enigme in liste_enigmes}
         reponses_eleves = self.dictionnaire_reponses_eleve()
         correction_reponses = {num_enigme: None for num_enigme in bonnes_reponses.keys()}
-        for num_enigme in bonnes_reponses.keys():
-            if reponses_eleves[num_enigme] == bonnes_reponses[num_enigme] or reponse_nettoyee(reponses_eleves[num_enigme]) == reponse_nettoyee(bonnes_reponses[num_enigme]):
-                correction_reponses[num_enigme] = True
+
+        for enigme in liste_enigmes:
+            lst_bonnes_reponses = enigme.liste_reponses()  # les réponses de cette liste sont nettoyées
+            if reponse_nettoyee(reponses_eleves[enigme.pk]) in lst_bonnes_reponses:
+                correction_reponses[enigme.pk] = True
             else:
-                correction_reponses[num_enigme] = False
+                correction_reponses[enigme.pk] = False
         return correction_reponses
     
     def calcul_score(self):
         return list(self.bonnes_mauvaises_reponses().values()).count(True)
-    
-    def dico_complet(self):
-        liste_enigmes = self.enquete.liste_enigmes_ordre_initial()
-        reponses_eleve = self.dictionnaire_reponses_eleve()
-        correction_reponses = self.bonnes_mauvaises_reponses()
-        d = {
-            "id": self.id_eleve,
-            "score": list(correction_reponses.values()).count(True),
-            "reponses": {
-                enigme.pk: {
-                    "rep_eleve": reponses_eleve[enigme.pk],
-                    "correct": correction_reponses[enigme.pk]
-                }
-                for enigme in liste_enigmes
-            },
-            "date": self.date
-        }
-        return d
 
     def mise_en_forme_date(self):
         d = self.date

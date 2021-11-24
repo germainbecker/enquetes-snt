@@ -95,6 +95,9 @@
             <details>
                 <summary><span class="voir-reponse">Voir la réponse</span></summary>
                 <p>Réponse attendue : <span class="reponse-attendue">{{ enigme.reponse }}</span></p>
+                {% if enigme.reponse2 %}
+                <p>Autre(s) réponse(s) acceptée(s) : <span class="autre-reponse-acceptee">{{ enigme.reponse2 }}</span>{% if enigme.reponse3%}, <span class="autre-reponse-acceptee">{{ enigme.reponse3 }}</span>{% endif %}{% if enigme.reponse4%}, <span class="autre-reponse-acceptee">{{ enigme.reponse4 }}</span>{% endif %}</p>
+                {% endif %}
             </details>
         </div>
     {% elif zone_saisie_reponses %}

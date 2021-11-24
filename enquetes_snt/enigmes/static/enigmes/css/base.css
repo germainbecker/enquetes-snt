@@ -1547,6 +1547,10 @@ summary span:hover {
     font-weight: bold;
 }
 
+.enigme-reponse details p .autre-reponse-acceptee {
+    font-weight: bold;
+}
+
 .enigme-reponse details p .reponse-attendue p {
     display: inline-block;
     margin: 0;
@@ -3033,7 +3037,11 @@ input:checked + .slider:before {
 }
 
 
-.zone-apercu .enigme-reponse .reponse {
+.zone-apercu .enigme-reponse .reponse-affichee {
+    font-weight: bold;
+}
+
+.zone-apercu .enigme-reponse .autres-reponses-affichees {
     font-weight: bold;
 }
 
@@ -3058,6 +3066,30 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: column;
 }
+
+.form-inscription p.hidden, .form-creation p.hidden, .description-container p.hidden {
+    display: none;
+}
+
+.btn-ajout-reponse {
+    display: flex;
+    justify-content: end;
+}
+
+button#ajouter-reponse {
+    color: white;
+    background: var(--main-darker);
+    border: var(--second);
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+button#ajouter-reponse:hover {
+    cursor: pointer;
+    background-color: var(--main);
+}
+
+
 
 .form-inscription p label,
 .form-creation p label,
@@ -3120,8 +3152,8 @@ input:checked + .slider:before {
     background-color: var(--main-darker);
     color: white;
     font-size: 15px;
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -3176,6 +3208,7 @@ input:checked + .slider:before {
     font-size: 15px;
     box-sizing: border-box;
     max-width: 100%;
+    padding: 5px;
 }
 
 .form-creation #id_enonce {
@@ -3510,6 +3543,13 @@ input:checked + .slider:before {
     font-size: 15px;
 }
 
+.form-reponses-enquete .zone-reponse-correcte input:disabled,
+.form-reponses-enquete .zone-reponse-incorrecte input:disabled {
+    background-color: white;
+    color: black;
+    border: 1px solid rgb(130,130,130);
+}
+
 .form-reponses-enquete .zone-reponse-correcte label,
 .form-reponses-enquete .zone-reponse-incorrecte label {
     font-weight: bold;
@@ -3525,6 +3565,7 @@ input:checked + .slider:before {
 .form-reponses-enquete .zone-reponse-incorrecte .reponse {
     margin-top: 10px;
 }
+
 
 /* Aperçu énigme */
 

@@ -32,6 +32,7 @@ from .forms import (
     UploadImageForm,
 )
 from .models import Enigme, Enquete, Resultat, Fichier, Image
+from enseignants.models import User
 
 
 def conditions(request):
@@ -96,7 +97,6 @@ def enigmes(request):
 def mes_fichiers(request):
     user = request.user
     context = {}
-    print(request.POST)
     if request.method == 'POST':
         if 'fichier' in request.POST:
             form_fichier = UploadFileForm(request.POST, request.FILES)
@@ -173,27 +173,8 @@ def mes_fichiers(request):
         enigmes = [enigme.pk for enigme in fichier.enigme.all()]
         enigmes_par_fichier[fichier] = enigmes
 
-    """ for enigme in enigmes_perso:
-        if enigme.image:
-            if enigme not in liste_images:
-                liste_images[enigme.image] = [enigme]
-            else:
-                liste_images[enigme.image].append(enigme)
-    print(liste_images)
-
-    liste_pj = {}
-    for enigme in enigmes_perso:
-        if enigme.fichier:
-            if enigme not in liste_pj:
-                liste_pj[enigme.fichier] = [enigme]
-            else:
-                liste_pj[enigme.fichier].append(enigme)
-    print(liste_pj) """
-
     context['enigmes_par_image'] = enigmes_par_image
     context['enigmes_par_fichier'] = enigmes_par_fichier
-
-    print(context)
 
     return render(request, 'enigmes/mes_fichiers.html', context)
 
@@ -202,7 +183,7 @@ class EnigmeListView(LoginRequiredMixin, ListView):
     model = Enigme
     template_name = 'enigmes/liste.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'enigmes'
-    ordering = ['date_creation']
+    #ordering = ['date_creation']
 
     def get_context_data(self, **kwargs):
         # Appel à l'implémentation d'origine pour récupérer le contexte
@@ -212,10 +193,27 @@ class EnigmeListView(LoginRequiredMixin, ListView):
         context['enigmes_perso'] = False
         return context
 
+    def get_queryset(self):
+        # pour limiter le nombre de requêtes SQL
+        # on récupère en une seule requête les énigmes et les auteurs, fichiers et images
+        # en pratique c'est une jointure qui est faite
+        return Enigme.objects.order_by('date_creation').select_related('auteur', 'fichier', 'image')
+
 class EnigmeDetailView(LoginRequiredMixin, DetailView):
     model = Enigme
     context_object_name = 'enigme'
 
+    def get_context_data(self, **kwargs):
+        # Appel à l'implémentation d'origine pour récupérer le contexte
+        context = super().get_context_data(**kwargs)
+        # Ajout au contexte
+        context['titre'] = "Toutes les énigmes"
+        context['enigmes_perso'] = False
+        return context
+
+    def get_queryset(self):
+        # pour limiter le nombre de requêtes SQL
+        return Enigme.objects.select_related('auteur', 'fichier', 'image').filter(pk=self.kwargs['pk'])
 
 class EnigmeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Enigme
@@ -277,7 +275,7 @@ class EnigmeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 @login_required
 def mes_enigmes(request):
-    enigmes_perso = Enigme.objects.filter(auteur=request.user)
+    enigmes_perso = Enigme.objects.select_related('auteur', 'fichier', 'image').filter(auteur=request.user).order_by('date_creation')
     context = {
         "enigmes": enigmes_perso,
         "titre": "Mes énigmes",
@@ -287,7 +285,7 @@ def mes_enigmes(request):
 
 @login_required
 def enquete(request, enquete_id):    
-    enquete = get_object_or_404(Enquete, pk=enquete_id)
+    enquete = get_object_or_404(Enquete.objects.select_related('auteur'), pk=enquete_id)
     
     if request.method == 'POST':
         try:
@@ -342,9 +340,9 @@ def enquete(request, enquete_id):
         except IntegrityError:
             messages.warning(request, "Une erreur interne est apparue. Merci de recommencer.")
 
-    liste_enigmes = enquete.liste_enigmes_ordre_initial()
+    liste_enigmes = enquete.liste_enigmes_ordre_initial
     
-    liste_num_enigmes = enquete.liste_numeros_enigmes_ordre_initial()
+    liste_num_enigmes = enquete.liste_numeros_enigmes_ordre_initial
     nb_resultats = Resultat.objects.filter(enquete=enquete).count()
     context = {
         "enquete": enquete,
@@ -371,7 +369,7 @@ def creation_enquete(request):
 @login_required
 def creation_enquete_manuelle(request):
     context = {
-        "enigmes": Enigme.objects.all(),
+        "enigmes": Enigme.objects.order_by('date_creation').select_related('auteur', 'fichier', 'image'),
         "titre": "Créer une enquête par sélection manuelle"
     }
 
@@ -471,7 +469,7 @@ def modification_enquete(request, enquete_id):
 @login_required
 def modification_enquete_manuelle(request, enquete_id):
 
-    enquete = get_object_or_404(Enquete, pk=enquete_id)
+    enquete = get_object_or_404(Enquete.objects.prefetch_related('enigmes', 'auteur'), pk=enquete_id)
 
     if request.user != enquete.auteur:
         raise PermissionDenied
@@ -484,7 +482,7 @@ def modification_enquete_manuelle(request, enquete_id):
 
     context = {
         "code": code_enquete,
-        "enigmes": Enigme.objects.all(),
+        "enigmes": Enigme.objects.all().prefetch_related('auteur', 'fichier', 'image'),
     }
 
     if request.method == 'POST':
@@ -710,7 +708,7 @@ def modification_enquete_liste(request, enquete_id):
                 'ordre_aleatoire': enquete.ordre_aleatoire,
             }
         )
-        context['enigmes'] = enquete.liste_enigmes_ordre_initial()
+        context['enigmes'] = enquete.liste_enigmes_ordre_initial
     context['form'] = form
     return render(request, 'enigmes/enquete_update_form_cle.html', context)
 
@@ -894,7 +892,7 @@ def partage_enquete(request, code_enquete):
         context = {'form': form}
         context['code'] = code_enquete
         context['cle'] = enquete_a_copier.cle
-        context['enigmes'] = enquete_a_copier.liste_enigmes_ordre_initial()
+        context['enigmes'] = enquete_a_copier.liste_enigmes_ordre_initial
             
     return render(request, 'enigmes/enquete_partage.html', context)
 
@@ -913,7 +911,7 @@ def partage_enquete_v0(request, code_enquete):
                 cle_entree = donnees['cle']
                 enquete_a_copier = Enquete.objects.get(code=code_enquete)
                 if enquete_a_copier.cle == cle_entree:
-                    context['enigmes'] = enquete_a_copier.liste_enigmes_ordre_initial()
+                    context['enigmes'] = enquete_a_copier.liste_enigmes_ordre_initial
                     return render(request, 'enigmes/enquete_partage.html', context)
                 else:
                     cle_nettoyee = cle_entree.replace(" ", "")  # suppression des espaces éventuels
@@ -989,7 +987,7 @@ def partage_enquete_v0(request, code_enquete):
             cle = enquete_a_copier.cle
             form = EnqueteShareForm(initial = {'cle': cle})
             context = {'form': form}
-            context['enigmes'] = enquete_a_copier.liste_enigmes_ordre_initial()
+            context['enigmes'] = enquete_a_copier.liste_enigmes_ordre_initial
             
     return render(request, 'enigmes/enquete_partage.html', context)
 
@@ -1084,6 +1082,23 @@ def suppression_enquete(request, enquete_id):
     
     return render(request, 'enigmes/enquete_confirm_delete.html', context)
     
+def bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses):
+    '''
+    liste_enigmes : list[Enigme]
+    bonnes_reponses : dict
+    resultat: Resultat
+    '''
+    correction_reponses = {num_enigme: None for num_enigme in bonnes_reponses.keys()}
+    reponses_eleve = resultat.dictionnaire_reponses_eleve()
+    
+    for enigme in liste_enigmes:
+        lst_bonnes_reponses = enigme.liste_reponses()  # les réponses de cette liste sont nettoyées
+        if reponse_nettoyee(resultat.dictionnaire_reponses_eleve()[enigme.pk]) in lst_bonnes_reponses:
+            correction_reponses[enigme.pk] = True
+        else:
+            correction_reponses[enigme.pk] = False
+    
+    return correction_reponses
 
 def eleve(request, code_enquete):
     try:
@@ -1101,9 +1116,9 @@ def eleve(request, code_enquete):
     
 
     if not enquete.ordre_aleatoire:
-        liste_enigmes = enquete.liste_enigmes_ordre_initial()
+        liste_enigmes = enquete.liste_enigmes_ordre_initial
     else:
-        liste_enigmes = enquete.liste_enigmes()
+        liste_enigmes = enquete.liste_enigmes
     context = {
         "enquete": enquete,
         "enigmes": liste_enigmes,
@@ -1111,31 +1126,34 @@ def eleve(request, code_enquete):
 
     if request.method == 'POST':
         try:
-            form = EnqueteEleveForm(request.POST, enigmes=liste_enigmes)
-            context['form'] = form
-            if form.is_valid():
-                donnees = form.cleaned_data
-                identifiant_eleve = donnees['id_eleve']
-                # recupération des réponses
-                liste_num_enigmes = enquete.liste_numeros_enigmes()  # liste de int
-                # construction du champ "reponses" du modèle
-                dic_reponses = {num: donnees[str(num)] for num in liste_num_enigmes}
-                # enregistrement
-                resultat = Resultat.objects.create(
-                    enquete=enquete,
-                    id_eleve=identifiant_eleve,
-                    reponses=str(dic_reponses) 
-                )
-                # si réponses affichées
-                if enquete.correction or enquete.score:
-                    context['reponses'] = dic_reponses
-                    context['score'] = resultat.calcul_score()
-                    context['correction'] =  resultat.bonnes_mauvaises_reponses()
-                    return render(request, 'enigmes/enquete_eleve_reponses.html', context)
-                # sinon redirection vers remerciements
-                
-                else:
-                    return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
+            with transaction.atomic():
+                form = EnqueteEleveForm(request.POST, enigmes=liste_enigmes)
+                context['form'] = form
+                if form.is_valid():
+                    donnees = form.cleaned_data
+                    identifiant_eleve = donnees['id_eleve']
+                    # recupération des réponses
+                    liste_num_enigmes = enquete.liste_numeros_enigmes_ordre_initial  # liste de int
+                    # construction du champ "reponses" du modèle
+                    dic_reponses = {num: donnees[str(num)] for num in liste_num_enigmes}
+                    # enregistrement
+                    resultat = Resultat.objects.create(
+                        enquete=enquete,
+                        id_eleve=identifiant_eleve,
+                        reponses=str(dic_reponses) 
+                    )
+                    # si réponses affichées
+                    if enquete.correction or enquete.score:
+                        bonnes_reponses = enquete.dico_bonnes_reponses()
+                        correction_reponses = bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses)
+                        context['reponses'] = dic_reponses
+                        context['score'] = list(correction_reponses.values()).count(True)
+                        context['correction'] = correction_reponses
+                        return render(request, 'enigmes/enquete_eleve_reponses.html', context)
+                    # sinon redirection vers remerciements
+                    
+                    else:
+                        return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
         except:
             messages.error(request, "Une erreur interne s'est produite. Les réponses n'ont pas été envoyées.")
     else:
@@ -1143,15 +1161,87 @@ def eleve(request, code_enquete):
         context['form'] = form
     return render(request, 'enigmes/enquete_eleve.html', context)
 
+
+def reponse_nettoyee(ch: str) -> str :
+    """
+    Renvoie une nouvelle chaine, en minuscules, correspond à la chaine ch mais
+    avec suppression des espaces de fin et début, et des accents.
+    Permet de comparer deux réponses.
+    Ex : 
+    >>> reponse_nettoyee(' Épinal    ')
+    'epinal' 
+    """
+    
+    # suppression des accents
+    import unicodedata
+    s = ''.join(c for c in unicodedata.normalize('NFD', ch)
+                if unicodedata.category(c) != 'Mn')
+    # suppression de espaces de début et fin
+    s = s.strip()
+    # en minuscules
+    return s.lower()
+
+def dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses):
+    '''
+    liste_enigmes : list[Enigme]
+    bonnes_reponses : dict
+    resultat: Resultat
+    '''
+    correction_reponses = {num_enigme: None for num_enigme in bonnes_reponses.keys()}
+    reponses_eleve = resultat.dictionnaire_reponses_eleve()
+    
+    for enigme in liste_enigmes:
+        lst_bonnes_reponses = enigme.liste_reponses()  # les réponses de cette liste sont nettoyées
+        if reponse_nettoyee(resultat.dictionnaire_reponses_eleve()[enigme.pk]) in lst_bonnes_reponses:
+            correction_reponses[enigme.pk] = True
+        else:
+            correction_reponses[enigme.pk] = False
+    
+    d = {
+        "id": resultat.id_eleve,
+        "score": list(correction_reponses.values()).count(True),
+        "reponses": {
+            enigme.pk: {
+                "rep_eleve": reponses_eleve[enigme.pk],
+                "correct": correction_reponses[enigme.pk]
+            }
+            for enigme in liste_enigmes
+        },
+        "date": resultat.date
+    }
+
+    return d
+
+
+""" def dico_complet_reponses_eleve(resultat, correction_reponses, liste_enigmes):
+    d = {
+        "id": resultat.id_eleve,
+        "score": list(correction_reponses.values()).count(True),
+        "reponses": {
+            enigme.pk: {
+                "rep_eleve": resultat[enigme.pk],
+                "correct": correction_reponses[enigme.pk]
+            }
+            for enigme in liste_enigmes
+        },
+        "date": resultat.date
+    }
+    return d """
+
+
 @login_required
 def resultats_enquete(request, enquete_id):
-    enquete = get_object_or_404(Enquete, pk=enquete_id)
-    liste_enigmes = enquete.liste_enigmes_ordre_initial()
-    liste_num_enigmes = enquete.liste_numeros_enigmes_ordre_initial()
-    liste_resultats = Resultat.objects.filter(enquete=enquete)
-    liste_complete = [resultat.dico_complet() for resultat in liste_resultats]
+    enquete = get_object_or_404(Enquete.objects.prefetch_related('enigmes'), pk=enquete_id)
+    liste_enigmes = enquete.liste_enigmes_ordre_initial
+    bonnes_reponses = enquete.dico_bonnes_reponses()
     
-    nb_bonnes_reponses = {num_enigmes: 0 for num_enigmes in liste_num_enigmes}
+    liste_resultats = Resultat.objects.select_related('enquete').filter(enquete=enquete)
+
+    liste_complete = [dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses) for resultat in liste_resultats]
+
+    liste_num_enigmes = enquete.liste_numeros_enigmes_ordre_initial
+    
+    nb_bonnes_reponses = {enigme.pk: 0 for enigme in liste_enigmes}
     for dico_resultat in liste_complete:
         for enigme in dico_resultat["reponses"]:
             if dico_resultat["reponses"][enigme]["correct"]:

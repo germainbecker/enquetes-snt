@@ -13,7 +13,8 @@
             <p>Pour ajouter une énigme, il faut remplir les champs ci-dessous. La zone d'aperçu vous permet de visualiser en direct l'énigme que vous créez. Voici quelques explications :</p>
             <ul>
                 <li>Seuls les champs <strong>Thème</strong>, <strong>Énoncé</strong> et <strong>Réponse</strong> sont obligatoires.</li>
-                <li>Le champ <strong>Réponse</strong> est limité à 100 caractères. Les réponses proposée par les élèves seront comparées à celle entrée par l'auteur mais une comparaison sera aussi effectuée entre leurs conversions respectives en minuscules pour éviter les problèmes de casse (si vous saisissez <em>Bordeaux</em> comme réponse attendue et qu'un élève saisi <em>bordeaux</em>, sa réponse sera ainsi jugée correcte). Une suppression des espaces en début et fin est également mise en oeuvre pour la comparaison.</li>
+                <li>Le champ <strong>Réponse</strong> est limité à 100 caractères. Après avoir saisi une première réponse (champ obligatoire), il est possible d'ajouter jusqu'à 3 autres réponses qui seront également acceptées. Cela peut s'avérer utile dans certains cas : par exemple, si la réponse attendue à une énigme est "CSV", on aura alors la possibilité de définir les réponses "CSV", "Comma-separated values" et "Comma separated values" comme réponses acceptées.
+                </br>Les réponses proposées par les élèves seront comparées à celle(s) entrée(s) par l'auteur en prenant soin de toutes les convertir en minuscules pour éviter les problèmes de casse (si vous saisissez <em>Bordeaux</em> comme réponse attendue et qu'un élève saisi <em>bordeaux</em>, sa réponse sera ainsi jugée correcte). Une suppression des éventuelles espaces inutiles en début et fin est également mise en oeuvre pour la comparaison.</li>
                 <li>Le champ <strong>Indication</strong> a pour but d'apporter une aide aux élèves (un indice ou lien par exemple pour trouver la réponse). Il est optionnel et il suffit de le laisser vide pour ne pas ajouter d'indications à votre énigme.
                 <br>Lors de la création d'une enquête pour vos élèves, il est possible de spécifier si ces derniers auront accès, si elles existent, aux indications des énigmes ou non. Il est donc possible d'ajouter une indication à l'énigme et choisir ensuite de la donner ou non aux élèves.</li>
                 <li>Les champs <strong>Énoncé</strong> et <strong>Indication</strong> peuvent être rédigés en Markdown ou en HTML : ces deux champs sont complétés ci-dessous pour vous donner des exemples. Notez qu'il est aussi possible d'écrire en LaTex : pour le moment, la prévisualisation pour le LaTeX ne se fait que lorsque l'on quitte le champ de saisie ou que l'on clique sur le bouton <em>Actualiser</em> dont c'est la seule utilité a priori.</li>
@@ -26,7 +27,7 @@
                 </ul>
                 Lorsqu'une image d'illustration est définie, le champ <strong>Crédits de l'image</strong> permet d'indiquer la licence de l'image, son auteur, sa source, etc. Cette partie sera affichée juste en dessous de l'image d'illustration.
                 </li>
-                <li>Le champ <strong>Fichier en pièce jointe</strong> est également optionnel et permet de sélectionné un fichier que vous aurez préalablement téléversé sur le serveur via l'onglet "Mes fichiers". Ce fichier pourra être téléchargé par les élèves et le lien de téléchargement est positionné entre l'énoncé et l'indication.</li>
+                <li>Le champ <strong>Fichier en pièce jointe</strong> est également optionnel et permet de sélectionner un fichier que vous aurez préalablement téléversé sur le serveur via l'onglet "Mes fichiers". Ce fichier pourra être téléchargé par les élèves et le lien de téléchargement est positionné entre l'énoncé et l'indication.</li>
             </ul>
             <p>Vous pouvez observer et jouer avec l'exemple ci-dessous si vous le souhaitez. Des images </p>    
         </div>
@@ -34,18 +35,34 @@
             <form>
                 {{ form.non_field_errors }}
                 {% for field in form %}
+                    {% if field.name != 'reponse2' and field.name != 'reponse3' and field.name != 'reponse4' %}
                     <p>
                         <label for="{{ field.id_for_label }}">
                             {{field.label}} {% if field.field.required %} (obligatoire) {% endif %} :
                         </label>
                         {{field}}
-                        {{field.errors}}
                         {% if field.help_text %}
                             <span class="helptext">{{ field.help_text|safe }}</span>
                         {% endif %}
                     </p>
+                    {{field.errors}}
+                    {% else %}
+                    <p class="champ-reponse hidden" id="champ-{{field.name}}">
+                        {{field}}
+                        {{field.errors}}
+                    </p>
+                    {% endif %}
+                    {% if field.name == 'reponse4' %}
+                    <div class="btn-ajout-reponse">
+                        <button id="ajouter-reponse" type="button">Ajouter une réponse</button>
+                    </div>
                     
+                    
+                    {% endif %}
                 {% endfor %}
+                <div class="btn-form">
+                    <button class="btn-validation" type="submit">Ajouter l'énigme dans la base</button>
+                </div>
             </form>
             <div class="zone-apercu-container">
                 <div class="titre-btn-actualiser">
@@ -80,7 +97,8 @@
                                 <div class="enigme-reponse">
                                     <details>
                                         <summary><span class="voir-reponse">Voir la réponse</span></summary>
-                                        <p>Réponse attendue : <span class="reponse">{{ enigme.reponse }}</span></p>
+                                        <p>Réponse attendue : <span class="reponse-affichee">{{ enigme.reponse }}</span></p>
+                                        <p id="autres-reponses">Autre(s) réponse(s) acceptée(s) : <span class="autres-reponses-affichees"></span></p>
                                     </details>
                                 </div>
                             </div>   
@@ -97,7 +115,7 @@
 {% block jsfiles %}
 {% load static %}
 <!-- Conversion markdown en HTML -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markedjs@3.0.4/marked.min.js" integrity="sha256-FAroCWEq31+au9TcBuLcuS+WvfVvGaVlY9tV9gntJZ8=" crossorigin="anonymous"></script>
 
 <!-- DOMPurify : purificateur de HTML -->    
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.9/purify.min.js"></script>
