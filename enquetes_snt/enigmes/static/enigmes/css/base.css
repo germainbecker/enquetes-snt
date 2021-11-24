@@ -1,11 +1,8 @@
 :root {
-    /* --main: rgb(93 33 188); */
-    /* --main: rgb(140 180 210); */
     --main: rgb(150 200 236);
     --main-darker: rgb(61 105 150);
     --main-semi-light: rgb(130 99 179);
     --main-light: rgb(246, 244, 255);
-    /* --second: rgb(249, 78, 84); */
     --second: rgb(251, 107, 45);
     --third: rgb(251, 107, 45);
     --third-semi-light: rgb(234 126 78);
@@ -936,6 +933,11 @@ li {
     line-height: 1.4em;
 }
 
+.enigme-creation-container {
+    max-width: 1600px;
+    margin: auto;
+}
+
 @media all and (max-width: 768px) {
     .enigme-creation-container {
         font-size: 0.9em;
@@ -1208,22 +1210,14 @@ li {
     margin-right: 10px;
 }
 
-/* .enigme-metadata h3 {
-    font-size: 1.6em;
-    line-height: 2.125rem;
 
-} */
 
 .enigme-metadata .metadata h2[class*="num-enigme"] a {
-/*     background-color: var(--second);
-    color: white; */
     color: #111;
     text-decoration: none;
 }
 
 .enigme-metadata .metadata h2[class*="num-enigme"] a:hover {
-/*     background-color: var(--second);
-    color: white; */
     color: var(--second);
 }
 
@@ -1236,13 +1230,9 @@ li {
 .enigme-metadata .metadata .auteur {
     display: flex;
     gap: 5px;
-    /* background-color: var(--main); */
     color: var(--main-darker);
-    /* padding: 2px 5px; */
-    /* border-radius: 5px; */
     font-weight: bold;
     margin-left: auto;
-    /* margin-right: 20px; */
 }
 
 .enigme-metadata .metadata .auteur .icone-auteur {
@@ -1342,8 +1332,7 @@ img.agrandir {
 }
 
 .modal-content{
-    width: 90%;/* 
-    max-height: 90vh; */
+    width: 90%;
     margin: auto;
     position: fixed;
     top: 50%;
@@ -1421,11 +1410,6 @@ img.agrandir {
     fill: var(--main-darker);
 }
 
-/* .piece-jointe img {
-    width: 30px;
-    padding: 10px;
-} */
-
 .piece-jointe a {
     color: #222;
     width: auto;
@@ -1434,10 +1418,6 @@ img.agrandir {
 .piece-jointe a:hover {
     color: var(--main-darker);
 }
-
-/* span.texte-pj {
-    width: 235px;
-} */
 
 /* Indication */ 
 
@@ -1466,43 +1446,6 @@ img.agrandir {
     border-radius: 0.3em;
     gap: 10px;
 }
-
-/* .enigme blockquote[class*="enigme-indication"] p {
-    margin-block-start: 0;
-} */
-
-/* .enigme blockquote[class*="enigme-indication"]{
-	background-color: rgb(220,240,255);
-    border-radius: 0.3em;
-}
-
-.enigme blockquote[class*="enigme-indication"] > p {
-    display: inline;
-}
-
-.enigme blockquote[class*="enigme-indication"]:before{
-	content: url(../img/info.svg);
-    position: relative;
-    top: 5px;
-    margin-right: 10px;
-} */
-
-
-
-/* .enigme .enigme-reponse {
-    border-left: 20px solid rgb(213, 243, 211);
-    padding: 5px;
-}
-
-.enigme .enigme-reponse * {
-    margin: 0;
-    padding: 0;
-} */
-
-/* summary::marker {
-    color: var(--second);
-    font-size: 1.3em;
-} */
 
 /* Zone Réponse */
 
@@ -1581,22 +1524,6 @@ summary span:hover {
 }
 
 /* Aperçu énigme avant ajout */
-
-/* .apercu-container {
-    padding: 10px 20px;
-}
-
-@media all and (max-width: 768px) {
-    .apercu-container {
-        padding: 10px 15px;
-    }
-}
-
-@media all and (max-width: 500px) {
-    .apercu-container {
-        padding: 8px 10px;
-    }
-} */
 
 .apercu {
     margin-bottom: 20px;
@@ -1680,25 +1607,6 @@ summary span:hover {
     border-radius: 0.3em;
     gap: 10px;
 }
-
-/* .apercu blockquote[class*="apercu-indication"]{
-	background-color: rgb(220,240,255);
-    border-radius: 0.3em;
-}
-
-.apercu blockquote[class*="apercu-indication"] > p {
-    display: inline;
-}
-
-.apercu blockquote[class*="apercu-indication"]::before{
-	content: url(/static/enigmes/img/info48.svg);
-    position: relative;
-    top: 5px;
-    margin-right: 10px;
-} */
-
-
-
 
 /* Création enquête */
 
@@ -1830,7 +1738,6 @@ summary span:hover {
 }
 
 .infos-enquete {
-    /* min-width: 320px; */
     max-width: 370px;
     background-color: var(--main-darker);
     color: white;
@@ -1871,14 +1778,6 @@ summary span:hover {
 .infos-enquete .lien-url-enquete:hover {
     cursor: pointer;
 }
-
-/* .infos-enquete span.oui-non {
-    color: var(--main-darker);
-    background-color: white;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 10px;
-} */
 
 .infos-enquete .btn-suppression-enquete {
     margin-top: 20px;
@@ -1945,7 +1844,6 @@ summary span:hover {
 }
 
 .param-enquete {
-    /* min-width: 280px; */
     background-color: var(--third-light);
     color: var(--second);
 }
@@ -2038,8 +1936,7 @@ summary span:hover {
     background-color: var(--third-semi-light);
 }
 
-.bilan-enquete {    
-    /* min-width: 240px; */
+.bilan-enquete {
     background-color: var(--main-light);
     color: var(--main);
 }
@@ -2070,10 +1967,6 @@ summary span:hover {
     padding-bottom: 5px;
     border-bottom: 2px solid var(--main-darker);
 }
-
-/* .bilan-enquete img.external-link {
-    margin-left: 0;
-} */
 
 .bilan-enquete .info {
     color: var(--main-darker);
@@ -2148,11 +2041,6 @@ summary span:hover {
     display: flex;
     align-items: center;
 }
-
-/* .bilan-enquete li#ligne-resultats img {
-    width: 35px;
-    margin-left: 10px;
-} */
 
 .bilan-enquete li#ligne-resultats svg {
     width: 35px;
@@ -2292,7 +2180,6 @@ summary span:hover {
 
 .zone-creation .creation-contenu img {
     margin-right: 10px;
-    /* background-color: lightcoral; */
 }
 
 .zone-creation .creation-contenu svg {
@@ -2331,7 +2218,6 @@ summary span:hover {
 }
 
 #tableau-de-bord td, #tableau-de-bord th {
-    /* border: 1px solid #ddd; */
     padding: 8px;
 }
 
@@ -2343,10 +2229,6 @@ summary span:hover {
     background-color: #ececec;
 }
 
-/* #tableau-de-bord tr:hover {
-    background-color: rgb(250, 250, 250);
-}
- */
 #tableau-de-bord th {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -2563,28 +2445,6 @@ td.enquete-active span {
     margin: auto;
 }
 
-/* #zone-titre-infos-enquetes {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#zone-titre-infos-enquetes svg {
-    max-width: 30px;
-    min-width: 30px;
-    max-height: 30px;
-    min-height: 30px;
-}
-
-#zone-titre-infos-enquetes svg path {
-    fill: var(--main-darker);
-}
-
-#zone-titre-infos-enquetes #titre-infos-enquetes {
-    margin:0;
-    color: var(--main-darker);
-}
- */
 #autres-actions {
     display: flex;
     justify-content: center;
@@ -2754,7 +2614,7 @@ input:checked + .slider:before {
 }
 
 #fetch-call:hover #icone-actualiser {
-    transform: scale(1.1) /*rotate(180deg)*/;
+    transform: scale(1.1);
 }
 
 /* modale de chargement au clic sur "Actualiser" */
@@ -3045,11 +2905,6 @@ input:checked + .slider:before {
     font-weight: bold;
 }
 
-
-/* FIN TESTS */
-
-
-
 .form-inscription {
     max-width: 400px;
     margin: auto;
@@ -3133,11 +2988,6 @@ button#ajouter-reponse:hover {
     margin: 0;
 }
 
-/* .btn-form {
-    text-align: center;
-    margin: 20px 0;
-} */
-
 .btn-form {
     display: flex;
     justify-content: center;
@@ -3215,19 +3065,6 @@ button#ajouter-reponse:hover {
     height: 13em; 
 }
 
-/* .form-creation .label-file {
-    color: var(--main);
-    font-size: 0.9em;
-    font-weight: normal;
-    border: 1px solid var(--main);
-    border-radius: 5px;
-    padding: 5px;
-}
-
-.form-creation .input-file  {
-    display: none;
-} */
-
 .btn-form-supp-valid {
     margin: 20px 0;
 }
@@ -3266,6 +3103,11 @@ button#ajouter-reponse:hover {
 
 /* --- Formulaire Modification énigme --- */
 
+.enigme-modification-container {
+    max-width: 1600px;
+    margin: auto;
+}
+
 @media all and (max-width: 768px) {
     .enigme-modification-container {
         font-size: 0.9em;
@@ -3303,16 +3145,6 @@ button#ajouter-reponse:hover {
     color: inherit;
     font-weight: inherit;
 }
-
-/* #fichier-actuel {
-    display: flex;
-    margin: 1em 0;
-    gap: 10px;
-}
-
-#fichier-actuel .file-reset {
-    display: block;
-} */
 
 .changer-pj {
     display: flex;
@@ -3384,7 +3216,6 @@ button#ajouter-reponse:hover {
 
 .form-reponses-enquete .zone-id {
     background-color: var(--main-darker);
-    /* border: 1px solid #ccc; */
     max-width: 300px;
     margin: auto;
     margin-top: 20px;
@@ -3568,12 +3399,6 @@ button#ajouter-reponse:hover {
 
 
 /* Aperçu énigme */
-
-/* .zone-apercu {
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: white;
-} */
 
 .zone-apercu p {
     display: block;
