@@ -127,19 +127,6 @@ function apercuReponse() {
         document.querySelector(".enigme-reponse").style.display = "none";
     }
 
-    /* let reponseMD = document.getElementById("id_reponse").value;
-
-    if (!(reponseMD == "")) {
-        let reponseHTML = marked(reponseMD);  // conversion en HTML
-        let reponseCleanHTML = DOMPurify.sanitize(reponseHTML);
-        let tmp = document.createElement("DIV");
-        tmp.innerHTML = reponseCleanHTML;
-        document.querySelector(".reponse-affichee").innerHTML = tmp.textContent;
-        document.querySelector(".enigme-reponse").style.display = "initial";
-    } else {
-        document.querySelector(".enigme-reponse").style.display = "none";
-    } */
-
     // recharger JS
     Prism.highlightAll(async=true);
 }
