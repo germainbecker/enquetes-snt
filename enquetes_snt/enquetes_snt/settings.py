@@ -228,6 +228,9 @@ MARKDOWNIFY = {
             'alt',
             'class',
             'style',
+        ],
+        "WHITELIST_STYLES": [
+            'display',
         ]
     }
     
