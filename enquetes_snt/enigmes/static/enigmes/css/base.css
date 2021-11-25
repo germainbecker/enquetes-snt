@@ -3008,7 +3008,7 @@ button#ajouter-reponse:hover {
     background-color: var(--main-darker);
     color: white;
     font-size: 15px;
-    padding: 5px 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
 }

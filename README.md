@@ -314,7 +314,7 @@ Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent 
 
 # Participer à la cagnotte
 
-Cagnotte : [https://www.onparticipe.fr/cagnottes/bNagoLGz](https://www.onparticipe.fr/cagnottes/bNagoLGz)
+Cagnotte : [https://www.onparticipe.fr/cagnottes/ma0eZaj1](https://www.onparticipe.fr/cagnottes/ma0eZaj1)
 
 Si l'application vous a été utile et que vous le souhaitez, vous pouvez contribuer à la cagnotte et ainsi participer aux frais engagés pour son fonctionnement. 
 
