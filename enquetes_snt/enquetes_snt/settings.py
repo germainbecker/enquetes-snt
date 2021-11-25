@@ -227,6 +227,7 @@ MARKDOWNIFY = {
             'src',
             'alt',
             'class',
+            'style',
         ]
     }
     
