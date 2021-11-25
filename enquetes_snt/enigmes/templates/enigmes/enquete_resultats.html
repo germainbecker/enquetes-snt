@@ -49,11 +49,17 @@
     <div class="actualisation">
         <form method="POST">
             {% csrf_token %}
-            <div id="btn-actualiser">
-                <button id="fetch-call" type="submit">
-                    <img id="icone-actualiser" src="{% static 'enigmes/img/refresh.svg' %}" alt="icone actualisation">
-                    <span>Actualiser</span>
-                </button>
+            <div class="actualisations">
+                <div id="btn-actualiser">
+                    <button id="fetch-call" type="submit">
+                        <img id="icone-actualiser" src="{% static 'enigmes/img/refresh.svg' %}" alt="icone actualisation">
+                        <span>Actualiser</span>
+                    </button>
+                </div>
+                <div class="case-actualisation-automatique">
+                    <input type="checkbox" id="case-actualisation-automatique" name="actualisation-automatique">
+                    <label for="case-actualisation-automatique">Actualisation automatique (toutes les 15 secondes)</label>
+                </div>
             </div>
         </form>
     </div>

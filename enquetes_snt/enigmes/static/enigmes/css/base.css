@@ -2617,6 +2617,12 @@ input:checked + .slider:before {
     transform: scale(1.1);
 }
 
+.actualisations { /* case à cocher pour actualisation automatique */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 /* modale de chargement au clic sur "Actualiser" */
 
 .modal-actualisation {

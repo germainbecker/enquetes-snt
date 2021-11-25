@@ -9,31 +9,10 @@ gestionIdentifants();
 gestionReponses();
 gestionResultats();
 
-
-
 document.getElementById("switch-id").addEventListener("change", gestionIdentifants);
 document.getElementById("switch-reponses").addEventListener("change", gestionReponses);
 document.getElementById("switch-resultats").addEventListener("change", gestionResultats);
 document.getElementById("switch-tri").addEventListener("change", gestionTri);
-
-
-/* function cacheIdentifiants() {
-    var identifiantsElevesBefore = document.querySelectorAll(".cache-eleve");
-    var identifiantsEleves = document.querySelectorAll(".id-eleve");
-    for (var i = 0; i < identifiantsEleves.length; i++) {
-        identifiantsElevesBefore[i].dataset.cache = "●●●●";
-        identifiantsEleves[i].style.display = "none";
-    }
-}
-
-function afficheIdentifiants() {
-    var identifiantsElevesBefore = document.querySelectorAll(".cache-eleve");
-    var identifiantsEleves = document.querySelectorAll(".id-eleve");
-    for (var i = 0; i < identifiantsEleves.length; i++) {
-        identifiantsElevesBefore[i].dataset.cache = "";
-        identifiantsEleves[i].style.display = "block";
-    }
-} */
 
 function gestionIdentifants() {
     var identifiantsElevesBefore = document.querySelectorAll(".cache-eleve");
@@ -170,25 +149,6 @@ function triChronologique() {
     }    
 }
 
-/* function toggleReponses() {
-    var reponsesEleves = document.querySelectorAll(".reponse");
-    for (var i = 0; i < reponsesEleves.length; i++) {
-        reponsesEleves[i].classList.toggle("hidden");
-    }
-    reponsesAffichees = !reponsesAffichees;
-}
-
-function toggleResultats() {
-    var zoneReponsesEleves = document.querySelectorAll(".correct, .incorrect");
-    var svgReponses = document.querySelectorAll(".correct svg, .incorrect svg");
-    var reponsesEleves = document.querySelectorAll(".reponse");
-    for (var i = 0; i < reponsesEleves.length; i++) {
-        zoneReponsesEleves[i].classList.toggle("masque-reponse");
-        svgReponses[i].classList.toggle("hidden");
-    }
-    afficherResultats = !afficherResultats;
-} */
-
 function gestionTri() {    
     if (document.getElementById("switch-tri-checkbox").checked) {
         triAlphabetique();
@@ -202,11 +162,12 @@ function gestionTri() {
 
 document.querySelector("#fetch-call").addEventListener("click", event => {
     event.preventDefault(); // le formulaire ne doit pas être envoyé (sinon rafraichissement page)
-    // animation icone de chargement
-    const modale = document.querySelector("#modale-actualisation");
-    const iconeModale = document.querySelector(".modal-actualisation-content img");
-    modale.classList.add("show");
-    iconeModale.classList.add("rotate");
+    if (!(checkboxActualisationAuto.checked)) {
+        voirAnimationChargement();
+    } else {
+        cacherAnimationChargement();
+    }
+    
     // Création d'une requête à envoyer au serveur
     let formData = new FormData();
     formData.append('maj', 'true');
@@ -227,6 +188,38 @@ document.querySelector("#fetch-call").addEventListener("click", event => {
             iconeModale.classList.remove("rotate");   
         });
 });
+
+const modale = document.querySelector("#modale-actualisation");
+const iconeModale = document.querySelector(".modal-actualisation-content img");
+
+function voirAnimationChargement() {
+    // animation icone de chargement
+    modale.classList.add("show");
+    iconeModale.classList.add("rotate");
+}
+
+function cacherAnimationChargement() {
+    modale.classList.remove("show");
+    iconeModale.classList.remove("rotate");
+}
+
+var actualisationAuto;
+
+var checkboxActualisationAuto = document.querySelector("#case-actualisation-automatique");
+
+checkboxActualisationAuto.addEventListener('change', function() {
+  if (this.checked) {
+    actualisationAuto = setInterval(clicBoutonActualiser, 15000);
+  } else {
+    clearInterval(actualisationAuto);
+  }
+});
+
+function clicBoutonActualiser() {
+    document.querySelector("#fetch-call").click();
+}
+
+
 
 function majResultats(result) {
     const nbResultats = result['resultats'].length;

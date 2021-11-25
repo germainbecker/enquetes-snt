@@ -1212,23 +1212,6 @@ def dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes
 
     return d
 
-
-""" def dico_complet_reponses_eleve(resultat, correction_reponses, liste_enigmes):
-    d = {
-        "id": resultat.id_eleve,
-        "score": list(correction_reponses.values()).count(True),
-        "reponses": {
-            enigme.pk: {
-                "rep_eleve": resultat[enigme.pk],
-                "correct": correction_reponses[enigme.pk]
-            }
-            for enigme in liste_enigmes
-        },
-        "date": resultat.date
-    }
-    return d """
-
-
 @login_required
 def resultats_enquete(request, enquete_id):
     enquete = get_object_or_404(Enquete.objects.prefetch_related('enigmes'), pk=enquete_id)

@@ -169,7 +169,7 @@ Pour des raisons de performances et de sécurité, les formats et tailles de ces
 | Extensions acceptées | .jpg, .png | .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png, .json |
 | Taille maximale | 300 Kio | 1 Mio |
 
->**Attention** : La taille du serveur étant limitée, merci de ne téléverser que des fichiers absolument nécessaires aux énigmes. Concernant les images, privilégiez plutôt l'URL d'une image déjà sur le Web lorsque cela est possible.
+>**Attention** : La taille du serveur étant limitée, merci de ne téléverser que des fichiers absolument nécessaires aux énigmes. Concernant les images, privilégiez plutôt l'URL d'une image déjà sur le Web lorsque cela est possible, en veillant à limiter la définition des images lorsque cela est possible.
 
 # Enquêtes
 
@@ -219,11 +219,18 @@ La page de détail d'une enquête recense toutes les informations de l'enquête,
 
 ## Résultats d'une enquête
 
-La page de résultats d'une enquête permet de voir dans un tableau la réussite des élèves pour l'enquête, énigme par énigme. Il est possible de masquer/afficher les identifiants des élèves, leurs réponses, leurs résultats. Ceci a pour but de pouvoir visualiser en temps réel les résultats, tout en préservant si on le souhaite l'identité des élèves et leurs réponses. Cette page permet également de procéder directement à la correction de l'enquête puisque sous les résultats on retrouve les énigmes et leurs réponses.
+La page de résultats d'une enquête permet de voir dans un tableau la réussite des élèves pour l'enquête, énigme par énigme. Il est possible de masquer/afficher les identifiants des élèves, leurs réponses, leurs résultats. Ceci a pour but de pouvoir visualiser en temps réel les résultats, tout en préservant si on le souhaite l'identité des élèves et leurs réponses. 
+
+Le bouton **Actualiser** permet de mettre à jour le tableau avec les réponses reçues. On peut également cocher la case "Actualisation automatique" pour que les résultats soient mis à jour automatiquement toutes les 15 secondes.
 
 | ![Résultats d'une enquête](img/resultats_enquete.png) | 
 |:--:| 
 | *Résultats d'une enquête* |
+
+Cette page permet également de :
+
+* télécharger les résultats au au format CSV
+* procéder directement à la correction de l'enquête puisque sous les résultats on retrouve les énigmes et leurs réponses.
 
 ## Modification d'une enquête
 
@@ -246,6 +253,10 @@ Pour copier une enquête partagée sur son compte, il suffit d'être connecté �
 ## Accès à une enquête
 
 Lors de la création d'une enquête, un code de 8 caractères sera généré ainsi qu'un lien. Les élèves n'auront qu'à saisir ce code sur la page d'accueil pour accéder à l'enquête, ou suivre le lien.
+
+| ![Code à saisir](img/code_a_saisir.png) | 
+|:--:| 
+| *Saisie du code de l'enquête* |
 
 ## Résolution de l'enquête
 
@@ -272,6 +283,10 @@ Mais les trois qui suivent ne le sont pas :
 
 >De cette façon **aucune donnée personnelle** sur les élèves n'est récoltée. Les identifiants seront stockés dans la base de données et permettront d'associer un résultat à chaque élève pour chaque enquête.
 
+| ![Saisie identifiant](img/enquete_eleve.png) | 
+|:--:| 
+| *Saisie de l'identifiant lors d'une enquête* |
+
 L'élève saisi ensuite ses réponses aux différentes énigmes de l'enquête et peux valider en bas de page une fois qu'il a terminé. Des champs de réponse peuvent rester vide si toutefois il ne trouve pas les réponses.
 
 ## Score et correction
@@ -288,11 +303,11 @@ Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent 
 
 >J'ai voulu créer une application avant tout pour apprendre le développement Web, domaine que j'ai découvert il y a peu et qui m'intéresse beaucoup par son aspect créatif. Dans un second temps, pour que les choses soient plus concrètes et stimulantes, j'ai souhaité développer une application qui soit utile et l'idée des enquêtes me paraissait intéressante en ce sens. J'ai choisi de le faire avec le framework Django pour parfaire mes connaissances dans le langage Python.
 >
->Je ne suis pas un développeur professionnel, loin de là, et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible, qui n'est pas toujours très important en période scolaire.
+>Je ne suis pas un développeur professionnel, et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible.
 >
 >De même, si vous voyez des améliorations, qu'elles soient d'ordre pédagogique, technique ou ergonomique, n'hésitez pas à m'en faire part (vous trouverez une adresse de contact en bas des pages de l'application).
 >
->En espérant que cette application vous soit utile,
+>En espérant que cette application puisse vous être utile,
 >
 >Germain Becker
 

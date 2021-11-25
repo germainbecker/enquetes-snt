@@ -14,9 +14,7 @@ function ouvertureModale(item) {
     let domaineURL = window.location.host;
     let url = domaineURL + cheminURL;
 
-    // on l'écrit dans la zone de texte de la modale
-    
-
+    // on l'écrit dans la zone de texte de la modale 
     // on affiche la modale
     if (item.classList.contains('partage')) {
         let inputLienPartage = document.getElementById('input-lien-partage');
@@ -79,14 +77,12 @@ boutonsCopie.forEach(item => {
     })
 })
 
-
 let textInputs = document.querySelectorAll('#input-lien, #input-lien-partage');
 textInputs.forEach(item => {
     item.addEventListener('click', function() {
         item.select();
     })
 })
-
 
 // Affichage modale pour création du fichier CSV
 
