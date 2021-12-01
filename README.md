@@ -138,7 +138,7 @@ Très rapidement, une énigme est composée de 6 champs :
 
 1. Thème (obligatoire) : pour sélectionner le thème de l'énigme (l'un des 8 cités au-dessus)
 2. Énoncé (obligatoire) : pour saisir l'énoncé de l'énigme
-3. Réponse (obligatoire) : pour saisir la réponse à l'énigme
+3. Réponse (obligatoire) : pour saisir la réponse à l'énigme (il est possible de saisir jusqu'à 4 réponses acceptées)
 4. Indication (optionnel) : pour saisir une indication à destination des élèves (l'affichage des indications pourra être activée ou désactivée dans les paramètres d'une enquête)
 5. Image d'illustration (optionnel) : on peut au choix
     * indiquer un lien vers l'url d'une image en ligne
@@ -156,7 +156,7 @@ Sachez que les énoncés et indications peuvent être rédigées en **Markdown**
 **Remarques** :
 
 * La bibliothèque JavaScript qui permet de voir le rendu en direct, n'implémente pas le Markdown exactement de la même manière que celui utilisé par Python pour l'application. Il se peut donc qu'il y ait de légères différences entre la zone d'aperçu de création d'énigme et le rendu réel une fois l'énigme enregistrée en base de données.
-* Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
+* Même si c'est sans doute moins utile, il est également possible d'utiliser LaTeX (via la bibliothèque MathJax dont le script est téléchargé par le navigateur automatiquement). La visualisation ne se fait (pour le moment) pas en direct mais lorsque l'on quitte un champ de saisie ou si on clique sur le bouton _Actualiser_.
 
 # Téléversement de fichiers
 
@@ -168,6 +168,10 @@ Pour des raisons de performances et de sécurité, les formats et tailles de ces
 | --- | --- | --- |
 | Extensions acceptées | .jpg, .png | .csv, .ods, .xls, .xlsx, .py, .html, .css, .txt, .jpg, .png, .json |
 | Taille maximale | 300 Kio | 1 Mio |
+
+| ![Onglet Mes fichiers](img/mes_fichiers.png) | 
+|:--:| 
+| *Onglet Mes fichiers* |
 
 >**Attention** : La taille du serveur étant limitée, merci de ne téléverser que des fichiers absolument nécessaires aux énigmes. Concernant les images, privilégiez plutôt l'URL d'une image déjà sur le Web lorsque cela est possible, en veillant à limiter la définition des images lorsque cela est possible.
 
@@ -184,6 +188,10 @@ Il y a deux façons de créer une enquête :
 1. en sélectionnant les énigmes souhaitées en parcourant la liste d'énigmes
 2. en renseignant directement la liste des numéros des énigmes souhaitées
 
+| ![Paramètres d'une enquête](img/creation_enquete.png) | 
+|:--:| 
+| *Création d'une enquête* |
+
 Une enquête créée est par défaut **active**, c'est-à-dire qu'elle est disponible pour les élèves. Vous pouvez désactiver une enquête, elle ne sera alors plus accessible pour les élèves.
 
 Au moment de la création d'une enquête, il faudra :
@@ -197,7 +205,11 @@ Au moment de la création d'une enquête, il faudra :
 
 Ces quatre paramètres peuvent être modifiés après la création de l'enquête, mais il faudra d'abord _désactiver_ l'enquête, puis la réactiver pour qu'elle soit à nouveau accessible aux élèves.
 
-Les enquêtes ne sont pas partagées avec les autres utilisateurs.
+| ![Paramètres d'une enquête](img/parametres_enquete.png) | 
+|:--:| 
+| *Paramètres d'une enquête* |
+
+> Les enquêtes peuvent être partagées entre collègues : voir le paragraphe [Partage d'enquêtes entre collègues](#partage-denqu%C3%AAtes-entre-coll%C3%A8gues)
 
 ## Tableau de bord
 
@@ -243,6 +255,10 @@ Vous pouvez dupliquer une enquête, afin d'en créer une copie. La nouvelle enqu
 ## Partage d'enquêtes entre collègues
 
 Vous pouvez partager une enquête à d'autres collègues, simplement en leur communiquant l'URL de partage.
+
+| ![Partage d'une enquête](img/partage_enquete.png) | 
+|:--:| 
+| *Partage d'une enquête* |
 
 Cette URL s'obtient soit directement dans le tableau de bord soit dans la page de détails de l'enquête.
 
@@ -303,7 +319,7 @@ Une fois que l'élève a validé ses réponses, plusieurs cas de figure peuvent 
 
 >J'ai voulu créer une application avant tout pour apprendre le développement Web, domaine que j'ai découvert il y a peu et qui m'intéresse beaucoup par son aspect créatif. Dans un second temps, pour que les choses soient plus concrètes et stimulantes, j'ai souhaité développer une application qui soit utile et l'idée des enquêtes me paraissait intéressante en ce sens. J'ai choisi de le faire avec le framework Django pour parfaire mes connaissances dans le langage Python.
 >
->Je ne suis pas un développeur professionnel, et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible.
+>Je ne suis pas un développeur professionnel et j'ai pour ainsi dire tout découvert en créant cette application. Aussi, je ne peux pas vous garantir qu'il n'y ait pas de "bugs", et je vous serais reconnaissant de m'en informer si vous en rencontrez. J'essaierai d'y remédier en fonction de mon temps disponible.
 >
 >De même, si vous voyez des améliorations, qu'elles soient d'ordre pédagogique, technique ou ergonomique, n'hésitez pas à m'en faire part (vous trouverez une adresse de contact en bas des pages de l'application).
 >
