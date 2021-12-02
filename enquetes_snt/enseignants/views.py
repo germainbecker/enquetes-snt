@@ -51,7 +51,8 @@ LISTE_ADRESSES_CORRECTES = [
     'ac-strasbourg.fr',
     'ac-toulouse.fr',
     'ac-versailles.fr',
-    'ac-wf.wf', # wallis et futuna ?
+    'ac-wf.wf', # wallis et futuna ?,
+    'aefe.fr',
 ]
 
 LISTE_ADRESSES_EXCEPTIONS = settings.EMAIL_EXCEPTIONS
