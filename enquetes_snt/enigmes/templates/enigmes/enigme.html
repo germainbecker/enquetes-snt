@@ -13,7 +13,7 @@
                 {% endif %}
                 <small class="auteur">
                     <img class="icone-auteur dim-fixe" src="{% static 'enigmes/img/avatar.svg' %}" alt="icone avatar profil">
-                    {{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}
+                    {{ enigme.auteur.first_name }} {{ enigme.auteur.last_name|lower|capfirst }}
                 </small>
                 <small class="date-ajout">
                     <img class="icone-date dim-fixe" src="{% static 'enigmes/img/clock-line.svg' %}" alt="icone avatar profil">

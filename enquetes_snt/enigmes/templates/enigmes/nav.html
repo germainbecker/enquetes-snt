@@ -157,7 +157,7 @@
             <li class="droite username">
                 {% load static %}
                 <img class="icone-auteur dim-fixe" src="{% static 'enigmes/img/avatar_nav.svg' %}" alt="icone avatar profil">
-                {{user.username}}
+                {{ user.first_name.0 }}. {{ user.last_name|lower|capfirst }}
             </li>
             <li id="logout">
                 <a href="{% url 'logout'%}?next=/">
