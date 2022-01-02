@@ -247,7 +247,6 @@ class EnigmeExampleCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
 
 class EnigmeUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = Enigme
-    #fields = ['theme', 'enonce', 'reponse', 'indication', 'image', 'fichier']
     context_object_name = 'enigme'
     template_name_suffix = '_update_form'
     form_class = EnigmeUpdateForm
@@ -428,7 +427,6 @@ def creation_enquete_manuelle(request):
                             liste_num_enigmes = [str(enigme.pk) for enigme in enigmes]  # et on modifie la liste des num d'énigmes (par ordre chrono)
                             messages.warning(request, "Une erreur s'est produite. L'enquête a tout de même été sauvegardée mais l'ordre des énigmes est l'ordre croissant des numéros.")
                         
-                        
                         for enigme in enigmes:
                             enquete.enigmes.add(enigme)
                         
@@ -436,8 +434,8 @@ def creation_enquete_manuelle(request):
                         enquete.cle = ";".join(liste_num_enigmes)
                         # Ajout des autres champs
                         enquete.description = description
-                        enquete.score = score or indications
                         enquete.indications = indications
+                        enquete.score = score or correction
                         enquete.correction = correction
                         enquete.ordre_aleatoire = ordre_aleatoire
                         
@@ -548,7 +546,6 @@ def modification_enquete_manuelle(request, enquete_id):
                         enquete.indications = indications
                         enquete.correction = correction
                         enquete.ordre_aleatoire = ordre_aleatoire
-                        
                         # Sauvegarde en base de données
                         enquete.save()
                         
@@ -1092,12 +1089,14 @@ def bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses):
     reponses_eleve = resultat.dictionnaire_reponses_eleve()
     
     for enigme in liste_enigmes:
-        lst_bonnes_reponses = enigme.liste_reponses()  # les réponses de cette liste sont nettoyées
-        if reponse_nettoyee(resultat.dictionnaire_reponses_eleve()[enigme.pk]) in lst_bonnes_reponses:
-            correction_reponses[enigme.pk] = True
+        if not enigme.question_libre:
+            lst_bonnes_reponses = enigme.liste_reponses()  # les réponses de cette liste sont nettoyées
+            if reponse_nettoyee(resultat.dictionnaire_reponses_eleve()[enigme.pk]) in lst_bonnes_reponses:
+                correction_reponses[enigme.pk] = True
+            else:
+                correction_reponses[enigme.pk] = False
         else:
-            correction_reponses[enigme.pk] = False
-    
+            correction_reponses[enigme.pk] = None
     return correction_reponses
 
 def eleve(request, code_enquete):
@@ -1143,15 +1142,17 @@ def eleve(request, code_enquete):
                         reponses=str(dic_reponses) 
                     )
                     # si réponses affichées
-                    if enquete.correction or enquete.score:
+                    if enquete.correction:
                         bonnes_reponses = enquete.dico_bonnes_reponses()
                         correction_reponses = bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses)
                         context['reponses'] = dic_reponses
-                        context['score'] = list(correction_reponses.values()).count(True)
+                        if enquete.score:
+                            context['score'] = list(correction_reponses.values()).count(True)
                         context['correction'] = correction_reponses
+                        context['score_calculable'] = score_calculable(liste_enigmes)
                         return render(request, 'enigmes/enquete_eleve_reponses.html', context)
-                    # sinon redirection vers remerciements
                     
+                    # sinon redirection vers remerciements
                     else:
                         return render(request, 'enigmes/enquete_eleve_remerciements.html', context)
         except:
@@ -1191,11 +1192,15 @@ def dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes
     reponses_eleve = resultat.dictionnaire_reponses_eleve()
     
     for enigme in liste_enigmes:
-        lst_bonnes_reponses = enigme.liste_reponses()  # les réponses de cette liste sont nettoyées
-        if reponse_nettoyee(resultat.dictionnaire_reponses_eleve()[enigme.pk]) in lst_bonnes_reponses:
-            correction_reponses[enigme.pk] = True
+        if not enigme.question_libre:
+            lst_bonnes_reponses = enigme.liste_reponses()  # les réponses de cette liste sont nettoyées
+            if reponse_nettoyee(resultat.dictionnaire_reponses_eleve()[enigme.pk]) in lst_bonnes_reponses:
+                correction_reponses[enigme.pk] = True
+            else:
+                correction_reponses[enigme.pk] = False
         else:
-            correction_reponses[enigme.pk] = False
+            # sinon la valeur reste à None
+            pass
     
     d = {
         "id": resultat.id_eleve,
@@ -1212,6 +1217,12 @@ def dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes
 
     return d
 
+def score_calculable(liste_enigmes):
+    for enigme in liste_enigmes:
+        if enigme.question_libre:
+            return False
+    return True
+
 @login_required
 def resultats_enquete(request, enquete_id):
     enquete = get_object_or_404(Enquete.objects.prefetch_related('enigmes'), pk=enquete_id)
@@ -1219,39 +1230,44 @@ def resultats_enquete(request, enquete_id):
     bonnes_reponses = enquete.dico_bonnes_reponses()
     
     liste_resultats = Resultat.objects.select_related('enquete').filter(enquete=enquete)
-
-    liste_complete = [dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses) for resultat in liste_resultats]
-
+    liste_complete = [dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses) for resultat in liste_resultats]  
     liste_num_enigmes = enquete.liste_numeros_enigmes_ordre_initial
     
-    nb_bonnes_reponses = {enigme.pk: 0 for enigme in liste_enigmes}
+    nb_bonnes_reponses = {enigme.pk: 0 if not enigme.question_libre else None for enigme in liste_enigmes}
     for dico_resultat in liste_complete:
         for enigme in dico_resultat["reponses"]:
             if dico_resultat["reponses"][enigme]["correct"]:
                 nb_bonnes_reponses[enigme] = nb_bonnes_reponses[enigme] + 1
     if len(liste_resultats) != 0:
-        pourcentage_bonnes_reponses = {num_enigmes: round(nb_bonnes_reponses[num_enigmes]/len(liste_resultats)*100) for num_enigmes in nb_bonnes_reponses}
+        pourcentage_bonnes_reponses = {
+            num_enigmes: round(nb_bonnes_reponses[num_enigmes]/len(liste_resultats)*100)  \
+                if nb_bonnes_reponses[num_enigmes] is not None \
+                else None 
+                for num_enigmes in nb_bonnes_reponses
+        }
     else:
-        pourcentage_bonnes_reponses = {num_enigmes: 0 for num_enigmes in nb_bonnes_reponses}
-    
+        pourcentage_bonnes_reponses = nb_bonnes_reponses
+
     context = {
             "enquete": enquete,
             "num_enigmes": liste_num_enigmes,
             "enigmes": liste_enigmes,
             "reponses": liste_resultats,
             "resultats": liste_complete,
-            "pourcentage": pourcentage_bonnes_reponses
+            "pourcentage": pourcentage_bonnes_reponses,
+            "score_calculable": score_calculable(liste_enigmes)
         }
-    # gestion du fetch pour actualiser les résultats
+    
     if request.method == 'POST':
+        """ # gestion du fetch pour actualiser les résultats
         if "maj" in request.POST:
             response = {
                 "resultats": liste_complete,
                 "pourcentage": pourcentage_bonnes_reponses,
                 "enigmes": liste_num_enigmes
             }
-            return JsonResponse(response)
-        elif 'telecharger-csv' in request.POST:
+            return JsonResponse(response) """
+        if 'telecharger-csv' in request.POST:
             response = enquete.genere_csv()
             if response is not None:  # présence d'au moins un résultat
                 return response
@@ -1259,3 +1275,48 @@ def resultats_enquete(request, enquete_id):
                 messages.warning(request, "Aucun résultat. Le fichier CSV n'a pas été généré.")
     return render(request, 'enigmes/enquete_resultats.html', context)  
         
+@login_required
+def maj_resultats(request, enquete_id):
+    enquete = get_object_or_404(Enquete.objects.prefetch_related('enigmes'), pk=enquete_id)
+    liste_enigmes = enquete.liste_enigmes_ordre_initial
+    bonnes_reponses = enquete.dico_bonnes_reponses()
+    
+    liste_resultats = Resultat.objects.select_related('enquete').filter(enquete=enquete)
+    liste_complete = [dico_complet_bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses) for resultat in liste_resultats]
+    
+    liste_num_enigmes = enquete.liste_numeros_enigmes_ordre_initial
+
+    nb_bonnes_reponses = {enigme.pk: 0 if not enigme.question_libre else None for enigme in liste_enigmes}
+    
+    for dico_resultat in liste_complete:
+        for enigme in dico_resultat["reponses"]:
+            if dico_resultat["reponses"][enigme]["correct"]:
+                nb_bonnes_reponses[enigme] = nb_bonnes_reponses[enigme] + 1
+
+
+    if len(liste_resultats) != 0:
+        pourcentage_bonnes_reponses = {
+            num_enigmes: round(nb_bonnes_reponses[num_enigmes]/len(liste_resultats)*100)  \
+                if nb_bonnes_reponses[num_enigmes] is not None \
+                else None 
+                for num_enigmes in nb_bonnes_reponses
+        }
+    else:
+        pourcentage_bonnes_reponses = nb_bonnes_reponses
+    
+    score_calculable = True
+    
+    for enigme in liste_enigmes:
+        if enigme.question_libre:
+            score_calculable = False
+
+    context = {
+        "enquete": enquete,
+        "num_enigmes": liste_num_enigmes,
+        "enigmes": liste_enigmes,
+        "reponses": liste_resultats,
+        "resultats": liste_complete,
+        "pourcentage": pourcentage_bonnes_reponses,
+        "score_calculable": score_calculable
+    }
+    return render(request, 'enigmes/partials/maj_resultats.html', context)  

@@ -15,7 +15,11 @@ function selectionFiltre() {
             let enigme = filterDivs[i];
             // si correspondance avec nom de l'auteur
             if (enigme.dataset.auteur.toLowerCase().indexOf(search) > -1) {
-                enigme.classList.add("show");
+                if (caseMasqueQuestionsLibres.checked && enigme.classList.contains("question-libre")) {
+                    enigme.classList.remove("show");
+                } else {
+                    enigme.classList.add("show");
+                }
             }
             else {
                 enigme.classList.remove("show");
@@ -28,7 +32,11 @@ function selectionFiltre() {
             let enigme = filterDivs[i];
             // si correspondance avec critère de filtre et nom de l'auteur
             if (enigme.classList.contains(critere) && enigme.dataset.auteur.toLowerCase().indexOf(search) > -1) {
-                enigme.classList.add("show");
+                if (caseMasqueQuestionsLibres.checked && enigme.classList.contains("question-libre")) {
+                    enigme.classList.remove("show");
+                } else {
+                    enigme.classList.add("show");
+                }
             }
             else {
                 enigme.classList.remove("show");
@@ -50,8 +58,12 @@ for (var i = 0; i < btnsFiltre.length; i++) {
 }
 
 // détection saisies au clavier et bouton pour effacer
-    document.getElementById("barre-recherche").addEventListener("keyup", selectionFiltre);
-    document.getElementById("barre-recherche").addEventListener("search", selectionFiltre);
+document.getElementById("barre-recherche").addEventListener("keyup", selectionFiltre);
+document.getElementById("barre-recherche").addEventListener("search", selectionFiltre);
+
+
+let caseMasqueQuestionsLibres = document.getElementById("case-choix-questions-libres");
+caseMasqueQuestionsLibres.addEventListener("change", filtreQuestionsLibres)
 
 selectionFiltre();
 
@@ -79,3 +91,19 @@ for (var i = 0; i < btnsTri.length; i++) {
 
 document.getElementById("asc").addEventListener("click", triAsc);
 document.getElementById("desc").addEventListener("click", triDesc);
+
+
+/* Afficher/Masque les énigmes à réponse libre */
+
+function filtreQuestionsLibres() {
+    let enigmesReponseLibre = document.querySelectorAll('.question-libre');
+    if (caseMasqueQuestionsLibres.checked) {
+        enigmesReponseLibre.forEach(enigme => {
+            enigme.classList.remove('show');
+        });
+    } else {
+        enigmesReponseLibre.forEach(enigme => {
+            enigme.classList.add('show');
+        });
+    }
+}

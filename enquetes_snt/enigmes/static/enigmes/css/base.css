@@ -1031,6 +1031,27 @@ li {
     align-items: center;
 }
 
+.zone-recherche .zone-choix-questions-libres {
+    margin-left: 20px;
+    font-size: 15px;
+}
+
+@media all and (max-width: 600px) {
+    .zone-recherche {
+        flex-wrap: wrap;
+    }
+    .zone-recherche .zone-choix-questions-libres {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+}
+
+@media all and (max-width: 500px) {
+    .zone-recherche .zone-choix-questions-libres {
+        font-size: 0.8em;
+    }
+}
+
 .zone-gauche {
     text-align: center;
     margin-right: 20px;
@@ -1225,6 +1246,27 @@ li {
     font-size: 0.9em;
     margin-left: 10px;
     color: #888;
+}
+
+div#warning-reponse-libre {
+    display: inline-block;
+}
+
+.enigme-reponse .reponse-libre {
+    color: white;
+    background-color: var(--black);
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.enigme-reponse .reponse-libre svg {
+    fill: white;
+    width: 15px;
+    height: 15px;
 }
 
 .enigme-metadata .metadata .auteur {
@@ -1439,12 +1481,13 @@ img.agrandir {
     }
 }
 
-.enigme blockquote[class*="enigme-indication"]{
+.enigme blockquote[class*="enigme-indication"] {
     display: flex;
     align-items: center;
     background-color: rgb(220,240,255);
     border-radius: 0.3em;
     gap: 10px;
+    word-break: break-word;
 }
 
 /* Zone Réponse */
@@ -1504,6 +1547,21 @@ summary span:hover {
     margin-top: 20px;
 }
 
+.enigme-reponse #para-commentaires {
+    padding: 10px 0;
+    background-color: rgb(255 234 234);
+    border-left: 5px solid var(--second);
+}
+
+.enigme-reponse #para-commentaires p {
+    margin: 5px 0;
+}
+
+.enigme-reponse #para-commentaires > span {
+    margin-left: 15px;
+    color: var(--second);
+    font-weight: bold;
+}
 
 /* bouton modifier une énigme */
 
@@ -1670,7 +1728,12 @@ summary span:hover {
 }
 
 #message-erreur {
-    visibility: hidden;
+    display: none;
+    color: red;
+}
+
+#message-erreur.show {
+    display: inline-block;
 }
 
 .message-erreur {
@@ -1686,9 +1749,42 @@ summary span:hover {
     padding: 10px;
 }
 
+#cle-enquete {
+    font-size: 0.9em;
+    max-width: 600px;
+    position: sticky;
+    bottom: 10px;
+    margin: auto;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: #eee;
+}
+
+#cle-enquete p {
+    margin: 0;
+    padding: 7px 10px;
+}
+
 #cle-enquete-contenu {
     font-weight: bold;
 }
+
+#cle-enquete #correction-auto {
+    display: none;
+    color: rgb(221, 65, 65);
+    padding-top: 0px;
+}
+
+#cle-enquete #correction-auto.show {
+    display: inline-block;
+}
+
+@media all and (max-width: 500px) {
+    #cle-enquete {
+        font-size: 0.8em;
+    }
+}
+
 
 /* Détails enquête */
 
@@ -2776,6 +2872,12 @@ input:checked + .slider:before {
     background-color: rgb(245,178,178);
 }
 
+#tableau-de-resultats td.libre svg  {
+    width: 15px;
+    height: 15px;
+    fill: #444;
+}
+
 #tableau-de-resultats td.correct.masque-resultat:not(.zone-eleve-score):not(.date-resultat),
 #tableau-de-resultats td.incorrect.masque-resultat:not(.zone-eleve-score):not(.date-resultat) {
     color: inherit;
@@ -2885,6 +2987,8 @@ input:checked + .slider:before {
     border-radius: 5px;
     box-shadow: 0 0 5px #d0d0d0;
     background-color: white;
+    position: sticky;
+    top: 20px;
 }
 
 
@@ -2911,6 +3015,44 @@ input:checked + .slider:before {
     font-weight: bold;
 }
 
+.zone-apercu #warning-reponse-libre {
+    display: none;
+}
+
+.zone-apercu #warning-reponse-libre .reponse-libre {
+    color: white;
+    background-color: var(--black);
+    padding: 8px 10px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.zone-apercu #warning-reponse-libre .reponse-libre svg {
+    fill: white;
+    width: 15px;
+    height: 15px;
+}
+
+.zone-apercu .enigme-reponse #apercu-para-commentaires {
+    padding: 10px 0;
+    background-color: rgb(255 234 234);
+    border-left: 5px solid var(--second);
+}
+
+.zone-apercu .enigme-reponse #apercu-para-commentaires > span {
+    margin-left: 15px;
+    color: var(--second);
+    font-weight: bold;
+}
+
+.zone-apercu .enigme-reponse #apercu-para-commentaires p {
+    margin: 5px 0;
+    padding-left: 15px;
+}
+
 .form-inscription {
     max-width: 400px;
     margin: auto;
@@ -2932,9 +3074,18 @@ input:checked + .slider:before {
     display: none;
 }
 
+.form-creation p#para-question-libre {
+    display: block;
+    margin-bottom: 0;
+}
+
 .btn-ajout-reponse {
     display: flex;
     justify-content: end;
+}
+
+.btn-ajout-reponse.hidden {
+    display: none;
 }
 
 button#ajouter-reponse {
@@ -3270,6 +3421,15 @@ button#ajouter-reponse:hover {
     font-size: 15px;
 }
 
+.form-reponses-enquete .zone-reponse textarea {
+    width: 98%;
+    max-width: 98%;
+    min-width: 98%;
+    padding: 5px;
+    font-family: Arial;
+    font-size: 15px;
+}
+
 .form-reponses-enquete .zone-reponse label {
     font-weight: bold;
 }
@@ -3325,6 +3485,8 @@ button#ajouter-reponse:hover {
 .score-obtenu p {
     font-size: 50px;
     font-weight: bold;
+    display: flex;
+    justify-content: center;
 }
 
 @media all and (max-width: 500px) {
@@ -3347,7 +3509,8 @@ button#ajouter-reponse:hover {
 }
 
 .form-reponses-enquete .zone-reponse-correcte *,
-.form-reponses-enquete .zone-reponse-incorrecte * {
+.form-reponses-enquete .zone-reponse-incorrecte *,
+.form-reponses-enquete .zone-reponse-libre * {
     border-collapse: collapse;
     margin: 0;
     padding: 0;
@@ -3367,8 +3530,16 @@ button#ajouter-reponse:hover {
     border-radius: 5px;
 }
 
+.form-reponses-enquete .zone-reponse-libre {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
 .form-reponses-enquete .zone-reponse-correcte p,
-.form-reponses-enquete .zone-reponse-incorrecte p {
+.form-reponses-enquete .zone-reponse-incorrecte p,
+.form-reponses-enquete .zone-reponse-libre p {
     margin: 5px;
 }
 
@@ -3380,27 +3551,61 @@ button#ajouter-reponse:hover {
     font-size: 15px;
 }
 
+.form-reponses-enquete .zone-reponse-libre textarea {
+    width: 98%;
+    max-width: 98%;
+    min-width: 98%;
+    padding: 5px;
+    font-family: Arial;
+    font-size: 15px;
+}
+
 .form-reponses-enquete .zone-reponse-correcte input:disabled,
-.form-reponses-enquete .zone-reponse-incorrecte input:disabled {
+.form-reponses-enquete .zone-reponse-incorrecte input:disabled,
+.form-reponses-enquete .zone-reponse-libre textarea:disabled {
     background-color: white;
     color: black;
     border: 1px solid rgb(130,130,130);
 }
 
 .form-reponses-enquete .zone-reponse-correcte label,
-.form-reponses-enquete .zone-reponse-incorrecte label {
+.form-reponses-enquete .zone-reponse-incorrecte label,
+.form-reponses-enquete .zone-reponse-libre label {
     font-weight: bold;
 }
 
 .form-reponses-enquete .zone-reponse-correcte input::placeholder,
-.form-reponses-enquete .zone-reponse-incorrecte input::placeholder {
+.form-reponses-enquete .zone-reponse-incorrecte input::placeholder,
+.form-reponses-enquete .zone-reponse-libre textarea::placeholder {
     color: #444;
     opacity: 1; /* Firefox */ 
 }
 
 .form-reponses-enquete .zone-reponse-correcte .reponse,
-.form-reponses-enquete .zone-reponse-incorrecte .reponse {
+.form-reponses-enquete .zone-reponse-incorrecte .reponse,
+.form-reponses-enquete .zone-reponse-libre .reponse {
     margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.form-reponses-enquete #para-commentaires {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background-color: rgb(255 234 234);
+    border-left: 5px solid var(--second);
+}
+
+.form-reponses-enquete #para-commentaires > span {
+    color: var(--second);
+    font-weight: bold;
+}
+
+.form-reponses-enquete #para-commentaires p {
+    margin: 5px 0;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 

@@ -12,18 +12,21 @@
 
 {% load custom_tags %}
 {% load static %}
+{% load markdownify %}
 
-{% if enquete.score %}
 <h1>Merci</h1>
 <p>Ta participation a bien été enregistrée !</p>
+{% if enquete.score %}
 <div class="resultat">
     <img class="image-responsive" src="{% static 'enigmes/img/inspection.svg' %}" alt="icone bilan">    
     <div class="score-obtenu">
-        <h1>Score</h1>
-        <p>{{ score }} / {{ enigmes|length }}</p>
+        <h1>Score {% if not score_calculable %}provisoire{% endif %}</h1>
+        <p>{{ score }} {% if score_calculable %}/ {{ enigmes|length }}{% endif %}</p>
+        <small>Certaines réponses doivent être vérifiées par le professeur.</small>
     </div>
 </div>
 {% endif %}
+
 {% if enquete.correction %}
 <p>Tu peux voir la correction ci-dessous. <em>L'ordre des énigmes n'est pas forcément respecté.</em> </p>
 
@@ -39,7 +42,8 @@
             
             {% include 'enigmes/enigme.html' with enigme=enigme pour_eleves=True reponses_eleves=True %}
 
-            <div class="{% if correction|get:enigme.pk %}zone-reponse-correcte{% else %}zone-reponse-incorrecte{% endif %}" >
+            {% if not enigme.question_libre %}
+            <div class="{% if correction|get:enigme.pk %}zone-reponse-correcte{% else %}zone-reponse-incorrecte{% endif %}">
                 <p>
                     <label for="{{enigme.pk}}">Réponse :</label>
                 </p>
@@ -56,10 +60,42 @@
                 </p>
                 {% if enigme.reponse2 %}
                 <p>Autre(s) réponse(s) acceptée(s) : <span class="autre-reponse-attendue">{{ enigme.reponse2 }}</span>{% if enigme.reponse3%}, <span class="autre-reponse-attendue">{{ enigme.reponse3 }}</span>{% endif %}{% if enigme.reponse4%}, <span class="autre-reponses-attendue">{{ enigme.reponse4 }}</span>{% endif %}</p>
-                {% endif %}     
+                {% endif %}    
                 {% endif %}
-                
-            </div>            
+                {% if enigme.commentaires %}                
+                    <div id="para-commentaires">
+                        <span>Commentaire</span>
+                        {% autoescape off %}
+                        {{ enigme.commentaires|markdownify }}
+                        {% endautoescape %}
+                    </div>
+                {% endif %} 
+            </div>
+            {% else %}
+            <div class="zone-reponse-libre">
+                <p>
+                    <label for="{{enigme.pk}}">Réponse :</label>
+                </p>
+                <p>
+                    <textarea name="{{enigme.pk}}" placeholder="{{reponses|get:enigme.pk}}" disabled cols="40" rows="5"></textarea>
+                </p>
+                <div class="reponse-libre-attendue">
+                    <p class="reponse">❔ En attente de correction par le professeur</p>
+                    <p class="bold">Réponse attendue :</p>
+                    {% autoescape off %}
+                    {{ enigme.reponse_libre|markdownify }}
+                    {% endautoescape %}
+                </div>
+                {% if enigme.commentaires %}                
+                    <div id="para-commentaires">
+                        <span>Commentaire</span>
+                        {% autoescape off %}
+                        {{ enigme.commentaires|markdownify }}
+                        {% endautoescape %}
+                    </div>
+                {% endif %} 
+            </div>
+            {% endif %}      
         </div>
     {% endfor %}
 

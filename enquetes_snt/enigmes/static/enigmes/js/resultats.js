@@ -5,16 +5,16 @@ let reponsesAffichees = false;
 let afficherResultats = true;
 let ordreAlpha = false;
 
-gestionIdentifants();
+gestionIdentifiants();
 gestionReponses();
 gestionResultats();
 
-document.getElementById("switch-id").addEventListener("change", gestionIdentifants);
+document.getElementById("switch-id").addEventListener("change", gestionIdentifiants);
 document.getElementById("switch-reponses").addEventListener("change", gestionReponses);
 document.getElementById("switch-resultats").addEventListener("change", gestionResultats);
 document.getElementById("switch-tri").addEventListener("change", gestionTri);
 
-function gestionIdentifants() {
+function gestionIdentifiants() {
     var identifiantsElevesBefore = document.querySelectorAll(".cache-eleve");
     var identifiantsEleves = document.querySelectorAll(".id-eleve");
     if (document.getElementById("switch-id-checkbox").checked) {
@@ -47,8 +47,8 @@ function gestionReponses() {
 }
 
 function gestionResultats() {
-    var zoneReponsesEleves = document.querySelectorAll(".correct, .incorrect");
-    var svgReponses = document.querySelectorAll(".correct svg, .incorrect svg");
+    var zoneReponsesEleves = document.querySelectorAll(".correct, .incorrect, .libre");
+    var svgReponses = document.querySelectorAll(".correct svg, .incorrect svg, .libre svg");
     var nbReponsesEleves = document.querySelectorAll(".reponse").length;
     var scoreEleves = document.querySelectorAll(".score-eleve");
     var pourcentagesReussite = document.querySelectorAll(".pourcentage");
@@ -158,9 +158,29 @@ function gestionTri() {
     ordreAlpha = !ordreAlpha;        
 }
 
+// on lance l'animation de chargement au moment de la requête HTMX (si actualisation manuelle)
+document.body.addEventListener('htmx:xhr:loadstart', () => {
+    if (!(checkboxActualisationAuto.checked)) {
+        voirAnimationChargement();
+    } else {
+        cacherAnimationChargement();
+    }
+});
+
+// on applique les choix pour l'affichage après la réponse à la requête HTMX 
+document.body.addEventListener('htmx:afterOnLoad', () => {
+    gestionIdentifiants();
+    gestionReponses();
+    gestionResultats();
+    gestionTri();
+    cacherAnimationChargement(); // et on cache l'anim de chargement
+});
+
+
+
 // Requête fetch pour actualiser les résultats sans recharger toute la page
 
-document.querySelector("#fetch-call").addEventListener("click", event => {
+/* document.querySelector("#fetch-call").addEventListener("click", event => {
     event.preventDefault(); // le formulaire ne doit pas être envoyé (sinon rafraichissement page)
     if (!(checkboxActualisationAuto.checked)) {
         voirAnimationChargement();
@@ -177,8 +197,7 @@ document.querySelector("#fetch-call").addEventListener("click", event => {
         body: formData,
         headers: {'X-CSRFToken': csrfTokenValue}
     });
-    /* envoi de la requête asynchrone (avec fetch), attente de la promesse 
-    et traitement de la réponse */
+    // envoi de la requête asynchrone (avec fetch), attente de la promesse  et traitement de la réponse
     fetch(request)
         .then(response => response.json())
         .then(result => {
@@ -187,7 +206,7 @@ document.querySelector("#fetch-call").addEventListener("click", event => {
             modale.classList.remove("show");
             iconeModale.classList.remove("rotate");   
         });
-});
+}); */
 
 const modale = document.querySelector("#modale-actualisation");
 const iconeModale = document.querySelector(".modal-actualisation-content img");
@@ -243,7 +262,7 @@ function majResultats(result) {
         pourcentagesReussite[i].innerHTML = String(pourcentages_bonnes_reponses[i]) + ' %';
     }
     
-    gestionIdentifants();
+    gestionIdentifiants();
     gestionReponses();
     gestionResultats();
     gestionTri();

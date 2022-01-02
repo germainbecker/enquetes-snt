@@ -49,6 +49,25 @@ function apercuIndication() {
     Prism.highlightAll(async=true);
 }
 
+function apercuCommentaire() {
+    let commentaireMD = document.getElementById('id_commentaires').value;
+    if (!(commentaireMD == "")) {
+        let commentaireHTML = marked(commentaireMD);  // conversion en HTML
+        let commentaireCleanHTML = DOMPurify.sanitize(commentaireHTML);
+        document.querySelector(".apercu-commentaire").innerHTML = commentaireCleanHTML;
+        document.querySelector("#apercu-para-commentaires").style.display = 'block';
+    } else {
+        document.querySelector("#apercu-para-commentaires").style.display = "none";
+    }
+
+    gestionImages();
+    gestionLiens();
+    gestionTableaux();
+
+    // recharger JS
+    Prism.highlightAll(async=true);
+}
+
 function reponsesPresentes(tableauReponsesMD) {
     let reponsePresente = false;
     for (reponse of tableauReponsesMD) {
@@ -60,75 +79,134 @@ function reponsesPresentes(tableauReponsesMD) {
 }
 
 function apercuReponse() {
-    if (nbReponsesAffichees == 4) {
-        boutonAjouterReponse.classList.add('hidden');
-    }
-
-    let reponsePrincipale = document.querySelector('#id_reponse').value;
-    
-    if (reponsePrincipale === '') {
-        boutonAjouterReponse.classList.add('hidden');
-        champsReponsesOptionnelles.forEach(champ => {
-            champ.disabled = true;
-        })
-    } else {
-        champsReponsesOptionnelles.forEach(champ => {
-            champ.disabled = false;
-        })
-        if (nbReponsesAffichees === 4) {
-            boutonAjouterReponse.classList.add('hidden');
-        } else {
-            boutonAjouterReponse.classList.remove('hidden');
-        }
-    }
-
-    /* Réponse */
-    let listeChampsReponse = document.querySelectorAll('input[type=text][id*=id_reponse]');
-    let tableauReponsesMD = [];
-    for (let champ of listeChampsReponse) {
-        tableauReponsesMD.push(champ.value)
-    }
-
-    reponsePresente = reponsesPresentes(tableauReponsesMD);
-    
-    if (reponsePresente) {
-        let tableauReponsesHTML = tableauReponsesMD.map(reponseMD => marked(reponseMD));
-            let tableauReponseCleanHTML = tableauReponsesHTML.map(reponseHTML => DOMPurify.sanitize(reponseHTML));
-        if (tableauReponseCleanHTML[0] === '') {
-            document.querySelector(".enigme-reponse").style.display = "none";
-        } else {
-            
-            let tableauReponses = tableauReponseCleanHTML.filter(x => x !== '');
-            const nbReponses = tableauReponses.length;
-            let tmp = document.createElement("DIV");
-            let reponse = document.querySelector(".reponse-affichee");
-            let autresReponses = document.querySelector("#autres-reponses");
-            let autresReponsesAffichees = document.querySelector(".autres-reponses-affichees");
-            
-            tmp.innerHTML = tableauReponses[0];
-            reponse.innerHTML = tmp.textContent;
-            if (nbReponses === 1) {
-                autresReponses.classList.add('hidden');
-            }
-            else {
-                tableauReponses.shift() // enlève le premier élément du tableau
-                tableauReponses = tableauReponses.map(x => x.replace('\n', ''));
-                let reponses = tableauReponses.join(', ');
-                tmp.innerHTML = reponses;
-                autresReponsesAffichees.innerHTML = tmp.textContent;
-                autresReponses.classList.remove('hidden');
-            }
-    
+    let reponseEnigmeContainer = document.getElementById('reponse-enigme-container');
+    let reponseLibreContainer = document.getElementById('reponse-libre-container');
+    // si réponse libre attendue
+    if (caseQuestionLibre.checked) {
+        document.getElementById('warning-reponse-libre').style.display = "inline-block";
+        reponseEnigmeContainer.classList.add('hidden');
+        reponseLibreContainer.classList.remove('hidden');
+        let reponseLibreMD = document.querySelector('#id_reponse_libre').value;
+        if (!(reponseLibreMD === '')) {
+            let reponseLibreHTML = marked(reponseLibreMD);  // conversion en HTML
+            let reponseLibreCleanHTML = DOMPurify.sanitize(reponseLibreHTML);
+            document.querySelector('#reponse-libre').innerHTML = reponseLibreCleanHTML;
             document.querySelector(".enigme-reponse").style.display = "initial";
+        } else {            
+            document.querySelector(".enigme-reponse").style.display = "none";
         }
+    } // sinon s'il s'agit d'une énigme classique 
+    else {
+        document.getElementById('warning-reponse-libre').style.display = "none";
+        reponseEnigmeContainer.classList.remove('hidden');
+        reponseLibreContainer.classList.add('hidden');
+        if (nbReponsesAffichees == 4) {
+            boutonAjouterReponse.classList.add('hidden');
+        }
+    
+        let reponsePrincipale = document.querySelector('#id_reponse').value;
         
-
-    } else {
-        document.querySelector(".enigme-reponse").style.display = "none";
+        if (reponsePrincipale === '') {
+            boutonAjouterReponse.classList.add('hidden');
+            champsReponsesOptionnelles.forEach(champ => {
+                champ.disabled = true;
+            })
+        } else {
+            champsReponsesOptionnelles.forEach(champ => {
+                champ.disabled = false;
+            })
+            if (nbReponsesAffichees === 4) {
+                boutonAjouterReponse.classList.add('hidden');
+            } else {
+                boutonAjouterReponse.classList.remove('hidden');
+            }
+        }
+    
+        /* Réponse */
+        let listeChampsReponse = document.querySelectorAll('input[type=text][id*=id_reponse]');
+        let tableauReponsesMD = [];
+        for (let champ of listeChampsReponse) {
+            tableauReponsesMD.push(champ.value)
+        }
+    
+        reponsePresente = reponsesPresentes(tableauReponsesMD);
+        
+        if (reponsePresente) {
+            let tableauReponsesHTML = tableauReponsesMD.map(reponseMD => marked(reponseMD));
+                let tableauReponseCleanHTML = tableauReponsesHTML.map(reponseHTML => DOMPurify.sanitize(reponseHTML));
+            if (tableauReponseCleanHTML[0] === '') {
+                document.querySelector(".enigme-reponse").style.display = "none";
+            } else {
+                
+                let tableauReponses = tableauReponseCleanHTML.filter(x => x !== '');
+                const nbReponses = tableauReponses.length;
+                let tmp = document.createElement("DIV");
+                let reponse = document.querySelector(".reponse-affichee");
+                let autresReponses = document.querySelector("#autres-reponses");
+                let autresReponsesAffichees = document.querySelector(".autres-reponses-affichees");
+                
+                tmp.innerHTML = tableauReponses[0];
+                reponse.innerHTML = tmp.textContent;
+                if (nbReponses === 1) {
+                    autresReponses.classList.add('hidden');
+                }
+                else {
+                    tableauReponses.shift() // enlève le premier élément du tableau
+                    tableauReponses = tableauReponses.map(x => x.replace('\n', ''));
+                    let reponses = tableauReponses.join(', ');
+                    tmp.innerHTML = reponses;
+                    autresReponsesAffichees.innerHTML = tmp.textContent;
+                    autresReponses.classList.remove('hidden');
+                }
+        
+                document.querySelector(".enigme-reponse").style.display = "initial";
+            }
+        } else {
+            document.querySelector(".enigme-reponse").style.display = "none";
+        }
     }
 
+    
+    apercuCommentaire();
     // recharger JS
     Prism.highlightAll(async=true);
+}
+
+
+let caseQuestionLibre = document.getElementById('id_question_libre');
+caseQuestionLibre.addEventListener('change', gestionQuestionLibre);
+
+function gestionQuestionLibre() {
+    apercuReponse();
+    gestionReponsesOptionnelles();
+    let paraReponses = document.getElementById('para-reponse');
+    /* let paraReponsesOptionnelles = document.querySelectorAll('.champ-reponse'); */
+    let paraReponseLibre = document.getElementById('para-reponse-libre');
+    let divBoutonAjouterReponse = document.querySelector('.btn-ajout-reponse');
+    if (caseQuestionLibre.checked) {
+        paraReponses.classList.add('hidden');
+        paraReponseLibre.classList.remove('hidden')
+        divBoutonAjouterReponse.classList.add('hidden');
+        gestionReponsesOptionnelles(false);
+    } else {
+        paraReponses.classList.remove('hidden');
+        paraReponseLibre.classList.add('hidden');
+        divBoutonAjouterReponse.classList.remove('hidden');
+        gestionReponsesOptionnelles(true);
+    }
+}
+
+function gestionReponsesOptionnelles(affiche) {
+    let paraReponsesOptionnelles = document.querySelectorAll('.champ-reponse');
+    if (affiche) {
+        for (i=0; i<nbReponsesAffichees-1; i++) {
+            paraReponsesOptionnelles[i].classList.remove('hidden');
+        }
+    } else {
+        for (i=0; i<nbReponsesAffichees-1; i++) {
+            paraReponsesOptionnelles[i].classList.add('hidden');
+        }
+    }
 }
 
 function conversion() {
@@ -139,6 +217,7 @@ function conversion() {
     apercuIndication(); 
     apercuFichier();
     apercuReponse();
+    apercuCommentaire();
     gestionImages();
     gestionLiens();
     gestionTableaux();
@@ -201,6 +280,9 @@ champsReponsesOptionnelles.forEach(champ => {
     champ.addEventListener("keyup", apercuReponse);
 })
 
+let reponseLibre = document.querySelector('#id_reponse_libre');
+reponseLibre.addEventListener('keyup', apercuReponse);
+
 document.querySelector('#id_indication').addEventListener("keyup", apercuIndication);
 document.querySelector('#id_indication').addEventListener("focusout", MathJaxReload);
 document.querySelector('#id_url_image').addEventListener("keyup", function() {
@@ -216,9 +298,9 @@ document.querySelector('#id_credits_image').addEventListener("keyup", function()
     apercuImage(theme);
 });
 
-
-
 document.querySelector('#id_fichier').addEventListener("change", apercuFichier);
+
+document.querySelector('#id_commentaires').addEventListener("keyup", apercuCommentaire);
 
 function isValidHttpUrl(string) {
     let url;
@@ -451,6 +533,7 @@ document.querySelector("form").addEventListener("submit", function(event) {
 
 /* Pour afficher l'aperçu directement */
 let theme = document.querySelector('#id_theme').value;
+gestionQuestionLibre();
 apercuImage(theme);
 apercuEnonce();
 apercuIndication(); 

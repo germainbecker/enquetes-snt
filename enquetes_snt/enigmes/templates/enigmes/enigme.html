@@ -92,11 +92,38 @@
     {% endif %}
     {% if affiche_reponses %}
         <div class="enigme-reponse">
+            
+            {% if enigme.question_libre %}
+            <div id="warning-reponse-libre">
+                <span class="reponse-libre">
+                    <?xml version="1.0" encoding="utf-8"?><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="122.88px" height="122.88px" viewBox="0 0 122.88 122.88" enable-background="new 0 0 122.88 122.88" xml:space="preserve"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M61.44,0c33.926,0,61.44,27.514,61.44,61.44c0,33.926-27.514,61.439-61.44,61.439 C27.513,122.88,0,95.366,0,61.44C0,27.514,27.513,0,61.44,0L61.44,0z M52.687,90.555H69.44v14.81H52.687V90.555L52.687,90.555z M69.431,82.96H52.691c-1.665-20.343-5.159-29.414-5.159-49.729c0-7.492,6.075-13.57,13.567-13.57s13.57,6.078,13.57,13.57 C74.67,53.535,71.13,62.633,69.431,82.96L69.431,82.96z"/></g></svg>
+                    Réponse libre attendue
+                </span>
+            </div>
+            {% endif %}
             <details>
-                <summary><span class="voir-reponse">Voir la réponse</span></summary>
-                <p>Réponse attendue : <span class="reponse-attendue">{{ enigme.reponse }}</span></p>
-                {% if enigme.reponse2 %}
-                <p>Autre(s) réponse(s) acceptée(s) : <span class="autre-reponse-acceptee">{{ enigme.reponse2 }}</span>{% if enigme.reponse3%}, <span class="autre-reponse-acceptee">{{ enigme.reponse3 }}</span>{% endif %}{% if enigme.reponse4%}, <span class="autre-reponse-acceptee">{{ enigme.reponse4 }}</span>{% endif %}</p>
+                <summary>
+                    <span class="voir-reponse">Voir la réponse</span>
+                </summary>
+                    {% if not enigme.question_libre %}
+                        <p>Réponse attendue : <span class="reponse-attendue">{{ enigme.reponse }}</span></p>
+                        {% if enigme.reponse2 %}
+                        <p>Autre(s) réponse(s) acceptée(s) : <span class="autre-reponse-acceptee">{{ enigme.reponse2 }}</span>{% if enigme.reponse3%}, <span class="autre-reponse-acceptee">{{ enigme.reponse3 }}</span>{% endif %}{% if enigme.reponse4%}, <span class="autre-reponse-acceptee">{{ enigme.reponse4 }}</span>{% endif %}</p>
+                        {% endif %}
+                    {% else %}
+                        <div class="reponse-libre-attendue">
+                            {% autoescape off %}
+                            {{ enigme.reponse_libre|markdownify }}
+                            {% endautoescape %}
+                        </div>
+                    {% endif %}
+                {% if enigme.commentaires %}                
+                <div id="para-commentaires">
+                    <span>Commentaire</span>
+                    {% autoescape off %}
+                    {{ enigme.commentaires|markdownify }}
+                    {% endautoescape %}
+                </div>
                 {% endif %}
             </details>
         </div>
@@ -121,7 +148,11 @@
                 <label for="{{enigme.pk}}">Réponse :</label>
             </p>
             <p>
+                {% if not enigme.question_libre %}
                 <input type="text" name="{{enigme.pk}}">
+                {% else %}
+                <textarea name="{{enigme.pk}}" placeholder="Répondre par une (ou plusieurs) phrase(s)." cols="40" rows="10"></textarea>
+                {% endif %}
             </p>
         </div>
         {% endif %}

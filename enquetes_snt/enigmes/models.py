@@ -123,13 +123,17 @@ class Enigme(models.Model):
         choices=Theme.choices,
         default=Theme.NC
     )
+
+    question_libre = models.BooleanField('Réponse libre attendue', default=False)
     
     enonce = models.TextField('énoncé')
-    reponse = models.CharField('réponse', max_length=100)
+    reponse = models.CharField('réponse', max_length=100, blank=True, null=True)
     reponse2 = models.CharField('réponse 2', max_length=100, blank=True, null=True)
     reponse3 = models.CharField('réponse 3', max_length=100, blank=True, null=True)
     reponse4 = models.CharField('réponse 4', max_length=100, blank=True, null=True)
     indication = models.TextField('indication', blank=True, null=True)
+    commentaires = models.TextField('commentaires', blank=True, null=True)
+    reponse_libre = models.TextField('réponse libre', blank=True, null=True)
 
     def repertoire_auteur(instance, nom_fichier):
         # le fichier sera uploadé dans MEDIA_ROOT/auteur_<id>/<nom_fichier>
@@ -190,11 +194,16 @@ class Enigme(models.Model):
         return reverse('enigme-detail', kwargs={'pk': self.pk})
 
     def liste_reponses(self):
-        lst = [self.reponse]
-        for r in [self.reponse2, self.reponse3, self.reponse4]:
-            if r is not None:
-                lst.append(r)
-        return [reponse_nettoyee(rep) for rep in lst]
+        # si enigme classique
+        if not self.question_libre:
+            lst = [self.reponse]
+            for r in [self.reponse2, self.reponse3, self.reponse4]:
+                if r is not None:
+                    lst.append(r)
+            return [reponse_nettoyee(rep) for rep in lst]
+        # sinon si énigme à réponse libre
+        else:
+            return [self.reponse_libre]
 
     class Meta:
         verbose_name = 'énigme'
@@ -205,7 +214,7 @@ class Enquete(models.Model):
     date_creation = models.DateTimeField('date de création', auto_now_add=True)
     active = models.BooleanField('active', default=True)
     indications = models.BooleanField('indications', default=True)  # indications affichées par défaut
-    score =  models.BooleanField('score', default=True)  # score affichés après l'enquête par défaut
+    score =  models.BooleanField('score', default=True)  # scores affichés après l'enquête par défaut
     correction = models.BooleanField('correction', default=False)  # reponses non affichées après l'enquête par défaut
     ordre_aleatoire = models.BooleanField('ordre aléatoire des énigmes', default=False)  # pas d'ordre aléatoire des énigmes par défaut
     auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)  # si un utilisateur supprime son compte, ses enquêtes sont supprimées

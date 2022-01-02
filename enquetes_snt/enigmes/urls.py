@@ -23,6 +23,7 @@ urlpatterns = [
     path('enquete/<int:enquete_id>/', views.enquete, name='enquete-detail'),
     path('enquete/<int:enquete_id>/suppression', views.suppression_enquete, name='enquete-delete'),
     path('enquete/<int:enquete_id>/resultats/', views.resultats_enquete, name='enquete-resultats'),
+    path('enquete/<int:enquete_id>/maj-resultats/', views.maj_resultats, name='maj-resultats'),
     path('enquete/creation/', views.creation_enquete, name='enquete-create'),
     path('enquete/creation/liste/', views.creation_enquete_liste, name='enquete-liste-create'),
     path('enquete/creation/manuelle/', views.creation_enquete_manuelle, name='enquete-manuelle-create'),

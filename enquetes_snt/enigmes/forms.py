@@ -83,23 +83,23 @@ class EnigmeCreateForm(ModelForm):
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
+        fields = ('question_libre', 'theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'reponse_libre', 'indication', 'url_image', 'image', 'credits_image', 'fichier', 'commentaires')
         
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
             ),
             'reponse': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': '100 caractères max.', 'required': 'required'}
             ),
             'reponse2': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
             ),
             'reponse3': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
             ),
             'reponse4': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
             ),
             'indication': Textarea(
                 attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
@@ -114,11 +114,38 @@ class EnigmeCreateForm(ModelForm):
         }
 
         help_texts = {
+            'question_libre': "Cochez cette case si vous attendez une réponse sous forme d'un paragraphe.",
             'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
         }
     
     def clean(self):
         cleaned_data = super().clean()
+        
+        #print(cleaned_data)
+        reponse_libre_attendue = cleaned_data.get("question_libre")
+
+        if reponse_libre_attendue:
+            reponse_libre = cleaned_data.get("reponse_libre")
+            if reponse_libre == '':
+                erreur = ValidationError(
+                     "Vous devez saisir une réponse libre."
+                )
+                self.add_error('reponse_libre', erreur)
+                raise ValidationError(
+                   "Le formulaire est invalide."
+                )
+        else:
+            reponse = cleaned_data.get("reponse")
+            if reponse == None:
+                erreur = ValidationError(
+                    "Vous devez saisir une réponse."
+                )
+                self.add_error('reponse', erreur)
+                raise ValidationError(
+                    "Le formulaire est invalide."
+                )
+        
+        
         image = cleaned_data.get("image")
         url_image = cleaned_data.get("url_image")
         
@@ -134,19 +161,184 @@ class EnigmeCreateForm(ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
 
-        # on décale les réponses optionnelles si nécessaire
-        autres_reponses = [instance.reponse2, instance.reponse3, instance.reponse4]
-        autres_reponses_valides = [rep for rep in autres_reponses if rep is not None]
-        
-        if len(autres_reponses_valides) == 2:
-            instance.reponse2 = autres_reponses_valides[0]
-            instance.reponse3 = autres_reponses_valides[1]
-            instance.reponse4 = None
-        elif len(autres_reponses_valides) == 1:
-            instance.reponse2 = autres_reponses_valides[0]
+        if instance.question_libre == True:
+            # on efface les champs 'reponse' si on attend le champ 'reponse_libre'
+            instance.reponse = None
+            instance.reponse2 = None
             instance.reponse3 = None
             instance.reponse4 = None
+        else:
+            # sinon, on efface le champ 'reponse_libre'
+            instance.reponse_libre = None
+            # on décale les réponses optionnelles si nécessaire
+            autres_reponses = [instance.reponse2, instance.reponse3, instance.reponse4]
+            autres_reponses_valides = [rep for rep in autres_reponses if rep is not None]
+            
+            if len(autres_reponses_valides) == 2:
+                instance.reponse2 = autres_reponses_valides[0]
+                instance.reponse3 = autres_reponses_valides[1]
+                instance.reponse4 = None
+            elif len(autres_reponses_valides) == 1:
+                instance.reponse2 = autres_reponses_valides[0]
+                instance.reponse3 = None
+                instance.reponse4 = None
 
+        # on efface l'attribut image si url_image est définie
+        if instance.url_image is not None:  # si une url est définie
+            instance.image = None  # on s'assure qu'aucune image téléversée n'est associée à l'énigme
+        if commit:
+            instance.save()  # on sauvegarde en bdd l'instance
+            self.save_m2m()  # on sauvegarde en bdd les relations many2many
+        return instance
+
+
+class EnigmeUpdateForm(ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        print('a')
+        self.user = kwargs.pop('user')
+        # pour personnaliser la liste d'erreurs (ErrorList)
+        kwargs.update({'error_class': ParagraphErrorList})
+        super(EnigmeUpdateForm, self).__init__(*args, **kwargs)
+        
+        if self.data:
+            data = self.data.copy()
+            credits_image = self.data.get("credits_image")
+            image = self.data.get("image")
+            url_image = self.data.get("url_image")
+            no_image = (url_image == '' and (image == None or image == False))
+            if credits_image != '' and no_image:
+                data['credits_image'] = ''
+                self.data = data
+        
+        """ enigme = self.instance        
+        if enigme.question_libre :
+            self.fields['reponse_libre'].widget.attrs = {'required': 'required'}
+            self.fields['reponse'].widget.attrs = {'class': 'hidden'}
+            self.fields['reponse_libre'].widget.attrs = {'class': ''}
+        else:
+            self.fields['reponse'].widget.attrs = {'required': 'required'}
+            self.fields['reponse_libre'].widget.attrs = {'class': 'hidden'}
+            self.fields['reponse'].widget.attrs = {'class': ''} """
+        
+        self.fields['image'] = ModelChoiceField(
+            queryset=Image.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucune image sélectionnée ---'
+        )
+        self.fields['image'].label = "Choisir une image d'illustration"
+
+        self.fields['fichier'] = ModelChoiceField(
+            queryset=Fichier.objects.filter(auteur=self.user),
+            required=False,
+            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
+            empty_label='--- aucun fichier sélectionné ---',
+            help_text="Vous pouvez sélectionner un de vos fichiers téléversés.",
+        )
+        self.fields['fichier'].label = "Choisir un fichier"
+    
+    class Meta:
+        model = Enigme
+        fields = ('question_libre', 'theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'reponse_libre', 'indication', 'url_image', 'image', 'credits_image', 'fichier', 'commentaires')
+        widgets = {
+            'reponse': TextInput(
+                attrs={'placeholder': '100 caractères max.'}
+            ),
+            'reponse2': TextInput(
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
+            ),
+            'reponse3': TextInput(
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
+            ),
+            'reponse4': TextInput(
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
+            ),
+            'reponse_libre': Textarea(
+                attrs={'placeholder': 'Réponse'}
+            ),
+            'image': FileSelect(),
+            'credits_image': Textarea(
+                attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
+            ),
+            'fichier': FileSelect,
+        }
+        help_texts = {
+            'question_libre': "Cochez cette case si vous attendez une réponse sous forme d'un paragraphe.",
+            'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
+            
+        }
+    
+    def clean(self):
+        cleaned_data = super().clean()        
+        print(cleaned_data)
+        reponse_libre_attendue = cleaned_data.get("question_libre")
+
+        if reponse_libre_attendue:
+            reponse_libre = cleaned_data.get("reponse_libre")
+            if reponse_libre == '':
+                erreur = ValidationError(
+                     "Vous devez saisir une réponse libre."
+                )
+                self.add_error('reponse_libre', erreur)
+                raise ValidationError(
+                   "Le formulaire est invalide."
+                )
+        else:
+            reponse = cleaned_data.get("reponse")
+            
+            if reponse == None:
+                print('a')
+                erreur = ValidationError(
+                    "Vous devez saisir une réponse."
+                )
+                self.add_error('reponse', erreur)
+                raise ValidationError(
+                    "Le formulaire est invalide."
+                )
+
+        
+        image = cleaned_data.get("image")
+        url_image = cleaned_data.get("url_image")
+        
+        # on s'assure de ne pas enregistrer des crédits si aucune image (url ou fichier) n'est choisie
+        credits_image = cleaned_data.get("credits_image")
+        no_image = (url_image == '' and (image == None or image == False))
+        if credits_image != '' and no_image:
+            raise ValidationError(
+                "Il n'est pas possible de définir les crédits si aucune image n'est sélectionnée."
+            )
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        if instance.question_libre == True:
+            # on efface les champs 'reponse' si on attend le champ 'reponse_libre'
+            instance.reponse = None
+            instance.reponse2 = None
+            instance.reponse3 = None
+            instance.reponse4 = None
+        else:
+            # sinon, on efface le champ 'reponse_libre'
+            instance.reponse_libre = None
+            # on décale les réponses optionnelles si nécessaire
+            autres_reponses = [instance.reponse2, instance.reponse3, instance.reponse4]
+            autres_reponses_valides = [rep for rep in autres_reponses if rep is not None]
+            
+            if len(autres_reponses_valides) == 2:
+                instance.reponse2 = autres_reponses_valides[0]
+                instance.reponse3 = autres_reponses_valides[1]
+                instance.reponse4 = None
+            elif len(autres_reponses_valides) == 1:
+                instance.reponse2 = autres_reponses_valides[0]
+                instance.reponse3 = None
+                instance.reponse4 = None
+            elif len(autres_reponses_valides) == 0:
+                instance.reponse2 = None
+                instance.reponse3 = None
+                instance.reponse4 = None
+        
         # on efface l'attribut image si url_image est définie
         if instance.url_image is not None:  # si une url est définie
             instance.image = None  # on s'assure qu'aucune image téléversée n'est associée à l'énigme
@@ -219,22 +411,23 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
     class Meta:
         
         model = Enigme
-        fields = ('theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'indication', 'url_image', 'image', 'credits_image', 'fichier')
+        fields = ('question_libre', 'theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'reponse_libre', 'indication', 'url_image', 'image', 'credits_image', 'fichier', 'commentaires')
+        
         widgets = {
             'enonce': Textarea(
                 attrs={'placeholder': 'L\'énoncé peut être écrit en Markdown ou en HTML'}
             ),
             'reponse': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': '100 caractères max.', 'required': 'required'}
             ),
             'reponse2': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
             ),
             'reponse3': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
             ),
             'reponse4': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
+                attrs={'placeholder': 'Autre réponse acceptée (optionnelle). 100 caractères max.'}
             ),
             'indication': Textarea(
                 attrs={'placeholder': 'Si vous écrivez une indication, vous pouvez aussi l\'écrire en Markdown ou en HTML'}
@@ -249,111 +442,9 @@ Et plein d'autres choses : [voici quelques exemples](https://fr.wikipedia.org/wi
         }
 
         help_texts = {
+            'question_libre': "Cochez cette case si vous attendez une réponse sous forme d'un paragraphe.",
             'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
         }
-
-class EnigmeUpdateForm(ModelForm):
-    
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
-        # pour personnaliser la liste d'erreurs (ErrorList)
-        kwargs.update({'error_class': ParagraphErrorList})
-        super(EnigmeUpdateForm, self).__init__(*args, **kwargs)
-        if self.data:
-            data = self.data.copy()
-            credits_image = self.data.get("credits_image")
-            image = self.data.get("image")
-            url_image = self.data.get("url_image")
-            no_image = (url_image == '' and (image == None or image == False))
-            if credits_image != '' and no_image:
-                data['credits_image'] = ''
-                self.data = data
-        
-        
-        self.fields['image'] = ModelChoiceField(
-            queryset=Image.objects.filter(auteur=self.user),
-            required=False,
-            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
-            empty_label='--- aucune image sélectionnée ---'
-        )
-        self.fields['image'].label = "Choisir une image d'illustration"
-
-        self.fields['fichier'] = ModelChoiceField(
-            queryset=Fichier.objects.filter(auteur=self.user),
-            required=False,
-            widget=FileSelect,  # pour ajouter l'url en tant que data attribut
-            empty_label='--- aucun fichier sélectionné ---',
-            help_text="Vous pouvez sélectionner un de vos fichiers téléversés.",
-        )
-        self.fields['fichier'].label = "Choisir un fichier"
-    
-    class Meta:
-        model = Enigme
-        fields = ['theme', 'enonce', 'reponse', 'reponse2', 'reponse3', 'reponse4', 'indication', 'url_image', 'image', 'credits_image', 'fichier']
-        widgets = {
-            'reponse': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
-            ),
-            'reponse2': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
-            ),
-            'reponse3': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
-            ),
-            'reponse4': TextInput(
-                attrs={'placeholder': '100 caractères max.'}
-            ),
-            'image': FileSelect(),
-            'credits_image': Textarea(
-                attrs={'placeholder': "Indiquez ici la licence, l'auteur et si possible la source de l'image d'illustration.", 'class': "credits-images", 'rows': '2'}
-            ),
-            'fichier': FileSelect,
-        }
-        help_texts = {
-            'url_image': "Copiez l'URL de l'image désirée ou sélectionnez en-dessous une de vos images téléversées.",
-            
-        }
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        image = cleaned_data.get("image")
-        url_image = cleaned_data.get("url_image")
-        
-        # on s'assure de ne pas enregistrer des crédits si aucune image (url ou fichier) n'est choisie
-        credits_image = cleaned_data.get("credits_image")
-        no_image = (url_image == '' and (image == None or image == False))
-        if credits_image != '' and no_image:
-            raise ValidationError(
-                "Il n'est pas possible de définir les crédits si aucune image n'est sélectionnée."
-            )
-        return cleaned_data
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-
-        # on décale les réponses optionnelles si nécessaire
-        autres_reponses = [instance.reponse2, instance.reponse3, instance.reponse4]
-        autres_reponses_valides = [rep for rep in autres_reponses if rep is not None]
-        
-        if len(autres_reponses_valides) == 2:
-            instance.reponse2 = autres_reponses_valides[0]
-            instance.reponse3 = autres_reponses_valides[1]
-            instance.reponse4 = None
-        elif len(autres_reponses_valides) == 1:
-            instance.reponse2 = autres_reponses_valides[0]
-            instance.reponse3 = None
-            instance.reponse4 = None
-        elif len(autres_reponses_valides) == 0:
-            instance.reponse2 = None
-            instance.reponse3 = None
-            instance.reponse4 = None
-        
-        if instance.url_image is not None:  # si une url est définie
-            instance.image = None  # on s'assure qu'aucune image téléversée n'est associée à l'énigme
-        if commit:
-            instance.save()  # on sauvegarde en bdd l'instance
-            self.save_m2m()  # on sauvegarde en bdd les relations many2many
-        return instance
 
 class CodeEnqueteForm(Form):
     code = CharField(label='Code à saisir', max_length=10)
@@ -383,7 +474,26 @@ class EnqueteEleveForm(Form):
         enigmes = kwargs.pop('enigmes')
         super(EnqueteEleveForm, self).__init__(*args, **kwargs)
         for enigme in enigmes:
-            self.fields[str(enigme.pk)] = CharField(max_length=100, label='Réponse :', required=False)
+            if not enigme.question_libre:
+                self.fields[str(enigme.pk)] = CharField(
+                    widget=TextInput(
+                        attrs={'placeholder': "Saisir uniquement la réponse à l'énigme."}
+                    ),
+                    max_length=100,
+                    label='Réponse :',
+                    required=False
+                )
+            else:
+                self.fields[str(enigme.pk)] = CharField(
+                    widget=Textarea(
+                        attrs={
+                            'placeholder': "Répondre par une (ou plusieurs) phrase(s).",
+                            'rows': "5"
+                        }
+                    ),
+                    max_length=1000,
+                    label='Réponse :',
+                    required=False)
 
 class EnqueteCreateListForm(ModelForm):
     class Meta:
@@ -403,7 +513,7 @@ class EnqueteCreateListForm(ModelForm):
                 "Cochez la case pour que la correction soit proposée aux élèves après leur enquête."
             ),
             'score': format_html(
-                "Cochez la case pour que le score des élèves soit affiché après leur enquête. Si la correction est activée (juste au-dessus), le score est automatiquement affiché."
+                "Cochez la case pour que le score des élèves soit affiché après leur enquête. Si la correction est activée (juste au-dessus), le score est automatiquement affiché. Si l'enquête contient (au moins) une énigme à réponse libre, un score <em>provisoire</em> sera affiché, les énigmes à réponse libre devant être corrigées manuellement."
             ),
             'ordre_aleatoire': format_html(
                 "Cochez la case pour que les énigmes de l'enquête soient proposées dans un ordre aléatoire aux élèves."

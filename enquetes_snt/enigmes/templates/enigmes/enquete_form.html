@@ -24,13 +24,13 @@
         <div id="liste-enigmes">
             {% for enigme in enigmes %}
                 {% load markdownify %}
-                <div class="filterDiv {{ enigme.theme }}" data-auteur="{{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}">
+                <div class="filterDiv {{ enigme.theme }} {% if enigme.question_libre %}question-libre{% endif %}" data-auteur="{{ enigme.auteur.first_name }} {{ enigme.auteur.last_name }}">
                     <div class="selected-enigme-container">
-                        <div class="checkbox-container" id="case-{{ enigme.id }}">
+                        <div class="checkbox-container" id="case-{{ enigme.id }}" data-question="{% if enigme.question_libre %}ql{% endif %}">
                             <input type="checkbox" name="enigmes" id="enigme-{{ enigme.id }}" class="case-a-cocher" value="{{ enigme.id }}" autocomplete="off">
                         </div>
                         <div class="enigme-container">
-                            {% include 'enigmes/enigme.html' with enigme=enigme %}
+                            {% include 'enigmes/enigme.html' with enigme=enigme affiche_reponses=True %}
                         </div>
                     </div>
                 </div>
@@ -83,6 +83,7 @@
         
         <div id="cle-enquete">
             <p id="cle-enquete-contenu">Vous n'avez sélectionné aucune énigme.</p>
+            <p id="correction-auto"></p>
             <p id="message-erreur">Vous devez sélectionner au moins une énigme pour créer une enquête.</p>
         </div>
 

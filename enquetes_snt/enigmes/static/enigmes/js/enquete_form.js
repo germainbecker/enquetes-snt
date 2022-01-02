@@ -40,24 +40,50 @@ function initialisationCouleur() {
 
 function changeListeCle(item) {
     let num = item.id.split("-")[1];
-    if (liste_num_enigmes.includes(num)) {
-        index_enigme = liste_num_enigmes.indexOf(num);
-        liste_num_enigmes.splice(index_enigme, 1);
+    // Si l'énigme était sélectionnée
+    if (listeNumEnigmes.includes(num)) {
+        // on la supprime du tableau des numéros d'énigmes
+        index_enigme = listeNumEnigmes.indexOf(num);
+        listeNumEnigmes.splice(index_enigme, 1);
+
+        // si c'est une énigme à question libre on la retire de l'ensemble des énigmes à question libre
+        if (ensembleEnigmesQuestionLibre.has(num)) {
+            ensembleEnigmesQuestionLibre.delete(num);
+        }
     } else {
-        liste_num_enigmes.push(num);
+        // sinon on l'ajoute
+        listeNumEnigmes.push(num);
+        // si l'énigme est à question libre on l'ajoute à l'ensemble des énigmes à question libre
+        if (item.dataset.question === "ql") {
+            ensembleEnigmesQuestionLibre.add(num);
+        }
     }
 }
 
 function changeCle() {
-    chaine = liste_num_enigmes.join(";");
+    console.log(ensembleEnigmesQuestionLibre)
+    chaine = listeNumEnigmes.join(";");
     let para = document.getElementById("cle-enquete-contenu");
+    let correctionAuto = document.getElementById("correction-auto");
+    
     if (chaine === "") {
         para.innerHTML = "Vous n'avez sélectionné aucune énigme.";
+        correctionAuto.classList.remove("show");
     } else {
-        let nb_enigmes = liste_num_enigmes.length.toString();
+        let nb_enigmes = listeNumEnigmes.length.toString();
         para.innerHTML = "Vous avez sélectionné " + nb_enigmes + " énigme(s)." + " La clé de votre enquête est : " + chaine;
+
+        // si il y a au moins une énigme à réponse libre sélectionnée
+        if (ensembleEnigmesQuestionLibre.size > 0) {
+            // on affiche un message à l'utilisateur
+            correctionAuto.innerHTML = "L'enquête contient au moins une énigme \"à réponse libre\". Une correction entièrement automatique sera donc impossible.";
+            correctionAuto.classList.add("show");
+        } else {
+            correctionAuto.classList.remove("show");
+        }
+
         // on efface le message d'erreur si une enquete est sélectionnée
-        document.querySelector('#message-erreur').style.visibility = "hidden";
+        document.querySelector('#message-erreur').classList.remove("show");
     }
 
     // on met à jour la valeur du champ clé caché
@@ -67,7 +93,8 @@ function changeCle() {
 
 }
 
-let liste_num_enigmes = [];
+let listeNumEnigmes = [];
+let ensembleEnigmesQuestionLibre = new Set();
 const couleurFond = document.querySelector(".checkbox-container").style.backgroundColor;
 initialisationCouleur();
 
@@ -103,7 +130,8 @@ document.getElementById("btn-creer-enquete").addEventListener("click", function(
     var donnees_formulaire = new FormData(document.getElementById("form"));
     if (!donnees_formulaire.has("enigmes")) {
         event.preventDefault();
-        zoneErreur.style.visibility = "visible";
-        zoneErreur.style.color = "red";
+        zoneErreur.classList.add("show");
+        /* zoneErreur.style.visibility = "visible";
+        zoneErreur.style.color = "red"; */
     }
 }, false);
