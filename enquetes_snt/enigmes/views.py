@@ -1142,13 +1142,13 @@ def eleve(request, code_enquete):
                         reponses=str(dic_reponses) 
                     )
                     # si réponses affichées
-                    if enquete.correction:
+                        
+                    if enquete.correction or enquete.score:
                         bonnes_reponses = enquete.dico_bonnes_reponses()
                         correction_reponses = bonnes_mauvaises_reponses_eleve(resultat, liste_enigmes, bonnes_reponses)
                         context['reponses'] = dic_reponses
-                        if enquete.score:
-                            context['score'] = list(correction_reponses.values()).count(True)
                         context['correction'] = correction_reponses
+                        context['score'] = list(correction_reponses.values()).count(True)
                         context['score_calculable'] = score_calculable(liste_enigmes)
                         return render(request, 'enigmes/enquete_eleve_reponses.html', context)
                     

@@ -49,7 +49,8 @@ function gestionReponses() {
 function gestionResultats() {
     var zoneReponsesEleves = document.querySelectorAll(".correct, .incorrect, .libre");
     var svgReponses = document.querySelectorAll(".correct svg, .incorrect svg, .libre svg");
-    var nbReponsesEleves = document.querySelectorAll(".reponse").length;
+    var nbReponsesEleves = document.querySelectorAll(".case-reponse").length;
+    console.log(nbReponsesEleves);
     var scoreEleves = document.querySelectorAll(".score-eleve");
     var pourcentagesReussite = document.querySelectorAll(".pourcentage");
     if (document.getElementById("switch-resultats-checkbox").checked) {
