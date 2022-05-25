@@ -22,7 +22,9 @@
     <div class="score-obtenu">
         <h1>Score {% if not score_calculable %}provisoire{% endif %}</h1>
         <p>{{ score }} {% if score_calculable %}/ {{ enigmes|length }}{% endif %}</p>
-        <small>Certaines réponses doivent être vérifiées par le professeur.</small>
+        {% if not score_calculable %}
+            <small>Certaines réponses doivent être vérifiées par le professeur.</small>
+        {% endif %}
     </div>
 </div>
 {% endif %}
