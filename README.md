@@ -4,7 +4,7 @@
 
 L'application **enquetes-snt** permet aux enseignants de SNT (Sciences Numériques et Technologie) de créer, mutualiser et partager des énigmes à destination de leurs élèves.
 
-Il s'agit d'une application Django développée par Germain Becker, enseignant de Mathématiques, NSI et SNT. Celle-ci est disponible à l'adresse : [enquetes-snt.fr](https://www.enquetes-snt.fr)
+Il s'agit d'une application Django développée par Germain Becker, enseignant de Mathématiques, NSI et SNT. Celle-ci est disponible à l'adresse : [https://enquetessnt.eu.pythonanywhere.com/](https://enquetessnt.eu.pythonanywhere.com/)
 
 ![CC](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)
 
@@ -48,7 +48,7 @@ Ce document est une présentation de l'application.
 
 # Création d'un compte enseignant
 
-La page d'accueil [enquetes-snt.fr](https://www.enquetes-snt.fr) est à destination des élèves. On y trouve en haut à droite un lien pour accéder à l'espace enseignant où les enseignants peuvent s'identifier.
+La page d'accueil [enquetessnt.eu.pythonanywhere.com/](https://enquetessnt.eu.pythonanywhere.com/) est à destination des élèves. On y trouve en haut à droite un lien pour accéder à l'espace enseignant où les enseignants peuvent s'identifier.
 
 Pour accéder à l'application, un enseignant devra créer un compte à la première connexion en renseignant :
 
@@ -61,7 +61,7 @@ Chaque enseignant sera ensuite identifié grâce au couple (adresse e-mail, mot 
 
 > Les formats acceptés d'adresse e-mail sont du type _prenom.nom@ac-&lt;academie&gt;.&lt;domaine&gt;_. Pour les cas particuliers, vous pouvez me contacter.
 
-Pour créer un compte, il est nécessaire de valider et accepter les conditions générales d'utilisation et la politique de confidentialité de l'application, disponibles à l'adresse [https://www.enquetes-snt.fr/conditions/](https://www.enquetes-snt.fr/conditions/)
+Pour créer un compte, il est nécessaire de valider et accepter les conditions générales d'utilisation et la politique de confidentialité de l'application, disponibles à l'adresse [https://enquetessnt.eu.pythonanywhere.com/conditions/](https://enquetessnt.eu.pythonanywhere.com/conditions/)
 
 **Quelques mots sur la confidentialité** 
 
@@ -132,7 +132,7 @@ Les énigmes ne peuvent pas directement être des questions de type Vrai/Faux ou
 
 ## Ajout d'une énigme
 
-Le lien suivant, que vous trouverez également sur la page de création d'une énigme, donne des explications détaillées sur la création d'une énigme : [https://www.enquetes-snt.fr/enigme/creation/exemple/](https://www.enquetes-snt.fr/enigme/creation/exemple/).
+Le lien suivant, que vous trouverez également sur la page de création d'une énigme, donne des explications détaillées sur la création d'une énigme : [https://enquetessnt.eu.pythonanywhere.com/enigme/creation/exemple/](https://enquetessnt.eu.pythonanywhere.com/enigme/creation/exemple/).
 
 Très rapidement, une énigme est composée de 6 champs :
 
